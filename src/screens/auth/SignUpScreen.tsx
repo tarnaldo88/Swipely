@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Image,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AuthStackParamList, SignUpData } from '../../types';
@@ -131,6 +132,7 @@ export const SignUpScreen: React.FC<Props> = ({ navigation }) => {
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
+          <Image source={require('../../../assets/SwipelyLogo.png')} style={styles.logo} />
           <Text style={styles.title}>Join Swipely</Text>
           <Text style={styles.subtitle}>Create your account to start discovering</Text>
         </View>
@@ -268,10 +270,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  logo: {
+    width: 240,
+    height: 120,
+    marginBottom: 10,
+    resizeMode: 'contain',
+  },
   scrollContent: {
     flexGrow: 1,
     justifyContent: 'center',
     padding: 20,
+    backgroundColor: "#221e27",
   },
   header: {
     alignItems: 'center',
@@ -280,12 +289,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#d8c0fc',
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: '#08f88c',
     textAlign: 'center',
   },
   form: {
@@ -305,7 +314,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   methodButtonActive: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#08f88c',
   },
   methodButtonText: {
     fontSize: 16,
@@ -341,7 +350,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   checkboxChecked: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#08f88c',
     borderColor: '#007AFF',
   },
   checkmark: {
@@ -352,7 +361,7 @@ const styles = StyleSheet.create({
   termsText: {
     flex: 1,
     fontSize: 14,
-    color: '#666',
+    color: '#08f88c',
     lineHeight: 20,
   },
   termsLink: {
@@ -360,7 +369,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   signUpButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#08f88c',
     borderRadius: 8,
     padding: 16,
     alignItems: 'center',
@@ -379,18 +388,19 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   orText: {
-    color: '#666',
+    color: '#08f88c',
     fontSize: 14,
     marginBottom: 16,
   },
   socialButtons: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '100%',
+    width: '100%',    
   },
   socialButton: {
     borderWidth: 1,
     borderColor: '#ddd',
+    backgroundColor:'#fff',
     borderRadius: 8,
     paddingVertical: 12,
     paddingHorizontal: 20,
@@ -408,7 +418,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   signInText: {
-    color: '#666',
+    color: '#08f88c',
     fontSize: 14,
   },
   signInLink: {
