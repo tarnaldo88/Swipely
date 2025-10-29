@@ -7,6 +7,7 @@ export {
 } from './AuthenticationService';
 
 export { AuthenticationServiceImpl } from './AuthenticationServiceImpl';
+export { FirebaseAuthService } from './FirebaseAuthService';
 export { SecureStorageService } from './SecureStorageService';
 export { getAuthService, initializeAuthService, AuthServiceFactory } from './AuthService';
 

@@ -1,4 +1,4 @@
-import { AuthenticationServiceImpl } from './AuthenticationServiceImpl';
+import { FirebaseAuthService } from './FirebaseAuthService';
 import { AuthenticationService } from './AuthenticationService';
 
 /**
@@ -15,12 +15,8 @@ class AuthServiceFactory {
    */
   static getInstance(): AuthenticationService {
     if (!AuthServiceFactory.instance) {
-      // In a real app, this URL would come from environment configuration
-      const apiBaseUrl = __DEV__ 
-        ? 'http://localhost:3000/api' 
-        : 'https://api.swipely.com';
-        
-      AuthServiceFactory.instance = new AuthenticationServiceImpl(apiBaseUrl);
+      // Use Firebase Authentication Service
+      AuthServiceFactory.instance = new FirebaseAuthService();
     }
     
     return AuthServiceFactory.instance;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { Provider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -21,11 +21,28 @@ function AppContent() {
       try {
         await initializeAuthService();
         const authService = getAuthService();
-        const currentUser = authService.getCurrentUser();
-        setUser(currentUser);
+        
+        // Set up a listener for auth state changes
+        const checkAuthState = () => {
+          const currentUser = authService.getCurrentUser();
+          setUser(currentUser);
+          setIsLoading(false);
+        };
+
+        // Check initial auth state
+        checkAuthState();
+
+        // For Firebase, the auth state will be updated automatically
+        // through the onAuthStateChanged listener in FirebaseAuthService
+        const interval = setInterval(checkAuthState, 1000);
+        
+        // Clean up interval after initial load
+        setTimeout(() => {
+          clearInterval(interval);
+        }, 3000);
+
       } catch (error) {
         console.error('Failed to initialize auth service:', error);
-      } finally {
         setIsLoading(false);
       }
     };
@@ -56,11 +73,18 @@ function AppContent() {
 
 // Placeholder component for the main app (will be implemented in future tasks)
 function MainAppPlaceholder() {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const authService = getAuthService();
+    const currentUser = authService.getCurrentUser();
+    setUser(currentUser);
+  }, []);
+
   const handleSignOut = async () => {
     try {
       const authService = getAuthService();
       await authService.signOut();
-      // In a real app, this would trigger a navigation reset
       console.log('User signed out');
     } catch (error) {
       console.error('Sign out error:', error);
@@ -71,11 +95,14 @@ function MainAppPlaceholder() {
     <View style={styles.mainContainer} testID="main-app-container">
       <Text style={styles.title} testID="main-app-title">Welcome to Swipely!</Text>
       <Text style={styles.subtitle} testID="main-app-subtitle">
-        You are now authenticated. Main app features will be implemented in future tasks.
+        Hello {user?.displayName || 'User'}! 🎉
       </Text>
-      <Text style={styles.signOutHint} onPress={handleSignOut}>
-        Tap here to sign out (for testing)
+      <Text style={styles.subtitle} testID="main-app-subtitle">
+        You are now authenticated with Firebase. Main app features will be implemented in future tasks.
       </Text>
+      <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
+        <Text style={styles.signOutButtonText}>Sign Out</Text>
+      </TouchableOpacity>
       <StatusBar style="auto" />
     </View>
   );
@@ -126,10 +153,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 30,
   },
-  signOutHint: {
-    fontSize: 14,
-    color: '#007AFF',
-    textDecorationLine: 'underline',
+  signOutButton: {
+    backgroundColor: '#ff4444',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 8,
     marginTop: 20,
+  },
+  signOutButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

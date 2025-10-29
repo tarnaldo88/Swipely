@@ -39,7 +39,6 @@
 
 - [x] 3. Create product data models and category selection
 
-
   - [x] 3.1 Define product and category data models
 
     - Create Product, ProductCard, and ProductCategory TypeScript interfaces
