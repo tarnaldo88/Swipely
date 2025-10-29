@@ -8,6 +8,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  Image,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AuthStackParamList } from '../../types';
@@ -125,6 +126,7 @@ export const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
     >
       <View style={styles.content}>
         <View style={styles.header}>
+          <Image source={require('../../../assets/SwipelyLogo.png')} style={styles.logo} />
           <Text style={styles.title}>
             {isCodeSent ? 'Reset Password' : 'Forgot Password'}
           </Text>
@@ -245,7 +247,13 @@ export const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#221e27",
+  },
+  logo: {
+    width: 240,
+    height: 120,
+    marginBottom: 10,
+    resizeMode: 'contain',
   },
   content: {
     flex: 1,
@@ -259,12 +267,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#d8c0fc',
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: '#08f88c',
     textAlign: 'center',
     lineHeight: 22,
   },
@@ -285,7 +293,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   methodButtonActive: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#08f88c',
   },
   methodButtonText: {
     fontSize: 16,
@@ -305,7 +313,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   primaryButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#08f88c',
     borderRadius: 8,
     padding: 16,
     alignItems: 'center',
@@ -337,7 +345,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   backButtonText: {
-    color: '#666',
+    color: '#d8c0fc',
     fontSize: 14,
   },
 });

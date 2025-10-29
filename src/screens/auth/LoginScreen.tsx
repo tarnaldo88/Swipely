@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
   },
-  mainMenuBg: {
-    backgroundColor: "#221e27",
-  },
+  // mainMenuBg: {
+  //   backgroundColor: "#221e27",
+  // },
 });
