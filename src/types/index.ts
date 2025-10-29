@@ -75,6 +75,19 @@ export interface ProductCategory {
   parentId?: string;
 }
 
+// ProductCard interface for swipeable cards
+export interface ProductCard {
+  id: string;
+  title: string;
+  price: number;
+  currency: string;
+  imageUrls: string[];
+  category: ProductCategory;
+  description: string;
+  specifications: Record<string, any>;
+  availability: boolean;
+}
+
 // Interaction types
 export interface SwipeAction {
   userId: string;
@@ -121,6 +134,37 @@ export interface SwipeHistory {
   actions: SwipeAction[];
   sessionId: string;
   startedAt: Date;
+}
+
+// API Response types
+export interface ProductFeedResponse {
+  products: ProductCard[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    hasMore: boolean;
+  };
+  filters: {
+    categories: string[];
+    priceRange?: { min: number; max: number };
+  };
+}
+
+export interface CategoryListResponse {
+  categories: ProductCategory[];
+  total: number;
+}
+
+export interface ProductDetailsResponse {
+  product: Product;
+  relatedProducts?: ProductCard[];
+}
+
+export interface SwipeActionResponse {
+  success: boolean;
+  message?: string;
+  updatedPreferences?: CategoryPreferences;
 }
 
 // Re-export authentication service types for convenience
