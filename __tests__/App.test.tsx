@@ -1,9 +1,8 @@
-import React from 'react';
-import { render } from '@testing-library/react-native';
-import App from '../App';
+import { render } from "@testing-library/react-native";
+import App from "../App";
 
 // Mock the store to avoid Redux issues in tests
-jest.mock('../src/store', () => ({
+jest.mock("../src/store", () => ({
   store: {
     getState: () => ({}),
     dispatch: jest.fn(),
@@ -11,25 +10,27 @@ jest.mock('../src/store', () => ({
   },
 }));
 
-describe('App Component', () => {
-  it('should render without crashing', () => {
+describe("App Component", () => {
+  it("should render without crashing", () => {
     const { getByText } = render(<App />);
-    expect(getByText('Swipely Commerce App')).toBeTruthy();
+    expect(getByText("Swipely Commerce App")).toBeTruthy();
   });
 
-  it('should display the project initialization message', () => {
+  it("should display the project initialization message", () => {
     const { getByText } = render(<App />);
-    expect(getByText('Project structure initialized successfully!')).toBeTruthy();
+    expect(
+      getByText("Project structure initialized successfully!")
+    ).toBeTruthy();
   });
 
-  it('should render the main container', () => {
+  it("should render the main container", () => {
     const { getByTestId } = render(<App />);
-    expect(getByTestId('app-container')).toBeTruthy();
+    expect(getByTestId("app-container")).toBeTruthy();
   });
 
-  it('should have correct test IDs', () => {
+  it("should have correct test IDs", () => {
     const { getByTestId } = render(<App />);
-    expect(getByTestId('app-title')).toBeTruthy();
-    expect(getByTestId('app-subtitle')).toBeTruthy();
+    expect(getByTestId("app-title")).toBeTruthy();
+    expect(getByTestId("app-subtitle")).toBeTruthy();
   });
 });
