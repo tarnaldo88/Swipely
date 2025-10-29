@@ -93,9 +93,9 @@ export const LoginScreen: React.FC<Props> = ({ navigation }) => {
       style={styles.container} 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView contentContainerStyle={styles.scrollContent} >
         <View style={styles.header}>
-          <Text style={styles.title}>Welcome to Swipely</Text>
+          <Text style={styles.title}>Swipely</Text>
           <Text style={styles.subtitle}>Sign in to discover amazing products</Text>
         </View>
 
@@ -210,6 +210,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     padding: 20,
+    backgroundColor:'#221e27',
   },
   header: {
     alignItems: 'center',
@@ -243,7 +244,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   methodButtonActive: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#08f88c',
   },
   methodButtonText: {
     fontSize: 16,
@@ -267,11 +268,11 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   forgotPasswordText: {
-    color: '#007AFF',
+    color: '#08f88c',
     fontSize: 14,
   },
   loginButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#08f88c',
     borderRadius: 8,
     padding: 16,
     alignItems: 'center',
@@ -290,7 +291,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   orText: {
-    color: '#666',
+    color: '#08f88c',
     fontSize: 14,
     marginBottom: 16,
   },
@@ -307,6 +308,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     minWidth: 80,
     alignItems: 'center',
+    backgroundColor:'#fff'
   },
   socialButtonText: {
     color: '#333',
@@ -319,12 +321,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   signUpText: {
-    color: '#666',
+    color: '#08f88c',
     fontSize: 14,
   },
   signUpLink: {
     color: '#007AFF',
     fontSize: 14,
     fontWeight: '600',
+  },
+  mainMenuBg: {
+    backgroundColor:'#221e27'
   },
 });

@@ -21,7 +21,7 @@ export const AuthNavigator: React.FC = () => {
         headerTitleStyle: {
           fontWeight: '600',
         },
-        headerBackTitleVisible: false,
+        headerBackTitle: '',
       }}
     >
       <Stack.Screen 

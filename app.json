@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -17,13 +16,7 @@
     ],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.swipely.app",
-      "buildNumber": "1",
-      "infoPlist": {
-        "UIBackgroundModes": ["background-fetch"],
-        "NSCameraUsageDescription": "This app uses camera to scan product barcodes",
-        "NSPhotoLibraryUsageDescription": "This app accesses photo library to upload product images"
-      }
+      "bundleIdentifier": "com.swipely.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -31,29 +24,14 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.swipely.app",
-      "versionCode": 1,
       "permissions": [
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE",
         "INTERNET",
         "ACCESS_NETWORK_STATE"
-      ],
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      ]
     },
     "web": {
-      "favicon": "./assets/favicon.png",
-      "bundler": "metro"
+      "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-router",
-      [
-        "react-native-reanimated/plugin",
-        {
-          "relativeSourceLocation": true
-        }
-      ]
-    ]
+    "plugins": []
   }
 }

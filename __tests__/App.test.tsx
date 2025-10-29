@@ -13,24 +13,18 @@ jest.mock("../src/store", () => ({
 describe("App Component", () => {
   it("should render without crashing", () => {
     const { getByText } = render(<App />);
-    expect(getByText("Swipely Commerce App")).toBeTruthy();
+    // App now shows loading screen initially, then auth flow
+    expect(getByText("Loading...")).toBeTruthy();
   });
 
-  it("should display the project initialization message", () => {
+  it("should display loading state initially", () => {
     const { getByText } = render(<App />);
-    expect(
-      getByText("Project structure initialized successfully!")
-    ).toBeTruthy();
+    expect(getByText("Loading...")).toBeTruthy();
   });
 
-  it("should render the main container", () => {
-    const { getByTestId } = render(<App />);
-    expect(getByTestId("app-container")).toBeTruthy();
-  });
-
-  it("should have correct test IDs", () => {
-    const { getByTestId } = render(<App />);
-    expect(getByTestId("app-title")).toBeTruthy();
-    expect(getByTestId("app-subtitle")).toBeTruthy();
+  it("should render the app structure", () => {
+    const { container } = render(<App />);
+    // App should render without crashing
+    expect(container).toBeTruthy();
   });
 });

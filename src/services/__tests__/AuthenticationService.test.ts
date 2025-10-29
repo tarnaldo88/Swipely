@@ -95,13 +95,13 @@ describe('AuthenticationServiceImpl', () => {
         json: async () => ({ message: 'Invalid credentials' }),
       });
 
-      await expect(authService.signIn(validCredentials)).rejects.toThrow(AuthError);
-      
       try {
         await authService.signIn(validCredentials);
+        fail('Expected AuthError to be thrown');
       } catch (error) {
         expect(error).toBeInstanceOf(AuthError);
         expect((error as AuthError).message).toBe('Invalid credentials');
+        expect((error as AuthError).type).toBe(AuthErrorType.INVALID_CREDENTIALS);
       }
     });
 
