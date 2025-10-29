@@ -1,6 +1,7 @@
 import type {
   User,
   Product,
+  ProductCard,
   SwipeAction,
   CartItem,
   LoginCredentials,
@@ -9,6 +10,11 @@ import type {
   UserPreferences,
   ProductImage,
   ProductCategory,
+  CategoryPreferences,
+  ProductFeedResponse,
+  CategoryListResponse,
+  ProductDetailsResponse,
+  SwipeActionResponse,
 } from "../index";
 
 describe("Type Definitions", () => {
@@ -90,6 +96,41 @@ describe("Type Definitions", () => {
       expect(mockImage.id).toBe("img1");
       expect(typeof mockImage.isPrimary).toBe("boolean");
     });
+
+    it("should define ProductCard interface correctly", () => {
+      const mockProductCard: ProductCard = {
+        id: "card123",
+        title: "Test Product Card",
+        price: 49.99,
+        currency: "USD",
+        imageUrls: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
+        category: {
+          id: "cat1",
+          name: "Electronics",
+        },
+        description: "A test product card",
+        specifications: { color: "black", size: "medium" },
+        availability: true,
+      };
+
+      expect(mockProductCard.id).toBe("card123");
+      expect(mockProductCard.price).toBe(49.99);
+      expect(mockProductCard.currency).toBe("USD");
+      expect(Array.isArray(mockProductCard.imageUrls)).toBe(true);
+      expect(mockProductCard.availability).toBe(true);
+    });
+
+    it("should define ProductCategory interface correctly", () => {
+      const mockCategory: ProductCategory = {
+        id: "electronics",
+        name: "Electronics",
+        parentId: "tech",
+      };
+
+      expect(mockCategory.id).toBe("electronics");
+      expect(mockCategory.name).toBe("Electronics");
+      expect(mockCategory.parentId).toBe("tech");
+    });
   });
 
   describe("Authentication types", () => {
@@ -140,6 +181,71 @@ describe("Type Definitions", () => {
 
       expect(mockCartItem.quantity).toBe(2);
       expect(typeof mockCartItem.addedAt).toBe("object");
+    });
+  });
+
+  describe("Category and Preference types", () => {
+    it("should define CategoryPreferences interface correctly", () => {
+      const mockPreferences: CategoryPreferences = {
+        selectedCategories: ["electronics", "fashion"],
+        lastUpdated: new Date(),
+      };
+
+      expect(Array.isArray(mockPreferences.selectedCategories)).toBe(true);
+      expect(mockPreferences.selectedCategories).toContain("electronics");
+      expect(typeof mockPreferences.lastUpdated).toBe("object");
+    });
+  });
+
+  describe("API Response types", () => {
+    it("should define ProductFeedResponse interface correctly", () => {
+      const mockResponse: ProductFeedResponse = {
+        products: [],
+        pagination: {
+          page: 1,
+          limit: 10,
+          total: 100,
+          hasMore: true,
+        },
+        filters: {
+          categories: ["electronics"],
+          priceRange: { min: 0, max: 1000 },
+        },
+      };
+
+      expect(Array.isArray(mockResponse.products)).toBe(true);
+      expect(mockResponse.pagination.page).toBe(1);
+      expect(mockResponse.pagination.hasMore).toBe(true);
+      expect(mockResponse.filters.categories).toContain("electronics");
+    });
+
+    it("should define CategoryListResponse interface correctly", () => {
+      const mockResponse: CategoryListResponse = {
+        categories: [
+          { id: "electronics", name: "Electronics" },
+          { id: "fashion", name: "Fashion" },
+        ],
+        total: 2,
+      };
+
+      expect(Array.isArray(mockResponse.categories)).toBe(true);
+      expect(mockResponse.total).toBe(2);
+      expect(mockResponse.categories[0].id).toBe("electronics");
+    });
+
+    it("should define SwipeActionResponse interface correctly", () => {
+      const mockResponse: SwipeActionResponse = {
+        success: true,
+        message: "Action recorded successfully",
+        updatedPreferences: {
+          selectedCategories: ["electronics"],
+          lastUpdated: new Date(),
+        },
+      };
+
+      expect(mockResponse.success).toBe(true);
+      expect(typeof mockResponse.message).toBe("string");
+      expect(mockResponse.updatedPreferences?.selectedCategories).toContain("electronics");
     });
   });
 });

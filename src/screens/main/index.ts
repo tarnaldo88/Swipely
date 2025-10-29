@@ -1,2 +1,2 @@
 // Main app screen exports
-export {};
+export { default as CategorySelectionScreen } from './CategorySelectionScreen';

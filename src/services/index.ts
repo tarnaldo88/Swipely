@@ -9,3 +9,9 @@ export {
 export { AuthenticationServiceImpl } from './AuthenticationServiceImpl';
 export { SecureStorageService } from './SecureStorageService';
 export { getAuthService, initializeAuthService, AuthServiceFactory } from './AuthService';
+
+// Category and preference services
+export { CategoryPreferenceService } from './CategoryPreferenceService';
+
+// Product feed services
+export { ProductFeedService } from './ProductFeedService';
