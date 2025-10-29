@@ -11,9 +11,9 @@ export default function App() {
     <GestureHandlerRootView style={styles.container}>
       <Provider store={store}>
         <NavigationContainer>
-          <View style={styles.content}>
-            <Text style={styles.title}>Swipely Commerce App</Text>
-            <Text style={styles.subtitle}>Project structure initialized successfully!</Text>
+          <View style={styles.content} testID="app-container">
+            <Text style={styles.title} testID="app-title">Swipely Commerce App</Text>
+            <Text style={styles.subtitle} testID="app-subtitle">Project structure initialized successfully!</Text>
             <StatusBar style="auto" />
           </View>
         </NavigationContainer>
