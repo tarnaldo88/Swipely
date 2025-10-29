@@ -246,8 +246,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#221e27",
   },
    logo: {
-    width: 360,
-    height: 180,
+    width: 408,
+    height: 204,
     marginBottom: 20,
     resizeMode: 'contain',
   },
@@ -364,7 +364,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   signUpLink: {
-    color: "#007AFF",
+    color: "#d8c0fc",
     fontSize: 14,
     fontWeight: "600",
   },
