@@ -35,6 +35,7 @@ yarn-error.*
 
 # Firebase config (keep your credentials secure)
 src/config/firebase.ts
+src/config/firebase.example.ts
 
 # typescript
 *.tsbuildinfo
@@ -42,5 +43,4 @@ src/config/firebase.ts
 # generated native folders
 /ios
 /android
-src/config/firebase.ts
-src/config/firebase.example.ts
+

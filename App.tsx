@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { Provider } from 'react-redux';
-import { NavigationContainer } from '@react-navigation/native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { createStackNavigator } from '@react-navigation/stack';
-import { store } from './src/store';
-import { AuthNavigator } from './src/navigation/AuthNavigator';
-import { getAuthService, initializeAuthService } from './src/services';
-import { User } from './src/types';
+import React, { useEffect, useState } from "react";
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { Provider } from "react-redux";
+import { NavigationContainer } from "@react-navigation/native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { createStackNavigator } from "@react-navigation/stack";
+import { store } from "./src/store";
+import { AuthNavigator } from "./src/navigation/AuthNavigator";
+import { getAuthService, initializeAuthService } from "./src/services";
+import { User } from "./src/types";
 
 const RootStack = createStackNavigator();
 
@@ -21,34 +21,46 @@ function AppContent() {
       try {
         await initializeAuthService();
         const authService = getAuthService();
-        
-        // Set up a listener for auth state changes
-        const checkAuthState = () => {
+
+        // Set up auth state listener if the service supports it
+        if (
+          "onAuthStateChanged" in authService &&
+          typeof authService.onAuthStateChanged === "function"
+        ) {
+          const unsubscribe = (authService as any).onAuthStateChanged(
+            (user: User | null) => {
+              setUser(user);
+              setIsLoading(false);
+            }
+          );
+
+          // Return cleanup function
+          return unsubscribe;
+        } else {
+          // Fallback for services that don't support listeners
           const currentUser = authService.getCurrentUser();
           setUser(currentUser);
           setIsLoading(false);
-        };
-
-        // Check initial auth state
-        checkAuthState();
-
-        // For Firebase, the auth state will be updated automatically
-        // through the onAuthStateChanged listener in FirebaseAuthService
-        const interval = setInterval(checkAuthState, 1000);
-        
-        // Clean up interval after initial load
-        setTimeout(() => {
-          clearInterval(interval);
-        }, 3000);
-
+        }
       } catch (error) {
-        console.error('Failed to initialize auth service:', error);
+        console.error("Failed to initialize auth service:", error);
         setIsLoading(false);
       }
     };
 
-    initializeAuth();
-  }, []);
+    const cleanup = initializeAuth();
+
+    // Return cleanup function
+    return () => {
+      if (cleanup && typeof cleanup.then === "function") {
+        cleanup.then((unsubscribe: any) => {
+          if (typeof unsubscribe === "function") {
+            unsubscribe();
+          }
+        });
+      }
+    };
+  }, []); // Remove user dependency to prevent infinite loops
 
   if (isLoading) {
     return (
@@ -77,28 +89,48 @@ function MainAppPlaceholder() {
 
   useEffect(() => {
     const authService = getAuthService();
-    const currentUser = authService.getCurrentUser();
-    setUser(currentUser);
+
+    // Set up auth state listener if available
+    if (
+      "onAuthStateChanged" in authService &&
+      typeof authService.onAuthStateChanged === "function"
+    ) {
+      const unsubscribe = (authService as any).onAuthStateChanged(
+        (user: User | null) => {
+          setUser(user);
+        }
+      );
+
+      return unsubscribe;
+    } else {
+      // Fallback
+      const currentUser = authService.getCurrentUser();
+      setUser(currentUser);
+    }
   }, []);
 
   const handleSignOut = async () => {
     try {
       const authService = getAuthService();
       await authService.signOut();
-      console.log('User signed out');
+      console.log("User signed out");
+      // The auth state listener will automatically update the UI
     } catch (error) {
-      console.error('Sign out error:', error);
+      console.error("Sign out error:", error);
     }
   };
 
   return (
     <View style={styles.mainContainer} testID="main-app-container">
-      <Text style={styles.title} testID="main-app-title">Welcome to Swipely!</Text>
-      <Text style={styles.subtitle} testID="main-app-subtitle">
-        Hello {user?.displayName || 'User'}! 🎉
+      <Text style={styles.title} testID="main-app-title">
+        Welcome to Swipely!
       </Text>
       <Text style={styles.subtitle} testID="main-app-subtitle">
-        You are now authenticated with Firebase. Main app features will be implemented in future tasks.
+        Hello {user?.displayName || "User"}! 🎉
+      </Text>
+      <Text style={styles.subtitle} testID="main-app-subtitle">
+        You are now authenticated with Firebase. Main app features will be
+        implemented in future tasks.
       </Text>
       <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
         <Text style={styles.signOutButtonText}>Sign Out</Text>
@@ -126,43 +158,43 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
   loadingText: {
     fontSize: 18,
-    color: '#666',
+    color: "#666",
   },
   mainContainer: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
     padding: 20,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+    color: "#666",
+    textAlign: "center",
     marginBottom: 30,
   },
   signOutButton: {
-    backgroundColor: '#ff4444',
+    backgroundColor: "#ff4444",
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 8,
     marginTop: 20,
   },
   signOutButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

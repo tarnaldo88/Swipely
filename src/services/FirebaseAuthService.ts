@@ -31,10 +31,42 @@ export class FirebaseAuthService implements AuthenticationService {
   private currentUser: User | null = null;
   private sessionStorage: SessionStorage;
   private authStateListener: (() => void) | null = null;
+  private authStateCallbacks: ((user: User | null) => void)[] = [];
 
   constructor() {
     this.sessionStorage = new SecureStorageService();
     this.setupAuthStateListener();
+  }
+
+  /**
+   * Add a callback to be notified of auth state changes
+   */
+  onAuthStateChanged(callback: (user: User | null) => void): () => void {
+    this.authStateCallbacks.push(callback);
+    
+    // Call immediately with current state
+    callback(this.currentUser);
+    
+    // Return unsubscribe function
+    return () => {
+      const index = this.authStateCallbacks.indexOf(callback);
+      if (index > -1) {
+        this.authStateCallbacks.splice(index, 1);
+      }
+    };
+  }
+
+  /**
+   * Notify all callbacks of auth state change
+   */
+  private notifyAuthStateChange(user: User | null): void {
+    this.authStateCallbacks.forEach(callback => {
+      try {
+        callback(user);
+      } catch (error) {
+        console.error('Error in auth state callback:', error);
+      }
+    });
   }
 
   /**
@@ -51,6 +83,9 @@ export class FirebaseAuthService implements AuthenticationService {
         this.currentUser = null;
         await this.sessionStorage.clearAll();
       }
+      
+      // Notify all listeners of the auth state change
+      this.notifyAuthStateChange(this.currentUser);
     });
   }
 
