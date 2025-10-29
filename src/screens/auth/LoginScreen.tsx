@@ -9,10 +9,12 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Image,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AuthStackParamList, LoginCredentials } from '../../types';
 import { getAuthService } from '../../services';
+import {logo} from '../../../assets/SwipelyLogo.png';
 
 type LoginScreenNavigationProp = StackNavigationProp<AuthStackParamList, 'Login'>;
 
@@ -95,7 +97,7 @@ export const LoginScreen: React.FC<Props> = ({ navigation }) => {
     >
       <ScrollView contentContainerStyle={styles.scrollContent} >
         <View style={styles.header}>
-          <Text style={styles.title}>Swipely</Text>
+          <Image source={logo}/>
           <Text style={styles.subtitle}>Sign in to discover amazing products</Text>
         </View>
 
@@ -224,7 +226,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: '#d8c0fc',
     textAlign: 'center',
   },
   form: {
