@@ -10,3 +10,6 @@ export const MainTab = createBottomTabNavigator<MainTabParamList>();
 
 // Navigation container will be configured in App.tsx
 export { NavigationContainer };
+
+// Export navigators
+export { AuthNavigator } from './AuthNavigator';

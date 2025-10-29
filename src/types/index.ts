@@ -24,6 +24,7 @@ export interface User {
   displayName: string;
   avatar?: string;
   preferences: UserPreferences;
+  swipeHistory: SwipeAction[];
   createdAt: Date;
   lastActiveAt: Date;
 }
@@ -101,10 +102,27 @@ export interface LoginCredentials {
 export interface SignUpData extends LoginCredentials {
   displayName: string;
   confirmPassword: string;
+  acceptTerms?: boolean;
 }
 
 export interface AuthResult {
   user: User;
   token: string;
   refreshToken: string;
+  expiresAt: Date;
 }
+
+export interface CategoryPreferences {
+  selectedCategories: string[];
+  lastUpdated: Date;
+}
+
+export interface SwipeHistory {
+  actions: SwipeAction[];
+  sessionId: string;
+  startedAt: Date;
+}
+
+// Re-export authentication service types for convenience
+export type { AuthenticationService, SessionStorage } from '../services/AuthenticationService';
+export { AuthError, AuthErrorType } from '../services/AuthenticationService';
