@@ -43,3 +43,4 @@ src/config/firebase.ts
 /ios
 /android
 src/config/firebase.ts
+src/config/firebase.example.ts
