@@ -1,15 +1,16 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
-// Firebase configuration - EXAMPLE
-// Copy this file to firebase.ts and replace with your actual Firebase project credentials
+// Firebase configuration
+// You'll need to replace these with your actual Firebase project credentials
 const firebaseConfig = {
-  apiKey: "AIzaSyExample-Replace-With-Your-Actual-API-Key",
-  authDomain: "your-project-id.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project-id.appspot.com",
-  messagingSenderId: "123456789012",
-  appId: "1:123456789012:web:abcdef1234567890abcdef"
+  apiKey: "AIzaSyDslt19Byt9H09-PCQDGvuE4CuRIe1QcNc",
+  authDomain: "swipely-d5d70.firebaseapp.com",
+  projectId: "swipely-d5d70",
+  storageBucket: "swipely-d5d70.firebasestorage.app",
+  messagingSenderId: "418266990343",
+  appId: "1:418266990343:web:5ded224bdd5418e82ee7a2",
+  measurementId: "G-ZHL367JS5Q"
 };
 
 // Initialize Firebase
