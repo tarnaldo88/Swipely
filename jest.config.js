@@ -6,7 +6,7 @@ module.exports = {
     '<rootDir>/.expo/',
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|expo|@expo|@react-navigation|react-redux|@reduxjs/toolkit)/)',
+    'node_modules/(?!(react-native|@react-native|expo|@expo|expo-status-bar|@react-navigation|react-redux|@reduxjs/toolkit|immer)/)',
   ],
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
@@ -18,8 +18,9 @@ module.exports = {
   testMatch: [
     '<rootDir>/src/**/__tests__/**/*.{ts,tsx}',
     '<rootDir>/src/**/*.{test,spec}.{ts,tsx}',
+    '<rootDir>/__tests__/**/*.{ts,tsx}',
   ],
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@/components/(.*)$': '<rootDir>/src/components/$1',
     '^@/screens/(.*)$': '<rootDir>/src/screens/$1',
