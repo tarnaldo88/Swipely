@@ -6,7 +6,7 @@ module.exports = {
     '<rootDir>/.expo/',
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|expo|@expo|expo-status-bar|@react-navigation|react-redux|@reduxjs/toolkit|immer)/)',
+    'node_modules/(?!(react-native|@react-native|expo|@expo|expo-status-bar|expo-haptics|react-native-reanimated|react-native-gesture-handler|@react-navigation|react-redux|@reduxjs/toolkit|immer)/)',
   ],
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',

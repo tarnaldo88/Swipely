@@ -66,12 +66,10 @@
     - Write tests for category selection and preference management
     - _Requirements: 2.1, 2.2, 2.3_
 
-- [ ] 4. Build swipeable product card interface
+- [x] 4. Build swipeable product card interface
 
 
   - [x] 4.1 Create swipeable product card component
-
-
 
     - Implement SwipeableCard component with gesture recognition
     - Add visual feedback for swipe gestures with animations
@@ -80,8 +78,6 @@
 
   - [x] 4.2 Implement swipe gesture handling and actions
 
-
-
     - Code left swipe (skip) and right swipe (like) gesture recognition
     - Implement swipe action recording and state management
     - Add haptic feedback for gesture interactions
@@ -89,15 +85,12 @@
 
   - [x] 4.3 Add cart and details buttons to product cards
 
-
-
     - Create Add_to_Cart_Button component with tap handling
     - Implement tap-to-view-details functionality for product cards
     - Add visual indicators and loading states for button interactions
     - _Requirements: 3.6, 3.7, 6.1_
 
-  - [-] 4.4 Write swipe interaction tests
-
+  - [x] 4.4 Write swipe interaction tests
 
     - Create tests for swipe gesture recognition and handling
     - Write tests for product card button interactions
