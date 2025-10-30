@@ -16,3 +16,11 @@ export { CategoryPreferenceService } from './CategoryPreferenceService';
 
 // Product feed services
 export { ProductFeedService } from './ProductFeedService';
+
+// Swipe action services
+export { 
+  SwipeActionService, 
+  SwipeActionHandler, 
+  getSwipeActionService, 
+  resetSwipeActionService 
+} from './SwipeActionService';

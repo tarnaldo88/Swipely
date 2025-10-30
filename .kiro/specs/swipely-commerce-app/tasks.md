@@ -78,7 +78,8 @@
     - Create product card UI with image, title, price, and action buttons
     - _Requirements: 3.1, 3.2, 3.5, 3.6_
 
-  - [-] 4.2 Implement swipe gesture handling and actions
+  - [x] 4.2 Implement swipe gesture handling and actions
+
 
 
     - Code left swipe (skip) and right swipe (like) gesture recognition
@@ -86,14 +87,17 @@
     - Add haptic feedback for gesture interactions
     - _Requirements: 3.2, 3.3, 3.4, 3.5_
 
-  - [ ] 4.3 Add cart and details buttons to product cards
+  - [x] 4.3 Add cart and details buttons to product cards
+
+
 
     - Create Add_to_Cart_Button component with tap handling
     - Implement tap-to-view-details functionality for product cards
     - Add visual indicators and loading states for button interactions
     - _Requirements: 3.6, 3.7, 6.1_
 
-  - [ ] 4.4 Write swipe interaction tests
+  - [-] 4.4 Write swipe interaction tests
+
 
     - Create tests for swipe gesture recognition and handling
     - Write tests for product card button interactions

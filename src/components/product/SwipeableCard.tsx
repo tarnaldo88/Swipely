@@ -24,6 +24,9 @@ import Animated, {
   Extrapolate,
 } from 'react-native-reanimated';
 import { ProductCard } from '../../types';
+import { getSwipeActionService } from '../../services/SwipeActionService';
+import { AddToCartButton } from './AddToCartButton';
+import { ViewDetailsButton } from './ViewDetailsButton';
 
 const { width: screenWidth } = Dimensions.get('window');
 const CARD_WIDTH = screenWidth * 0.9;
@@ -31,15 +34,17 @@ const SWIPE_THRESHOLD = screenWidth * 0.25;
 
 interface SwipeableCardProps {
   product: ProductCard;
-  onSwipeLeft: (productId: string) => void;
-  onSwipeRight: (productId: string) => void;
-  onAddToCart: (productId: string) => void;
-  onViewDetails: (productId: string) => void;
+  userId: string;
+  onSwipeLeft?: (productId: string) => void;
+  onSwipeRight?: (productId: string) => void;
+  onAddToCart?: (productId: string) => void;
+  onViewDetails?: (productId: string) => void;
   isTopCard?: boolean;
 }
 
 export const SwipeableCard: React.FC<SwipeableCardProps> = ({
   product,
+  userId,
   onSwipeLeft,
   onSwipeRight,
   onAddToCart,
@@ -51,15 +56,23 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = ({
   const scale = useSharedValue(isTopCard ? 1 : 0.95);
   const opacity = useSharedValue(isTopCard ? 1 : 0.8);
 
+  const swipeActionService = getSwipeActionService(userId);
+
   const handleSwipeComplete = useCallback(
-    (direction: 'left' | 'right') => {
-      if (direction === 'left') {
-        onSwipeLeft(product.id);
-      } else {
-        onSwipeRight(product.id);
+    async (direction: 'left' | 'right') => {
+      try {
+        if (direction === 'left') {
+          await swipeActionService.onSwipeLeft(product.id);
+          onSwipeLeft?.(product.id);
+        } else {
+          await swipeActionService.onSwipeRight(product.id);
+          onSwipeRight?.(product.id);
+        }
+      } catch (error) {
+        console.error('Error handling swipe:', error);
       }
     },
-    [product.id, onSwipeLeft, onSwipeRight]
+    [product.id, swipeActionService, onSwipeLeft, onSwipeRight]
   );
 
   const gestureHandler = useAnimatedGestureHandler<
@@ -141,13 +154,23 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = ({
     };
   });
 
-  const handleAddToCart = useCallback(() => {
-    onAddToCart(product.id);
-  }, [product.id, onAddToCart]);
+  const handleAddToCart = useCallback(async () => {
+    try {
+      await swipeActionService.onAddToCart(product.id);
+      onAddToCart?.(product.id);
+    } catch (error) {
+      console.error('Error handling add to cart:', error);
+    }
+  }, [product.id, swipeActionService, onAddToCart]);
 
-  const handleViewDetails = useCallback(() => {
-    onViewDetails(product.id);
-  }, [product.id, onViewDetails]);
+  const handleViewDetails = useCallback(async () => {
+    try {
+      await swipeActionService.onViewDetails(product.id);
+      onViewDetails?.(product.id);
+    } catch (error) {
+      console.error('Error handling view details:', error);
+    }
+  }, [product.id, swipeActionService, onViewDetails]);
 
   const primaryImage = product.imageUrls[0] || 'https://via.placeholder.com/300x400';
   const formattedPrice = `${product.currency}${product.price.toFixed(2)}`;
@@ -187,28 +210,37 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = ({
           <View style={styles.actionButtons}>
             <TouchableOpacity
               style={[styles.actionButton, styles.skipButton]}
-              onPress={() => onSwipeLeft(product.id)}
+              onPress={() => handleSwipeComplete('left')}
               activeOpacity={0.7}
             >
               <Text style={styles.skipButtonText}>Skip</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[styles.actionButton, styles.cartButton]}
+            <AddToCartButton
               onPress={handleAddToCart}
-              activeOpacity={0.7}
               disabled={!product.availability}
-            >
-              <Text style={styles.cartButtonText}>Add to Cart</Text>
-            </TouchableOpacity>
+              style={[styles.actionButton, styles.cartButton]}
+              textStyle={styles.cartButtonText}
+              title={product.availability ? 'Add to Cart' : 'Out of Stock'}
+            />
 
             <TouchableOpacity
               style={[styles.actionButton, styles.likeButton]}
-              onPress={() => onSwipeRight(product.id)}
+              onPress={() => handleSwipeComplete('right')}
               activeOpacity={0.7}
             >
               <Text style={styles.likeButtonText}>Like</Text>
             </TouchableOpacity>
+          </View>
+
+          {/* View Details Button */}
+          <View style={styles.detailsButtonContainer}>
+            <ViewDetailsButton
+              onPress={handleViewDetails}
+              style={styles.detailsButton}
+              textStyle={styles.detailsButtonText}
+              title="View Details"
+            />
           </View>
         </Pressable>
       </Animated.View>
@@ -336,5 +368,19 @@ const styles = StyleSheet.create({
     color: '#4CAF50',
     fontWeight: '600',
     fontSize: 14,
+  },
+  detailsButtonContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  detailsButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    paddingVertical: 10,
+  },
+  detailsButtonText: {
+    color: '#666666',
+    fontSize: 13,
   },
 });
