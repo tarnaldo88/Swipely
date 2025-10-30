@@ -107,8 +107,7 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
     if (retryCount < 3) {
       loadProductDetails(true);
     }
-  };$',
-
+  };
 
   const handleClose = useCallback(() => {
     translateY.value = withTiming(screenHeight, { duration: 300 });
