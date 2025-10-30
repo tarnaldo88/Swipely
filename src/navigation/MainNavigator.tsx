@@ -1,15 +1,13 @@
 import React from 'react';
+import { Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MainStackParamList, MainTabParamList } from '../types';
-import { ProductDetailsScreen } from '../screens/main/ProductDetailsScreen';
-
-// Import tab screens (these would be created in other tasks)
-// For now, we'll create placeholder components
-const FeedScreen = () => null;
-const WishlistScreen = () => null;
-const CartScreen = () => null;
-const ProfileScreen = () => null;
+import { SimpleProductDetailsScreen } from '../screens/main/SimpleProductDetailsScreen';
+import { FeedScreen } from '../screens/main/FeedScreen';
+import { WishlistScreen } from '../screens/main/WishlistScreen';
+import { CartScreen } from '../screens/main/CartScreen';
+import { ProfileScreen } from '../screens/main/ProfileScreen';
 
 const Stack = createStackNavigator<MainStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -39,8 +37,10 @@ const MainTabNavigator: React.FC = () => {
         name="Feed" 
         component={FeedScreen}
         options={{
-          tabBarLabel: 'Feed',
-          // tabBarIcon would be added here
+          tabBarLabel: 'Discover',
+          tabBarIcon: ({ focused, color }) => (
+            <Text style={{ fontSize: 20, color }}>{focused ? '🏠' : '🏡'}</Text>
+          ),
         }}
       />
       <Tab.Screen 
@@ -48,7 +48,9 @@ const MainTabNavigator: React.FC = () => {
         component={WishlistScreen}
         options={{
           tabBarLabel: 'Wishlist',
-          // tabBarIcon would be added here
+          tabBarIcon: ({ focused, color }) => (
+            <Text style={{ fontSize: 20, color }}>{focused ? '💖' : '🤍'}</Text>
+          ),
         }}
       />
       <Tab.Screen 
@@ -56,7 +58,9 @@ const MainTabNavigator: React.FC = () => {
         component={CartScreen}
         options={{
           tabBarLabel: 'Cart',
-          // tabBarIcon would be added here
+          tabBarIcon: ({ focused, color }) => (
+            <Text style={{ fontSize: 20, color }}>{focused ? '🛒' : '🛍️'}</Text>
+          ),
         }}
       />
       <Tab.Screen 
@@ -64,7 +68,9 @@ const MainTabNavigator: React.FC = () => {
         component={ProfileScreen}
         options={{
           tabBarLabel: 'Profile',
-          // tabBarIcon would be added here
+          tabBarIcon: ({ focused, color }) => (
+            <Text style={{ fontSize: 20, color }}>{focused ? '👤' : '👥'}</Text>
+          ),
         }}
       />
     </Tab.Navigator>
@@ -84,16 +90,9 @@ export const MainNavigator: React.FC = () => {
       />
       <Stack.Screen 
         name="ProductDetails" 
-        component={ProductDetailsScreen}
+        component={SimpleProductDetailsScreen}
         options={{
-          presentation: 'transparentModal',
-          cardStyle: { backgroundColor: 'transparent' },
-          cardOverlayEnabled: true,
-          cardStyleInterpolator: ({ current: { progress } }) => ({
-            cardStyle: {
-              opacity: progress,
-            },
-          }),
+          presentation: 'modal',
         }}
       />
     </Stack.Navigator>
