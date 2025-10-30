@@ -33,6 +33,7 @@ import { MainStackParamList, ProductCard, Product } from '../../types';
 import { AddToCartButton } from '../../components/product/AddToCartButton';
 import { getSwipeActionService } from '../../services/SwipeActionService';
 import { ImageGallery } from '../../components/product/ImageGallery';
+import { ProductDetailsService } from '../../services/ProductDetailsService';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -50,6 +51,8 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
   const [loading, setLoading] = useState(!initialProduct);
   const [error, setError] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(true);
+  const [retryCount, setRetryCount] = useState(0);
+  const [isRetrying, setIsRetrying] = useState(false);
 
   // Animation values for modal presentation
   const translateY = useSharedValue(screenHeight);
@@ -70,45 +73,42 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
     }
   }, []);
 
-  const loadProductDetails = async () => {
+  const loadProductDetails = async (isRetry: boolean = false) => {
     try {
-      setLoading(true);
+      if (isRetry) {
+        setIsRetrying(true);
+        setRetryCount(prev => prev + 1);
+      } else {
+        setLoading(true);
+      }
       setError(null);
       
-      // Mock API call - replace with actual service call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Use ProductDetailsService for optimized loading with caching
+      const productDetails = await ProductDetailsService.getProductDetails(productId);
+      setProduct(productDetails);
       
-      // Mock product data - in real app this would come from API
-      const mockProduct: ProductCard = {
-        id: productId,
-        title: 'Premium Wireless Headphones',
-        price: 299.99,
-        currency: '$',
-        imageUrls: [
-          'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
-          'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400&h=400&fit=crop',
-          'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=400&fit=crop',
-        ],
-        category: { id: 'electronics', name: 'Electronics' },
-        description: 'Experience premium sound quality with these wireless headphones featuring active noise cancellation, 30-hour battery life, and premium comfort design.',
-        specifications: {
-          'Battery Life': '30 hours',
-          'Connectivity': 'Bluetooth 5.0',
-          'Weight': '250g',
-          'Noise Cancellation': 'Active',
-          'Warranty': '2 years',
-        },
-        availability: true,
-      };
-      
-      setProduct(mockProduct);
+      // Reset retry count on success
+      if (isRetry) {
+        setRetryCount(0);
+      }
     } catch (err) {
-      setError('Failed to load product details');
+      const errorMessage = retryCount >= 2 
+        ? 'Unable to load product details. Please check your connection and try again.'
+        : 'Failed to load product details';
+      setError(errorMessage);
       console.error('Error loading product details:', err);
     } finally {
       setLoading(false);
+      setIsRetrying(false);
     }
   };
+
+  const handleRetry = () => {
+    if (retryCount < 3) {
+      loadProductDetails(true);
+    }
+  };$',
+
 
   const handleClose = useCallback(() => {
     translateY.value = withTiming(screenHeight, { duration: 300 });
@@ -219,14 +219,33 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
               ) : error ? (
                 <View style={styles.errorContainer}>
                   <Text style={styles.errorText}>{error}</Text>
-                  <TouchableOpacity style={styles.retryButton} onPress={loadProductDetails}>
-                    <Text style={styles.retryButtonText}>Retry</Text>
+                  <TouchableOpacity 
+                    style={[styles.retryButton, (isRetrying || retryCount >= 3) && styles.retryButtonDisabled]} 
+                    onPress={handleRetry}
+                    disabled={isRetrying || retryCount >= 3}
+                  >
+                    {isRetrying ? (
+                      <ActivityIndicator size="small" color="#FFFFFF" />
+                    ) : (
+                      <Text style={styles.retryButtonText}>
+                        {retryCount >= 3 ? 'Max retries reached' : 'Retry'}
+                      </Text>
+                    )}
                   </TouchableOpacity>
+                  {retryCount > 0 && (
+                    <Text style={styles.retryCountText}>
+                      Attempt {retryCount} of 3
+                    </Text>
+                  )}
                 </View>
               ) : product ? (
                 <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-                  {/* Image Gallery */}
-                  <ImageGallery images={product.imageUrls} />
+                  {/* Image Gallery with optimizations */}
+                  <ImageGallery 
+                    images={product.imageUrls} 
+                    enableLazyLoading={true}
+                    preloadRadius={1}
+                  />
 
                   {/* Product Information */}
                   <View style={styles.productInfo}>
@@ -384,6 +403,16 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '600',
     fontSize: 16,
+  },
+  retryButtonDisabled: {
+    backgroundColor: '#BDBDBD',
+    opacity: 0.6,
+  },
+  retryCountText: {
+    fontSize: 12,
+    color: '#666666',
+    marginTop: 8,
+    textAlign: 'center',
   },
   productInfo: {
     padding: 20,

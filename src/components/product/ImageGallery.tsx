@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import {
   View,
   Image,
@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Text,
+  ActivityIndicator,
 } from 'react-native';
 import {
   PanGestureHandler,
@@ -30,11 +31,79 @@ const SWIPE_THRESHOLD = screenWidth * 0.2;
 interface ImageGalleryProps {
   images: string[];
   height?: number;
+  enableLazyLoading?: boolean;
+  preloadRadius?: number;
 }
+
+interface OptimizedImageProps {
+  uri: string;
+  style: any;
+  resizeMode: 'cover' | 'contain' | 'stretch' | 'repeat' | 'center';
+  shouldLoad: boolean;
+}
+
+const OptimizedImage: React.FC<OptimizedImageProps> = React.memo(({ 
+  uri, 
+  style, 
+  resizeMode, 
+  shouldLoad 
+}) => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  const handleLoadStart = useCallback(() => {
+    setLoading(true);
+    setError(false);
+  }, []);
+
+  const handleLoadEnd = useCallback(() => {
+    setLoading(false);
+  }, []);
+
+  const handleError = useCallback(() => {
+    setLoading(false);
+    setError(true);
+  }, []);
+
+  if (!shouldLoad) {
+    return (
+      <View style={[style, styles.placeholderImage]}>
+        <ActivityIndicator size="small" color="#999999" />
+      </View>
+    );
+  }
+
+  return (
+    <View style={style}>
+      <Image
+        source={{ uri }}
+        style={style}
+        resizeMode={resizeMode}
+        onLoadStart={handleLoadStart}
+        onLoadEnd={handleLoadEnd}
+        onError={handleError}
+        // Enable caching
+        cache="force-cache"
+      />
+      {loading && (
+        <View style={[styles.loadingOverlay, style]}>
+          <ActivityIndicator size="small" color="#999999" />
+        </View>
+      )}
+      {error && (
+        <View style={[styles.errorOverlay, style]}>
+          <Text style={styles.errorText}>Failed to load image</Text>
+        </View>
+      )}
+    </View>
+  );
+});
 
 export const ImageGallery: React.FC<ImageGalleryProps> = ({
   images,
   height = IMAGE_HEIGHT,
+  enableLazyLoading = true,
+  preloadRadius = 1,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollViewRef = useRef<ScrollView>(null);
@@ -43,7 +112,19 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
   const translateX = useSharedValue(0);
   const scale = useSharedValue(1);
 
-  const handleIndexChange = (newIndex: number) => {
+  // Memoize which images should be loaded based on current index and preload radius
+  const shouldLoadImage = useMemo(() => {
+    if (!enableLazyLoading) {
+      return images.map(() => true);
+    }
+
+    return images.map((_, index) => {
+      const distance = Math.abs(index - currentIndex);
+      return distance <= preloadRadius;
+    });
+  }, [currentIndex, preloadRadius, enableLazyLoading, images.length]);
+
+  const handleIndexChange = useCallback((newIndex: number) => {
     if (newIndex >= 0 && newIndex < images.length) {
       setCurrentIndex(newIndex);
       scrollViewRef.current?.scrollTo({
@@ -51,7 +132,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
         animated: true,
       });
     }
-  };
+  }, [images.length]);
 
   const gestureHandler = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
@@ -92,13 +173,13 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
     };
   });
 
-  const handleScroll = (event: any) => {
+  const handleScroll = useCallback((event: any) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
     const newIndex = Math.round(contentOffsetX / screenWidth);
     if (newIndex !== currentIndex && newIndex >= 0 && newIndex < images.length) {
       setCurrentIndex(newIndex);
     }
-  };
+  }, [currentIndex, images.length]);
 
   if (!images || images.length === 0) {
     return (
@@ -124,10 +205,11 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
           >
             {images.map((imageUrl, index) => (
               <View key={index} style={[styles.imageContainer, { width: screenWidth }]}>
-                <Image
-                  source={{ uri: imageUrl }}
+                <OptimizedImage
+                  uri={imageUrl}
                   style={[styles.image, { height }]}
                   resizeMode="cover"
+                  shouldLoad={shouldLoadImage[index]}
                 />
               </View>
             ))}
@@ -270,5 +352,35 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 24,
     fontWeight: 'bold',
+  },
+  placeholderImage: {
+    backgroundColor: '#F0F0F0',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(240, 240, 240, 0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    color: '#999999',
+    fontSize: 14,
+    textAlign: 'center',
   },
 });
