@@ -10,7 +10,7 @@ import {
   Alert,
   Dimensions,
 } from 'react-native';
-import { SimpleSwipeableCard } from '../../components/product/SimpleSwipeableCard';
+import { MouseSwipeableCard } from '../../components/product/MouseSwipeableCard';
 import { ProductCard } from '../../types';
 import { ProductFeedService } from '../../services/ProductFeedService';
 
@@ -100,7 +100,7 @@ export const FeedScreen: React.FC = () => {
           },
         ]}
       >
-        <SimpleSwipeableCard
+        <MouseSwipeableCard
           product={product}
           userId={MOCK_USER_ID}
           onSwipeLeft={handleSwipeLeft}

@@ -76,30 +76,52 @@ src/
 
 ## Testing the App
 
-1. **Authentication Flow**:
+### **Authentication Flow**
 
-   - Start the app and you'll see the login screen
-   - Create a new account or use existing credentials
-   - After login, you'll be taken to the main app
+- Start the app and you'll see the login screen
+- Create a new account or use existing credentials
+- After login, you'll be taken to the main app
 
-2. **Product Discovery**:
+### **Product Discovery (Swipe Testing)**
 
-   - The "Discover" tab shows swipeable product cards
-   - Swipe left to skip products
-   - Swipe right to add to wishlist
-   - Tap "Add to Cart" to add products to cart
-   - Tap "View Details" or tap the card to see detailed product information
+#### **🖱️ Mouse/Trackpad Gestures (Emulator)**
 
-3. **Product Details**:
+- **Drag Left**: Click and drag the card to the left to skip
+- **Drag Right**: Click and drag the card to the right to like
+- **Visual Feedback**: See "SKIP" or "LIKE" overlays while dragging
+- **Threshold**: Drag at least 100px or release with velocity to trigger action
 
-   - View multiple product images with swipe navigation
-   - See detailed specifications and descriptions
-   - Use Like, Skip, or Add to Cart actions
-   - Pull down or tap X to close the modal
+#### **📱 Touch Gestures (Device)**
 
-4. **Navigation**:
-   - Use bottom tabs to navigate between sections
-   - Pull down on the Discover tab to refresh products
+- **Swipe Left**: Touch and swipe left to skip products
+- **Swipe Right**: Touch and swipe right to add to wishlist
+- **Visual Feedback**: Cards rotate and show colored overlays during swipe
+
+#### **🔘 Button Actions (Alternative)**
+
+- **Skip Button** (red): Same as swipe left
+- **Like Button** (green): Same as swipe right
+- **Add to Cart Button** (blue): Add products to cart
+- **View Details Button**: See full product information
+
+### **Product Details**
+
+- **Image Gallery**: Click and drag or swipe through multiple product images
+- **Specifications**: View detailed product information
+- **Actions**: Use Like, Skip, or Add to Cart buttons
+- **Close**: Tap X button or swipe down to close modal
+
+### **Navigation**
+
+- **Bottom Tabs**: Navigate between Discover, Wishlist, Cart, Profile
+- **Pull to Refresh**: Pull down on Discover tab to load new products
+
+### **Emulator-Specific Tips**
+
+- **Mouse Drag**: Works like touch gestures - click, hold, and drag
+- **Scroll Wheel**: Use on image galleries for quick navigation
+- **Right Click**: May show context menu (ignore for app testing)
+- **Keyboard**: Use arrow keys in some input fields
 
 ## Development
 
