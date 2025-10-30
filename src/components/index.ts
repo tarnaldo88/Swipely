@@ -1,2 +1,2 @@
 // Component exports will be added here
-export {};
+export * from './product';

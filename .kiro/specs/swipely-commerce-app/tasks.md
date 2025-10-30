@@ -68,14 +68,18 @@
 
 - [ ] 4. Build swipeable product card interface
 
-  - [ ] 4.1 Create swipeable product card component
+
+  - [x] 4.1 Create swipeable product card component
+
+
 
     - Implement SwipeableCard component with gesture recognition
     - Add visual feedback for swipe gestures with animations
     - Create product card UI with image, title, price, and action buttons
     - _Requirements: 3.1, 3.2, 3.5, 3.6_
 
-  - [ ] 4.2 Implement swipe gesture handling and actions
+  - [-] 4.2 Implement swipe gesture handling and actions
+
 
     - Code left swipe (skip) and right swipe (like) gesture recognition
     - Implement swipe action recording and state management

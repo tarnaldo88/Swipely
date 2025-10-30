@@ -1,2 +1,2 @@
 // Product-related component exports
-export {};
+export { SwipeableCard } from './SwipeableCard';
