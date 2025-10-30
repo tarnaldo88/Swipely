@@ -78,8 +78,6 @@ const OptimizedImage: React.FC<OptimizedImageProps> = React.memo(
           onLoadStart={handleLoadStart}
           onLoadEnd={handleLoadEnd}
           onError={handleError}
-          // Enable caching
-          cache="force-cache"
         />
         {loading && (
           <View style={[styles.loadingOverlay, style]}>
