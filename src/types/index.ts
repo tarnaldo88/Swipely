@@ -17,6 +17,11 @@ export type MainTabParamList = {
   Profile: undefined;
 };
 
+export type MainStackParamList = {
+  MainTabs: undefined;
+  ProductDetails: { productId: string; product?: ProductCard };
+};
+
 // User types
 export interface User {
   id: string;

@@ -23,7 +23,9 @@ import Animated, {
   interpolate,
   Extrapolate,
 } from 'react-native-reanimated';
-import { ProductCard } from '../../types';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { ProductCard, MainStackParamList } from '../../types';
 import { getSwipeActionService } from '../../services/SwipeActionService';
 import { AddToCartButton } from './AddToCartButton';
 import { ViewDetailsButton } from './ViewDetailsButton';
@@ -31,6 +33,8 @@ import { ViewDetailsButton } from './ViewDetailsButton';
 const { width: screenWidth } = Dimensions.get('window');
 const CARD_WIDTH = screenWidth * 0.9;
 const SWIPE_THRESHOLD = screenWidth * 0.25;
+
+type SwipeableCardNavigationProp = StackNavigationProp<MainStackParamList>;
 
 interface SwipeableCardProps {
   product: ProductCard;
@@ -51,6 +55,7 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = ({
   onViewDetails,
   isTopCard = true,
 }) => {
+  const navigation = useNavigation<SwipeableCardNavigationProp>();
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const scale = useSharedValue(isTopCard ? 1 : 0.95);
@@ -166,11 +171,15 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = ({
   const handleViewDetails = useCallback(async () => {
     try {
       await swipeActionService.onViewDetails(product.id);
+      navigation.navigate('ProductDetails', { 
+        productId: product.id, 
+        product: product 
+      });
       onViewDetails?.(product.id);
     } catch (error) {
       console.error('Error handling view details:', error);
     }
-  }, [product.id, swipeActionService, onViewDetails]);
+  }, [product, swipeActionService, navigation, onViewDetails]);
 
   const primaryImage = product.imageUrls[0] || 'https://via.placeholder.com/300x400';
   const formattedPrice = `${product.currency}${product.price.toFixed(2)}`;

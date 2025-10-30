@@ -13,3 +13,4 @@ export { NavigationContainer };
 
 // Export navigators
 export { AuthNavigator } from './AuthNavigator';
+export { MainNavigator } from './MainNavigator';

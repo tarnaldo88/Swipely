@@ -68,7 +68,6 @@
 
 - [x] 4. Build swipeable product card interface
 
-
   - [x] 4.1 Create swipeable product card component
 
     - Implement SwipeableCard component with gesture recognition
@@ -98,7 +97,10 @@
 
 - [ ] 5. Implement product details and information display
 
-  - [ ] 5.1 Create product details screen and modal
+  - [-] 5.1 Create product details screen and modal
+
+
+
 
     - Build ProductDetailsScreen with comprehensive product information
     - Implement modal presentation with smooth transitions
