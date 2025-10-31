@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MainStackParamList, MainTabParamList } from '../types';
 import { SimpleProductDetailsScreen } from '../screens/main/SimpleProductDetailsScreen';
 import CategorySelectionScreen from '../screens/main/CategorySelectionScreen';
+import { SkippedProductsScreen } from '../screens/main/SkippedProductsScreen';
 import { FeedScreen } from '../screens/main/FeedScreen';
 import { WishlistScreen } from '../screens/main/WishlistScreen';
 import { CartScreen } from '../screens/main/CartScreen';
@@ -109,6 +110,13 @@ export const MainNavigator: React.FC = () => {
           headerTitleStyle: {
             fontWeight: '600',
           },
+        }}
+      />
+      <Stack.Screen 
+        name="SkippedProducts" 
+        component={SkippedProductsScreen}
+        options={{
+          headerShown: false,
         }}
       />
     </Stack.Navigator>

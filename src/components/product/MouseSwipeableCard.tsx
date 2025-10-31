@@ -211,7 +211,7 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
             <Text style={styles.productTitle} numberOfLines={2}>
               {product.title}
             </Text>
-            <Text style={styles.productPrice}>{formattedPrice}</Text>
+            <Text style={styles.productPrice}> {formattedPrice}</Text>
             <Text style={styles.productCategory}>{product.category.name}</Text>
             
             {!product.availability && (

@@ -32,6 +32,12 @@ export const LinkingConfiguration: LinkingOptions<RootStackParamList> = {
             },
           },
           CategorySelection: 'categories',
+          SkippedProducts: {
+            path: 'skipped/:category',
+            parse: {
+              category: (category: string) => category,
+            },
+          },
         },
       },
     },

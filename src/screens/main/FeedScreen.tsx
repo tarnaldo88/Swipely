@@ -9,21 +9,34 @@ import {
   ScrollView,
   Alert,
   Dimensions,
+  TouchableOpacity,
+  Modal,
+  FlatList,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { MouseSwipeableCard } from '../../components/product/MouseSwipeableCard';
-import { ProductCard } from '../../types';
+import { ProductCard, MainStackParamList } from '../../types';
 import { ProductFeedService } from '../../services/ProductFeedService';
+import { getSkippedProductsService } from '../../services/SkippedProductsService';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
+type FeedScreenNavigationProp = StackNavigationProp<MainStackParamList>;
 
 // Mock user ID - in real app this would come from auth context
 const MOCK_USER_ID = 'mock-user-123';
 
 export const FeedScreen: React.FC = () => {
+  const navigation = useNavigation<FeedScreenNavigationProp>();
   const [products, setProducts] = useState<ProductCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [showSkippedModal, setShowSkippedModal] = useState(false);
+  const [skippedCategories, setSkippedCategories] = useState<{ category: string; count: number }[]>([]);
+  
+  const skippedProductsService = getSkippedProductsService();
 
   useEffect(() => {
     loadProducts();
@@ -59,13 +72,23 @@ export const FeedScreen: React.FC = () => {
   const handleSwipeLeft = useCallback(async (productId: string) => {
     console.log('Swiped left on product:', productId);
     try {
-      await ProductFeedService.recordSwipeAction(productId, 'skip', MOCK_USER_ID);
+      // Get the product to extract its category
+      const product = products.find(p => p.id === productId);
+      const category = product?.category.id || 'general';
+      
+      // Add to skipped products and record swipe action
+      await Promise.all([
+        skippedProductsService.addSkippedProduct(productId, category),
+        ProductFeedService.recordSwipeAction(productId, 'skip', MOCK_USER_ID)
+      ]);
+      
+      console.log('Successfully added to skipped products and recorded skip action');
       setCurrentCardIndex(prev => prev + 1);
     } catch (error) {
       console.error('Error recording skip action:', error);
       setCurrentCardIndex(prev => prev + 1);
     }
-  }, []);
+  }, [products, skippedProductsService]);
 
   const handleSwipeRight = useCallback(async (productId: string) => {
     console.log('Swiped right on product:', productId);
@@ -123,7 +146,36 @@ export const FeedScreen: React.FC = () => {
 
   const handleViewDetails = useCallback((productId: string) => {
     console.log('Viewing details for product:', productId);
-  }, []);
+    const product = products.find(p => p.id === productId);
+    if (product) {
+      navigation.navigate('ProductDetails', { productId, product });
+    }
+  }, [products, navigation]);
+
+  const loadSkippedCategories = useCallback(async () => {
+    try {
+      const categories = await skippedProductsService.getAvailableCategories();
+      const categoriesWithCounts = await Promise.all(
+        categories.map(async (category) => {
+          const count = await skippedProductsService.getSkippedProductsCountByCategory(category);
+          return { category, count };
+        })
+      );
+      setSkippedCategories(categoriesWithCounts.filter(item => item.count > 0));
+    } catch (error) {
+      console.error('Error loading skipped categories:', error);
+    }
+  }, [skippedProductsService]);
+
+  const handleShowSkippedProducts = useCallback(async () => {
+    await loadSkippedCategories();
+    setShowSkippedModal(true);
+  }, [loadSkippedCategories]);
+
+  const handleNavigateToSkippedCategory = useCallback((category: string) => {
+    setShowSkippedModal(false);
+    navigation.navigate('SkippedProducts', { category });
+  }, [navigation]);
 
   const renderCard = (product: ProductCard, index: number) => {
     const isTopCard = index === currentCardIndex;
@@ -200,13 +252,23 @@ export const FeedScreen: React.FC = () => {
       
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Discover</Text>
-        <Text style={styles.headerSubtitle}>
-          {hasMoreCards 
-            ? `${products.length - currentCardIndex} products to explore`
-            : 'All caught up!'
-          }
-        </Text>
+        <View style={styles.headerContent}>
+          <View style={styles.headerLeft}>
+            <Text style={styles.headerTitle}>Discover</Text>
+            <Text style={styles.headerSubtitle}>
+              {hasMoreCards 
+                ? `${products.length - currentCardIndex} products to explore`
+                : 'All caught up!'
+              }
+            </Text>
+          </View>
+          <TouchableOpacity 
+            style={styles.skippedButton} 
+            onPress={handleShowSkippedProducts}
+          >
+            <Text style={styles.skippedButtonText}>↻</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Cards Container */}
@@ -246,6 +308,59 @@ export const FeedScreen: React.FC = () => {
           <Text style={styles.refreshHintText}>Pull down to refresh</Text>
         </View>
       </ScrollView>
+
+      {/* Skipped Products Modal */}
+      <Modal
+        visible={showSkippedModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowSkippedModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Review Skipped Products</Text>
+              <TouchableOpacity 
+                style={styles.modalCloseButton}
+                onPress={() => setShowSkippedModal(false)}
+              >
+                <Text style={styles.modalCloseButtonText}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            
+            {skippedCategories.length === 0 ? (
+              <View style={styles.modalEmptyContainer}>
+                <Text style={styles.modalEmptyText}>No skipped products yet</Text>
+                <Text style={styles.modalEmptySubtext}>
+                  Products you skip will appear here organized by category
+                </Text>
+              </View>
+            ) : (
+              <FlatList
+                data={skippedCategories}
+                keyExtractor={(item) => item.category}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.categoryItem}
+                    onPress={() => handleNavigateToSkippedCategory(item.category)}
+                  >
+                    <View style={styles.categoryInfo}>
+                      <Text style={styles.categoryName}>
+                        {item.category.charAt(0).toUpperCase() + item.category.slice(1)}
+                      </Text>
+                      <Text style={styles.categoryCount}>
+                        {item.count} skipped product{item.count !== 1 ? 's' : ''}
+                      </Text>
+                    </View>
+                    <Text style={styles.categoryChevron}>›</Text>
+                  </TouchableOpacity>
+                )}
+                style={styles.categoriesList}
+              />
+            )}
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -260,7 +375,15 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: '#221e27',
     borderBottomWidth: 1,
-    
+    borderBottomColor: '#333',
+  },
+  headerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerLeft: {
+    flex: 1,
   },
   headerTitle: {
     fontSize: 28,
@@ -271,6 +394,20 @@ const styles = StyleSheet.create({
   headerSubtitle: {
     fontSize: 16,
     color: '#d7dce0ff',
+  },
+  skippedButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#08f88c',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 16,
+  },
+  skippedButtonText: {
+    fontSize: 20,
+    color: '#221e27',
+    fontWeight: 'bold',
   },
   cardsContainer: {
     flex: 1,
@@ -355,5 +492,92 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
+  },
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    maxHeight: '70%',
+    minHeight: 300,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E9ECEF',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#212529',
+  },
+  modalCloseButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#F8F9FA',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalCloseButtonText: {
+    fontSize: 16,
+    color: '#6C757D',
+    fontWeight: 'bold',
+  },
+  modalEmptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  modalEmptyText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#212529',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  modalEmptySubtext: {
+    fontSize: 14,
+    color: '#6C757D',
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  categoriesList: {
+    flex: 1,
+  },
+  categoryItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F8F9FA',
+  },
+  categoryInfo: {
+    flex: 1,
+  },
+  categoryName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#212529',
+    marginBottom: 4,
+  },
+  categoryCount: {
+    fontSize: 14,
+    color: '#6C757D',
+  },
+  categoryChevron: {
+    fontSize: 20,
+    color: '#6C757D',
   },
 });

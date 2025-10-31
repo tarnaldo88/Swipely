@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
   },
   viewModeButtonText: {
     fontSize: 16,
-    color: '#495057',
+    color: '#d3d9dfff',
   },
   listContainer: {
     paddingVertical: 8,
@@ -288,13 +288,13 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 24,
     fontWeight: '600',
-    color: '#212529',
+    color: '#f4faffff',
     marginBottom: 12,
     textAlign: 'center',
   },
   emptyDescription: {
     fontSize: 16,
-    color: '#6C757D',
+    color: '#d9e0e6ff',
     textAlign: 'center',
     lineHeight: 24,
   },
