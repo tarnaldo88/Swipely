@@ -197,6 +197,7 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
             
             {/* Swipe Overlays */}
             <Animated.View style={[styles.overlay, styles.likeOverlay, { opacity: likeOpacity }]}>
+              <Image source={require('../../../assets/SwipelyBag.png')} style={styles.logo} />
               <Text style={styles.overlayText}>LIKE</Text>
             </Animated.View>
             
@@ -270,6 +271,12 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
 };
 
 const styles = StyleSheet.create({
+    logo: {
+    width: 408,
+    height: 204,
+    marginBottom: 20,
+    resizeMode: 'contain',
+  },
   cardContainer: {
     alignSelf: 'center',
   },
