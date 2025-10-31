@@ -173,7 +173,7 @@ const CategorySelectionScreen: React.FC<CategorySelectionScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#230234',
   },
   loadingContainer: {
     flex: 1,
@@ -191,12 +191,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#dddcdcff',
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: '#b1b0b0ff',
     lineHeight: 22,
   },
   categoryList: {
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
   },
   categoryItem: {
     flex: 0.48,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#05cb72',
     borderRadius: 12,
     padding: 16,
     marginVertical: 6,
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#333',
+    color: '#fff',
     flex: 1,
   },
   categoryTextSelected: {
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   saveButton: {
-    backgroundColor: '#2196f3',
+    backgroundColor: '#05cb72',
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
