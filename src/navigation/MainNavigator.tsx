@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MainStackParamList, MainTabParamList } from '../types';
 import { SimpleProductDetailsScreen } from '../screens/main/SimpleProductDetailsScreen';
+import CategorySelectionScreen from '../screens/main/CategorySelectionScreen';
 import { FeedScreen } from '../screens/main/FeedScreen';
 import { WishlistScreen } from '../screens/main/WishlistScreen';
 import { CartScreen } from '../screens/main/CartScreen';
@@ -93,6 +94,21 @@ export const MainNavigator: React.FC = () => {
         component={SimpleProductDetailsScreen}
         options={{
           presentation: 'modal',
+        }}
+      />
+      <Stack.Screen 
+        name="CategorySelection" 
+        component={CategorySelectionScreen}
+        options={{
+          title: 'Categories',
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: '#FFFFFF',
+          },
+          headerTintColor: '#08f88c',
+          headerTitleStyle: {
+            fontWeight: '600',
+          },
         }}
       />
     </Stack.Navigator>

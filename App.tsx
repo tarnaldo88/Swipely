@@ -1,17 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, AppState, AppStateStatus } from "react-native";
 import { Provider } from "react-redux";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { createStackNavigator } from "@react-navigation/stack";
 import { store } from "./src/store";
 import { AuthNavigator } from "./src/navigation/AuthNavigator";
 import { MainNavigator } from "./src/navigation/MainNavigator";
+import { LinkingConfiguration } from "./src/navigation/LinkingConfiguration";
+import { navigationService } from "./src/navigation/NavigationService";
 import { getAuthService, initializeAuthService } from "./src/services";
-import { User } from "./src/types";
+import { User, RootStackParamList } from "./src/types";
 
-const RootStack = createStackNavigator();
+const RootStack = createStackNavigator<RootStackParamList>();
+
+// Global navigation reference
+const navigationRef = React.createRef<NavigationContainerRef<RootStackParamList>>();
+let isNavigationReady = false;
+
+// Navigation ready handler
+const onNavigationReady = () => {
+  isNavigationReady = true;
+  navigationService.setNavigationRef(navigationRef);
+};
+
+// Navigation state change handler for analytics/logging
+const onNavigationStateChange = (state: any) => {
+  if (isNavigationReady) {
+    // Log navigation events for analytics
+    const currentRoute = navigationRef.current?.getCurrentRoute();
+    if (currentRoute) {
+      console.log('Navigation:', currentRoute.name, currentRoute.params);
+    }
+  }
+};
 
 function AppContent() {
   const [isLoading, setIsLoading] = useState(true);
@@ -61,7 +84,30 @@ function AppContent() {
         });
       }
     };
-  }, []); // Remove user dependency to prevent infinite loops
+  }, []);
+
+  // Handle app state changes for session validation
+  useEffect(() => {
+    const handleAppStateChange = async (nextAppState: AppStateStatus) => {
+      if (nextAppState === 'active' && user) {
+        try {
+          const authService = getAuthService();
+          const isValid = await authService.isSessionValid();
+          if (!isValid) {
+            // Session expired, sign out user
+            await authService.signOut();
+          }
+        } catch (error) {
+          console.error('Error validating session:', error);
+        }
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    return () => subscription?.remove();
+  }, [user]);
+
+
 
   if (isLoading) {
     return (
@@ -72,13 +118,31 @@ function AppContent() {
   }
 
   return (
-    <RootStack.Navigator screenOptions={{ headerShown: false }}>
+    <RootStack.Navigator 
+      screenOptions={{ 
+        headerShown: false,
+        animationEnabled: true,
+        gestureEnabled: false, // Disable swipe back to prevent accidental navigation
+      }}
+    >
       {user ? (
         // User is authenticated - show main app
-        <RootStack.Screen name="Main" component={MainNavigator} />
+        <RootStack.Screen 
+          name="Main" 
+          component={MainNavigator}
+          options={{
+            animationTypeForReplace: isLoading ? 'pop' : 'push',
+          }}
+        />
       ) : (
         // User is not authenticated - show auth flow
-        <RootStack.Screen name="Auth" component={AuthNavigator} />
+        <RootStack.Screen 
+          name="Auth" 
+          component={AuthNavigator}
+          options={{
+            animationTypeForReplace: isLoading ? 'pop' : 'push',
+          }}
+        />
       )}
     </RootStack.Navigator>
   );
@@ -90,7 +154,12 @@ export default function App() {
   return (
     <GestureHandlerRootView style={styles.container}>
       <Provider store={store}>
-        <NavigationContainer>
+        <NavigationContainer 
+          linking={LinkingConfiguration}
+          onReady={onNavigationReady}
+          onStateChange={onNavigationStateChange}
+          ref={navigationRef}
+        >
           <AppContent />
         </NavigationContainer>
       </Provider>

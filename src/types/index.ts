@@ -20,6 +20,7 @@ export type MainTabParamList = {
 export type MainStackParamList = {
   MainTabs: undefined;
   ProductDetails: { productId: string; product?: ProductCard };
+  CategorySelection: { isInitialSetup?: boolean };
 };
 
 // User types
