@@ -204,7 +204,7 @@ export const CartScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: '#221e27',
   },
   loadingContainer: {
     flex: 1,
@@ -221,18 +221,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#221e27',
     borderBottomWidth: 1,
-    borderBottomColor: '#E9ECEF',
+    borderBottomColor: '#221e27',
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#212529',
+    color: '#f8fcffff',
   },
   itemCount: {
     fontSize: 14,
-    color: '#6C757D',
+    color: '#f5faffff',
   },
   listContainer: {
     paddingVertical: 8,
@@ -249,13 +249,13 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 24,
     fontWeight: '600',
-    color: '#212529',
+    color: '#f0f7ffff',
     marginBottom: 12,
     textAlign: 'center',
   },
   emptyDescription: {
     fontSize: 16,
-    color: '#6C757D',
+    color: '#ebeff1ff',
     textAlign: 'center',
     lineHeight: 24,
   },
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#007BFF',
+    color: '#0bdf04ff',
     marginBottom: 8,
   },
   quantityContainer: {
@@ -341,11 +341,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   checkoutSection: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#221e27',
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderTopWidth: 1,
-    borderTopColor: '#E9ECEF',
+    borderTopColor: '#221e27',
   },
   totalContainer: {
     flexDirection: 'row',
@@ -356,15 +356,15 @@ const styles = StyleSheet.create({
   totalLabel: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#212529',
+    color: '#f1f7fdff',
   },
   totalAmount: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#007BFF',
+    color: '#0bdf04ff',
   },
   checkoutButton: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#c725f8ff',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
