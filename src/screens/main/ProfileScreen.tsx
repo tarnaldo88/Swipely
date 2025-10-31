@@ -238,7 +238,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "##2d3427",
+    backgroundColor: "#230234",
   },
   loadingContainer: {
     flex: 1,
@@ -264,14 +264,14 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: "##2d3427",
+    backgroundColor: "#47006e",
     borderBottomWidth: 1,
-    borderBottomColor: "#E9ECEF",
+    borderBottomColor: "#3a8004",
   },
   headerTitle: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#212529",
+    color: "#eff7e9",
   },
   section: {
     backgroundColor: "#FFFFFF",
