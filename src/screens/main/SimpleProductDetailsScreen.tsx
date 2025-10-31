@@ -252,7 +252,7 @@ export const SimpleProductDetailsScreen: React.FC<SimpleProductDetailsScreenProp
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#221e27',
   },
   header: {
     flexDirection: 'row',
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: '#1976D2',
+    backgroundColor: '#221e27',
   },
   closeButton: {
     width: 32,
@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
   },
   retryCountText: {
     fontSize: 12,
-    color: '#666666',
+    color: '#b6b5b5ff',
     marginTop: 8,
     textAlign: 'center',
   },
@@ -337,19 +337,19 @@ const styles = StyleSheet.create({
   productTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333333',
+    color: '#f3ededff',
     marginBottom: 8,
     lineHeight: 32,
   },
   productPrice: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#2E7D32',
+    color: '#1fa726ff',
     marginBottom: 8,
   },
   productCategory: {
     fontSize: 16,
-    color: '#666666',
+    color: '#afaeaeff',
     marginBottom: 16,
     textTransform: 'capitalize',
   },
@@ -363,13 +363,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333333',
+    color: '#f7f1f1ff',
     marginTop: 24,
     marginBottom: 12,
   },
   productDescription: {
     fontSize: 16,
-    color: '#666666',
+    color: '#f5ebebff',
     lineHeight: 24,
     marginBottom: 16,
   },
@@ -420,15 +420,15 @@ const styles = StyleSheet.create({
   skipButton: {
     backgroundColor: '#FFEBEE',
     borderWidth: 1,
-    borderColor: '#F44336',
+    borderColor: '#c725f8ff',
   },
   skipButtonText: {
-    color: '#F44336',
+    color: '#b91decff',
     fontWeight: '600',
     fontSize: 16,
   },
   cartButton: {
-    backgroundColor: '#1976D2',
+    backgroundColor: '#08f88c',
   },
   cartButtonText: {
     color: '#FFFFFF',
@@ -436,12 +436,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   likeButton: {
-    backgroundColor: '#E8F5E8',
+    backgroundColor: '#c725f8ff',
     borderWidth: 1,
     borderColor: '#4CAF50',
   },
   likeButtonText: {
-    color: '#4CAF50',
+    color: '#f1fcf1ff',
     fontWeight: '600',
     fontSize: 16,
   },

@@ -407,7 +407,7 @@ const styles = StyleSheet.create({
   detailsButton: {
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: '#21fa50ff',
+    borderColor: '#21fa501c',
     paddingVertical: 10,
   },
   detailsButtonText: {
