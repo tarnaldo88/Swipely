@@ -236,24 +236,24 @@ export const FeedScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: '#221e27',
   },
   header: {
     paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#FFFFFF',
+    paddingVertical: 10,
+    backgroundColor: '#221e27',
     borderBottomWidth: 1,
-    borderBottomColor: '#E9ECEF',
+    
   },
   headerTitle: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#212529',
+    color: '#e1ecf8ff',
     marginBottom: 4,
   },
   headerSubtitle: {
     fontSize: 16,
-    color: '#6C757D',
+    color: '#d7dce0ff',
   },
   cardsContainer: {
     flex: 1,
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 18,
-    color: '#6C757D',
+    color: '#d6e4d8ff',
     textAlign: 'center',
   },
   emptyContainer: {
@@ -283,13 +283,13 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#212529',
+    color: '#d8dfe7ff',
     marginBottom: 12,
     textAlign: 'center',
   },
   emptySubtitle: {
     fontSize: 16,
-    color: '#6C757D',
+    color: '#a9b1b8ff',
     textAlign: 'center',
     lineHeight: 24,
   },
@@ -304,13 +304,13 @@ const styles = StyleSheet.create({
   allDoneSubtitle: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#212529',
+    color: '#d5dee7ff',
     marginBottom: 8,
     textAlign: 'center',
   },
   allDoneAction: {
     fontSize: 16,
-    color: '#6C757D',
+    color: '#a1b1c0ff',
     textAlign: 'center',
   },
   refreshScrollView: {

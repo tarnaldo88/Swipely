@@ -278,6 +278,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   cardContainer: {
+    paddingTop:30,
     alignSelf: 'center',  
   },
   card: {
