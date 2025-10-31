@@ -271,18 +271,18 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
 };
 
 const styles = StyleSheet.create({
-    logo: {
+  logo: {
     width: 408,
     height: 204,
     marginBottom: 20,
     resizeMode: 'contain',
   },
   cardContainer: {
-    alignSelf: 'center',
+    alignSelf: 'center',  
   },
   card: {
     width: CARD_WIDTH,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#221e27',
     borderRadius: 16,
     shadowColor: '#000',
     shadowOffset: {
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
   productTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333333',
+    color: '#e7e7e7ff',
     marginBottom: 8,
     lineHeight: 24,
   },
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
   },
   productCategory: {
     fontSize: 14,
-    color: '#666666',
+    color: '#cececeff',
     marginBottom: 8,
   },
   outOfStock: {
@@ -372,17 +372,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   skipButton: {
-    backgroundColor: '#FFEBEE',
+    backgroundColor:'#fff',
+    borderColor: '#c725f8ff',
     borderWidth: 1,
-    borderColor: '#F44336',
   },
   skipButtonText: {
-    color: '#F44336',
+    color: '#b91decff',
     fontWeight: '600',
     fontSize: 14,
   },
   cartButton: {
-    backgroundColor: '#1976D2',
+    backgroundColor: '#08f88c',
   },
   cartButtonText: {
     color: '#FFFFFF',
@@ -390,12 +390,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   likeButton: {
-    backgroundColor: '#E8F5E8',
+    backgroundColor: '#c725f8ff',
     borderWidth: 1,
-    borderColor: '#4CAF50',
+    borderColor: '#2bee31ff',
   },
   likeButtonText: {
-    color: '#4CAF50',
+    color: '#f1fcf1ff',
     fontWeight: '600',
     fontSize: 14,
   },
@@ -406,11 +406,11 @@ const styles = StyleSheet.create({
   detailsButton: {
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: '#21fa50ff',
     paddingVertical: 10,
   },
   detailsButtonText: {
-    color: '#666666',
+    color: '#bbb8b8ff',
     fontSize: 13,
   },
   instructionsContainer: {
