@@ -99,7 +99,7 @@ export interface ProductCard {
 export interface SwipeAction {
   userId: string;
   productId: string;
-  action: 'like' | 'skip';
+  action: "like" | "skip";
   timestamp: Date;
   sessionId: string;
 }
@@ -116,7 +116,7 @@ export interface LoginCredentials {
   email?: string;
   phone?: string;
   password: string;
-  provider?: 'email' | 'phone' | 'google' | 'facebook' | 'apple';
+  provider?: "email" | "phone" | "google" | "facebook" | "apple";
 }
 
 export interface SignUpData extends LoginCredentials {
@@ -175,5 +175,8 @@ export interface SwipeActionResponse {
 }
 
 // Re-export authentication service types for convenience
-export type { AuthenticationService, SessionStorage } from '../services/AuthenticationService';
-export { AuthError, AuthErrorType } from '../services/AuthenticationService';
+export type {
+  AuthenticationService,
+  SessionStorage,
+} from "../services/AuthenticationService";
+export { AuthError, AuthErrorType } from "../services/AuthenticationService";

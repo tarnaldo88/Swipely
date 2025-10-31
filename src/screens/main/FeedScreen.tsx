@@ -40,7 +40,20 @@ export const FeedScreen: React.FC = () => {
 
   useEffect(() => {
     loadProducts();
+    // Add some test skipped products for development
+    addTestSkippedProducts();
   }, []);
+
+  const addTestSkippedProducts = async () => {
+    try {
+      await skippedProductsService.addSkippedProduct('prod-1', 'electronics');
+      await skippedProductsService.addSkippedProduct('prod-2', 'fashion');
+      await skippedProductsService.addSkippedProduct('prod-3', 'electronics');
+      console.log('Added test skipped products');
+    } catch (error) {
+      console.error('Error adding test skipped products:', error);
+    }
+  };
 
   const loadProducts = async () => {
     try {
@@ -168,8 +181,15 @@ export const FeedScreen: React.FC = () => {
   }, [skippedProductsService]);
 
   const handleShowSkippedProducts = useCallback(async () => {
-    await loadSkippedCategories();
-    setShowSkippedModal(true);
+    console.log('Skipped products button pressed');
+    try {
+      await loadSkippedCategories();
+      console.log('Loaded skipped categories:', skippedCategories.length);
+      setShowSkippedModal(true);
+      console.log('Modal should be visible now');
+    } catch (error) {
+      console.error('Error showing skipped products:', error);
+    }
   }, [loadSkippedCategories]);
 
   const handleNavigateToSkippedCategory = useCallback((category: string) => {
@@ -183,7 +203,7 @@ export const FeedScreen: React.FC = () => {
     
     if (!isVisible) return null;
 
-    const zIndex = products.length - index;
+    const zIndex = Math.min(products.length - index, 100); // Cap z-index to stay below header
     const scale = isTopCard ? 1 : 0.95 - (index - currentCardIndex) * 0.02;
     const translateY = (index - currentCardIndex) * 8;
 
@@ -217,7 +237,7 @@ export const FeedScreen: React.FC = () => {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+        <StatusBar barStyle="light-content" backgroundColor="#221e27" />
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>Loading your personalized feed...</Text>
         </View>
@@ -228,7 +248,7 @@ export const FeedScreen: React.FC = () => {
   if (products.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+        <StatusBar barStyle="light-content" backgroundColor="#221e27" />
         <ScrollView
           contentContainerStyle={styles.emptyContainer}
           refreshControl={
@@ -248,7 +268,7 @@ export const FeedScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar barStyle="light-content" backgroundColor="#221e27" />
       
       {/* Header */}
       <View style={styles.header}>
@@ -265,8 +285,10 @@ export const FeedScreen: React.FC = () => {
           <TouchableOpacity 
             style={styles.skippedButton} 
             onPress={handleShowSkippedProducts}
+            activeOpacity={0.7}
           >
-            <Text style={styles.skippedButtonText}>↻</Text>
+            <Text style={styles.skippedButtonIcon}>↻</Text>
+            <Text style={styles.skippedButtonText}>View Skipped</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -303,8 +325,9 @@ export const FeedScreen: React.FC = () => {
           />
         }
         showsVerticalScrollIndicator={false}
+        pointerEvents="none"
       >
-        <View style={styles.refreshHint}>
+        <View style={[styles.refreshHint, { pointerEvents: 'auto' }]}>
           <Text style={styles.refreshHintText}>Pull down to refresh</Text>
         </View>
       </ScrollView>
@@ -314,7 +337,11 @@ export const FeedScreen: React.FC = () => {
         visible={showSkippedModal}
         transparent={true}
         animationType="slide"
-        onRequestClose={() => setShowSkippedModal(false)}
+        onRequestClose={() => {
+          console.log('Modal close requested');
+          setShowSkippedModal(false);
+        }}
+        onShow={() => console.log('Modal is now visible')}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
@@ -376,6 +403,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#221e27',
     borderBottomWidth: 1,
     borderBottomColor: '#333',
+    zIndex: 1000,
+    elevation: 10,
+    position: 'relative',
   },
   headerContent: {
     flexDirection: 'row',
@@ -385,6 +415,7 @@ const styles = StyleSheet.create({
   headerLeft: {
     flex: 1,
   },
+
   headerTitle: {
     fontSize: 28,
     fontWeight: 'bold',
@@ -395,19 +426,33 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#d7dce0ff',
   },
+
   skippedButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#08f88c',
-    justifyContent: 'center',
+    flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 16,
+    backgroundColor: '#08f88c',
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
-  skippedButtonText: {
-    fontSize: 20,
+  skippedButtonIcon: {
+    fontSize: 16,
     color: '#221e27',
     fontWeight: 'bold',
+    marginRight: 6,
+  },
+  skippedButtonText: {
+    fontSize: 12,
+    color: '#221e27',
+    fontWeight: '600',
   },
   cardsContainer: {
     flex: 1,
