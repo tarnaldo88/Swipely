@@ -130,71 +130,28 @@ export class ProductDetailsService {
    * Mock API call to fetch product details
    */
   private static async fetchProductFromAPI(productId: string): Promise<ProductCard> {
-    // Mock enhanced product data with more details
-    const mockProducts: { [key: string]: ProductCard } = {
-      'prod-1': {
-        id: 'prod-1',
-        title: 'Premium Wireless Bluetooth Headphones',
-        price: 299.99,
-        currency: 'USD',
-        imageUrls: [
-          'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
-          'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400&h=400&fit=crop',
-          'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=400&fit=crop',
-        ],
-        category: { id: 'electronics', name: 'Electronics' },
-        description: 'Experience premium sound quality with these wireless headphones featuring active noise cancellation, 30-hour battery life, and premium comfort design. Perfect for music lovers and professionals who demand the best audio experience.',
-        specifications: {
-          'Battery Life': '30 hours',
-          'Connectivity': 'Bluetooth 5.0',
-          'Weight': '250g',
-          'Noise Cancellation': 'Active',
-          'Warranty': '2 years',
-          'Driver Size': '40mm',
-          'Frequency Response': '20Hz - 20kHz',
-          'Charging Time': '2 hours',
-        },
-        availability: true,
-      },
-      'prod-2': {
-        id: 'prod-2',
-        title: 'Cotton Summer Dress',
-        price: 49.99,
-        currency: 'USD',
-        imageUrls: [
-          'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop',
-          'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=400&fit=crop',
-        ],
-        category: { id: 'fashion', name: 'Fashion' },
-        description: 'Comfortable cotton dress perfect for summer days. Made from 100% organic cotton with a flattering fit that works for any occasion.',
-        specifications: {
-          'Material': '100% Organic Cotton',
-          'Sizes Available': 'XS, S, M, L, XL',
-          'Care Instructions': 'Machine wash cold',
-          'Origin': 'Made in USA',
-          'Fit': 'Regular',
-        },
-        availability: true,
-      },
-    };
-
-    const product = mockProducts[productId];
-    if (!product) {
-      // Generate a default product if not found in mock data
-      return {
-        id: productId,
-        title: 'Product Details',
-        price: 99.99,
-        currency: 'USD',
-        imageUrls: ['https://via.placeholder.com/400x400'],
-        category: { id: 'general', name: 'General' },
-        description: 'Product details are being loaded...',
-        specifications: {},
-        availability: true,
-      };
+    // Import ProductFeedService to get product data
+    const { ProductFeedService } = require('./ProductFeedService');
+    
+    // Try to get product from the main product feed
+    const product = ProductFeedService.getProductById(productId);
+    
+    if (product) {
+      return product;
     }
 
-    return product;
+    // Generate a default product if not found in mock data
+    return {
+      id: productId,
+      title: 'Product Unavailable',
+      price: 0,
+      currency: 'USD',
+      imageUrls: ['https://via.placeholder.com/400x400?text=Product+Unavailable'],
+      category: { id: 'general', name: 'General' },
+      description: 'This product is currently unavailable.',
+      specifications: {},
+      availability: false,
+    };
   }
 
   /**

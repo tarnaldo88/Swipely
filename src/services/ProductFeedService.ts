@@ -24,7 +24,7 @@ const MOCK_PRODUCTS: ProductCard[] = [
     id: 'prod-1',
     title: 'Premium Wireless Headphones',
     price: 299.99,
-    currency: '$',
+    currency: 'USD',
     imageUrls: [
       'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
       'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400&h=400&fit=crop',
@@ -45,7 +45,7 @@ const MOCK_PRODUCTS: ProductCard[] = [
     id: 'prod-2',
     title: 'Elegant Summer Dress',
     price: 89.99,
-    currency: '$',
+    currency: 'USD',
     imageUrls: [
       'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop',
       'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=400&fit=crop',
@@ -64,7 +64,7 @@ const MOCK_PRODUCTS: ProductCard[] = [
     id: 'prod-3',
     title: 'Smart Security Camera',
     price: 179.99,
-    currency: '$',
+    currency: 'USD',
     imageUrls: [
       'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop',
       'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=400&h=400&fit=crop',
@@ -84,7 +84,7 @@ const MOCK_PRODUCTS: ProductCard[] = [
     id: 'prod-4',
     title: 'Premium Yoga Mat',
     price: 59.99,
-    currency: '$',
+    currency: 'USD',
     imageUrls: [
       'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=400&fit=crop',
     ],
@@ -103,7 +103,7 @@ const MOCK_PRODUCTS: ProductCard[] = [
     id: 'prod-5',
     title: 'Artisan Coffee Beans',
     price: 24.99,
-    currency: '$',
+    currency: 'USD',
     imageUrls: [
       'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&h=400&fit=crop',
       'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=400&h=400&fit=crop',
@@ -123,7 +123,7 @@ const MOCK_PRODUCTS: ProductCard[] = [
     id: 'prod-6',
     title: 'Luxury Skincare Set',
     price: 149.99,
-    currency: '$',
+    currency: 'USD',
     imageUrls: [
       'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&h=400&fit=crop',
     ],
@@ -142,7 +142,7 @@ const MOCK_PRODUCTS: ProductCard[] = [
     id: 'prod-7',
     title: 'Minimalist Watch',
     price: 199.99,
-    currency: '$',
+    currency: 'USD',
     imageUrls: [
       'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop',
       'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=400&h=400&fit=crop',
@@ -162,7 +162,7 @@ const MOCK_PRODUCTS: ProductCard[] = [
     id: 'prod-8',
     title: 'Wireless Charging Pad',
     price: 39.99,
-    currency: '$',
+    currency: 'USD',
     imageUrls: [
       'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400&h=400&fit=crop',
     ],
@@ -177,11 +177,163 @@ const MOCK_PRODUCTS: ProductCard[] = [
     },
     availability: true,
   },
+  {
+    id: 'prod-9',
+    title: 'Gaming Mechanical Keyboard',
+    price: 159.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'electronics', name: 'Electronics' },
+    description: 'RGB backlit mechanical gaming keyboard with tactile switches and programmable keys.',
+    specifications: { 
+      'Switch Type': 'Cherry MX Blue', 
+      'Backlight': 'RGB', 
+      'Connectivity': 'USB-C',
+      'Key Layout': 'Full Size',
+      'Programmable': 'Yes'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-10',
+    title: 'Leather Crossbody Bag',
+    price: 129.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'fashion', name: 'Fashion' },
+    description: 'Handcrafted genuine leather crossbody bag with adjustable strap and multiple compartments.',
+    specifications: { 
+      'Material': 'Genuine Leather', 
+      'Dimensions': '10" x 8" x 3"', 
+      'Strap': 'Adjustable',
+      'Compartments': '3',
+      'Hardware': 'Antique Brass'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-11',
+    title: 'Smart Fitness Tracker',
+    price: 199.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1544117519-31a4b719223d?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'electronics', name: 'Electronics' },
+    description: 'Advanced fitness tracker with heart rate monitoring, GPS, and 7-day battery life.',
+    specifications: { 
+      'Battery Life': '7 days', 
+      'Water Resistance': '50m', 
+      'GPS': 'Built-in',
+      'Heart Rate': 'Continuous',
+      'Display': 'AMOLED'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-12',
+    title: 'Organic Green Tea Set',
+    price: 34.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'food', name: 'Food & Beverages' },
+    description: 'Premium organic green tea collection with 6 different varieties from around the world.',
+    specifications: { 
+      'Varieties': '6 types', 
+      'Weight': '2 oz each', 
+      'Organic': 'Certified',
+      'Origin': 'Multiple Countries',
+      'Packaging': 'Resealable Tins'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-13',
+    title: 'Bluetooth Speaker',
+    price: 79.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1545454675-3531b543be5d?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'electronics', name: 'Electronics' },
+    description: 'Portable Bluetooth speaker with 360-degree sound and waterproof design.',
+    specifications: { 
+      'Battery Life': '12 hours', 
+      'Water Rating': 'IPX7', 
+      'Connectivity': 'Bluetooth 5.0',
+      'Range': '30 feet',
+      'Weight': '1.2 lbs'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-14',
+    title: 'Silk Scarf',
+    price: 69.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'fashion', name: 'Fashion' },
+    description: 'Luxurious 100% silk scarf with hand-painted floral design.',
+    specifications: { 
+      'Material': '100% Mulberry Silk', 
+      'Size': '35" x 35"', 
+      'Design': 'Hand-painted',
+      'Care': 'Dry Clean Only',
+      'Origin': 'Italy'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-15',
+    title: 'Essential Oil Diffuser',
+    price: 49.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'beauty', name: 'Beauty & Personal Care' },
+    description: 'Ultrasonic essential oil diffuser with LED lights and timer settings.',
+    specifications: { 
+      'Capacity': '300ml', 
+      'Runtime': '10 hours', 
+      'LED Lights': '7 colors',
+      'Timer': '1/3/6 hours',
+      'Coverage': '300 sq ft'
+    },
+    availability: true,
+  },
 ];
 
 export class ProductFeedService {
   private static swipeHistory: SwipeAction[] = [];
   private static sessionId: string = Date.now().toString();
+
+  /**
+   * Get all available products (for accessing from other services)
+   */
+  static getAllProducts(): ProductCard[] {
+    return [...MOCK_PRODUCTS];
+  }
+
+  /**
+   * Get a specific product by ID
+   */
+  static getProductById(productId: string): ProductCard | null {
+    return MOCK_PRODUCTS.find(product => product.id === productId) || null;
+  }
 
   /**
    * Fetch products based on user preferences and filters

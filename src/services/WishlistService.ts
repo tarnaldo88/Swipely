@@ -144,27 +144,36 @@ export class WishlistServiceImpl implements WishlistService {
   async getWishlistItemsWithDetails(): Promise<(WishlistItem & { product: ProductCard })[]> {
     await this.initialize();
     
-    // In a real implementation, this would fetch product details from the API
-    // For now, we'll return a mock implementation
+    // Import ProductDetailsService to get product details
+    const { ProductDetailsService } = require('./ProductDetailsService');
+    
     const itemsWithDetails = await Promise.all(
       this.wishlistItems.map(async (item) => {
-        // Mock product data - in real implementation, fetch from ProductService
-        const mockProduct: ProductCard = {
-          id: item.productId,
-          title: `Product ${item.productId}`,
-          price: 99.99,
-          currency: 'USD',
-          imageUrls: [`https://example.com/product-${item.productId}.jpg`],
-          category: { id: 'electronics', name: 'Electronics' },
-          description: `Description for product ${item.productId}`,
-          specifications: {},
-          availability: true
-        };
-
-        return {
-          ...item,
-          product: mockProduct
-        };
+        try {
+          const product = await ProductDetailsService.getProductDetails(item.productId);
+          return {
+            ...item,
+            product
+          };
+        } catch (error) {
+          console.warn(`Failed to load product details for ${item.productId}:`, error);
+          // Return a fallback product if details can't be loaded
+          const fallbackProduct: ProductCard = {
+            id: item.productId,
+            title: 'Product Unavailable',
+            price: 0,
+            currency: 'USD',
+            imageUrls: ['https://via.placeholder.com/400x400?text=Product+Unavailable'],
+            category: { id: 'general', name: 'General' },
+            description: 'This product is currently unavailable.',
+            specifications: {},
+            availability: false
+          };
+          return {
+            ...item,
+            product: fallbackProduct
+          };
+        }
       })
     );
 

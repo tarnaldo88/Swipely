@@ -56,20 +56,52 @@ export const FeedScreen: React.FC = () => {
     }
   }, []);
 
-  const handleSwipeLeft = useCallback((productId: string) => {
+  const handleSwipeLeft = useCallback(async (productId: string) => {
     console.log('Swiped left on product:', productId);
-    setCurrentCardIndex(prev => prev + 1);
+    try {
+      await ProductFeedService.recordSwipeAction(productId, 'skip', MOCK_USER_ID);
+      setCurrentCardIndex(prev => prev + 1);
+    } catch (error) {
+      console.error('Error recording skip action:', error);
+      setCurrentCardIndex(prev => prev + 1);
+    }
   }, []);
 
-  const handleSwipeRight = useCallback((productId: string) => {
+  const handleSwipeRight = useCallback(async (productId: string) => {
     console.log('Swiped right on product:', productId);
-    Alert.alert('Added to Wishlist!', 'Product has been added to your wishlist.');
-    setCurrentCardIndex(prev => prev + 1);
+    try {
+      // Import services to add to wishlist
+      const { getWishlistService } = require('../../services/WishlistService');
+      const wishlistService = getWishlistService();
+      
+      // Add to wishlist and record swipe action
+      await Promise.all([
+        wishlistService.addToWishlist(productId),
+        ProductFeedService.recordSwipeAction(productId, 'like', MOCK_USER_ID)
+      ]);
+      
+      Alert.alert('Added to Wishlist!', 'Product has been added to your wishlist.');
+      setCurrentCardIndex(prev => prev + 1);
+    } catch (error) {
+      console.error('Error adding to wishlist:', error);
+      Alert.alert('Error', 'Failed to add product to wishlist. Please try again.');
+      setCurrentCardIndex(prev => prev + 1);
+    }
   }, []);
 
-  const handleAddToCart = useCallback((productId: string) => {
+  const handleAddToCart = useCallback(async (productId: string) => {
     console.log('Added to cart:', productId);
-    Alert.alert('Added to Cart!', 'Product has been added to your cart.');
+    try {
+      // Import services to add to cart
+      const { getCartService } = require('../../services/CartService');
+      const cartService = getCartService();
+      
+      await cartService.addToCart(productId, 1);
+      Alert.alert('Added to Cart!', 'Product has been added to your cart.');
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      Alert.alert('Error', 'Failed to add product to cart. Please try again.');
+    }
   }, []);
 
   const handleViewDetails = useCallback((productId: string) => {

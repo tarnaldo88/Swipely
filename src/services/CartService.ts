@@ -1,5 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CartItem, ProductCard } from '../types';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CartItem, ProductCard } from "../types";
 
 /**
  * Cart service interface for managing shopping cart functionality
@@ -21,8 +21,8 @@ export interface CartService {
  * Requirements: 3.7, 5.3
  */
 export class CartServiceImpl implements CartService {
-  private static readonly CART_STORAGE_KEY = '@swipely_cart';
-  private static readonly SYNC_TIMESTAMP_KEY = '@swipely_cart_sync';
+  private static readonly CART_STORAGE_KEY = "@swipely_cart";
+  private static readonly SYNC_TIMESTAMP_KEY = "@swipely_cart_sync";
   private cartItems: CartItem[] = [];
   private isInitialized = false;
 
@@ -37,18 +37,20 @@ export class CartServiceImpl implements CartService {
     if (this.isInitialized) return;
 
     try {
-      const storedCart = await AsyncStorage.getItem(CartServiceImpl.CART_STORAGE_KEY);
+      const storedCart = await AsyncStorage.getItem(
+        CartServiceImpl.CART_STORAGE_KEY
+      );
       if (storedCart) {
         this.cartItems = JSON.parse(storedCart);
         // Convert date strings back to Date objects
-        this.cartItems = this.cartItems.map(item => ({
+        this.cartItems = this.cartItems.map((item) => ({
           ...item,
-          addedAt: new Date(item.addedAt)
+          addedAt: new Date(item.addedAt),
         }));
       }
       this.isInitialized = true;
     } catch (error) {
-      console.error('Failed to initialize cart service:', error);
+      console.error("Failed to initialize cart service:", error);
       this.cartItems = [];
       this.isInitialized = true;
     }
@@ -64,8 +66,8 @@ export class CartServiceImpl implements CartService {
         JSON.stringify(this.cartItems)
       );
     } catch (error) {
-      console.error('Failed to save cart to storage:', error);
-      throw new Error('Failed to save cart data');
+      console.error("Failed to save cart to storage:", error);
+      throw new Error("Failed to save cart data");
     }
   }
 
@@ -77,10 +79,12 @@ export class CartServiceImpl implements CartService {
     await this.initialize();
 
     if (quantity <= 0) {
-      throw new Error('Quantity must be greater than 0');
+      throw new Error("Quantity must be greater than 0");
     }
 
-    const existingItemIndex = this.cartItems.findIndex(item => item.productId === productId);
+    const existingItemIndex = this.cartItems.findIndex(
+      (item) => item.productId === productId
+    );
 
     if (existingItemIndex >= 0) {
       // Update existing item quantity
@@ -91,16 +95,16 @@ export class CartServiceImpl implements CartService {
         productId,
         quantity,
         addedAt: new Date(),
-        selectedVariants: {}
+        selectedVariants: {},
       };
       this.cartItems.push(newItem);
     }
 
     await this.saveToStorage();
-    
+
     // Sync with backend in background
-    this.syncWithBackend().catch(error => {
-      console.warn('Background cart sync failed:', error);
+    this.syncWithBackend().catch((error) => {
+      console.warn("Background cart sync failed:", error);
     });
   }
 
@@ -112,17 +116,19 @@ export class CartServiceImpl implements CartService {
     await this.initialize();
 
     const initialLength = this.cartItems.length;
-    this.cartItems = this.cartItems.filter(item => item.productId !== productId);
+    this.cartItems = this.cartItems.filter(
+      (item) => item.productId !== productId
+    );
 
     if (this.cartItems.length === initialLength) {
-      throw new Error('Product not found in cart');
+      throw new Error("Product not found in cart");
     }
 
     await this.saveToStorage();
-    
+
     // Sync with backend in background
-    this.syncWithBackend().catch(error => {
-      console.warn('Background cart sync failed:', error);
+    this.syncWithBackend().catch((error) => {
+      console.warn("Background cart sync failed:", error);
     });
   }
 
@@ -134,7 +140,7 @@ export class CartServiceImpl implements CartService {
     await this.initialize();
 
     if (quantity < 0) {
-      throw new Error('Quantity cannot be negative');
+      throw new Error("Quantity cannot be negative");
     }
 
     if (quantity === 0) {
@@ -142,18 +148,20 @@ export class CartServiceImpl implements CartService {
       return;
     }
 
-    const itemIndex = this.cartItems.findIndex(item => item.productId === productId);
-    
+    const itemIndex = this.cartItems.findIndex(
+      (item) => item.productId === productId
+    );
+
     if (itemIndex === -1) {
-      throw new Error('Product not found in cart');
+      throw new Error("Product not found in cart");
     }
 
     this.cartItems[itemIndex].quantity = quantity;
     await this.saveToStorage();
-    
+
     // Sync with backend in background
-    this.syncWithBackend().catch(error => {
-      console.warn('Background cart sync failed:', error);
+    this.syncWithBackend().catch((error) => {
+      console.warn("Background cart sync failed:", error);
     });
   }
 
@@ -170,30 +178,48 @@ export class CartServiceImpl implements CartService {
    * Get cart items with product details
    * Requirements: 5.3
    */
-  async getCartItemsWithDetails(): Promise<(CartItem & { product: ProductCard })[]> {
+  async getCartItemsWithDetails(): Promise<
+    (CartItem & { product: ProductCard })[]
+  > {
     await this.initialize();
-    
-    // In a real implementation, this would fetch product details from the API
-    // For now, we'll return a mock implementation
+
+    // Import ProductDetailsService to get product details
+    const { ProductDetailsService } = require("./ProductDetailsService");
+
     const itemsWithDetails = await Promise.all(
       this.cartItems.map(async (item) => {
-        // Mock product data - in real implementation, fetch from ProductService
-        const mockProduct: ProductCard = {
-          id: item.productId,
-          title: `Product ${item.productId}`,
-          price: 99.99,
-          currency: 'USD',
-          imageUrls: [`https://example.com/product-${item.productId}.jpg`],
-          category: { id: 'electronics', name: 'Electronics' },
-          description: `Description for product ${item.productId}`,
-          specifications: {},
-          availability: true
-        };
-
-        return {
-          ...item,
-          product: mockProduct
-        };
+        try {
+          const product = await ProductDetailsService.getProductDetails(
+            item.productId
+          );
+          return {
+            ...item,
+            product,
+          };
+        } catch (error) {
+          console.warn(
+            `Failed to load product details for ${item.productId}:`,
+            error
+          );
+          // Return a fallback product if details can't be loaded
+          const fallbackProduct: ProductCard = {
+            id: item.productId,
+            title: "Product Unavailable",
+            price: 0,
+            currency: "USD",
+            imageUrls: [
+              "https://via.placeholder.com/400x400?text=Product+Unavailable",
+            ],
+            category: { id: "general", name: "General" },
+            description: "This product is currently unavailable.",
+            specifications: {},
+            availability: false,
+          };
+          return {
+            ...item,
+            product: fallbackProduct,
+          };
+        }
       })
     );
 
@@ -207,10 +233,10 @@ export class CartServiceImpl implements CartService {
     await this.initialize();
     this.cartItems = [];
     await this.saveToStorage();
-    
+
     // Sync with backend in background
-    this.syncWithBackend().catch(error => {
-      console.warn('Background cart sync failed:', error);
+    this.syncWithBackend().catch((error) => {
+      console.warn("Background cart sync failed:", error);
     });
   }
 
@@ -234,11 +260,11 @@ export class CartServiceImpl implements CartService {
         CartServiceImpl.SYNC_TIMESTAMP_KEY,
         new Date().toISOString()
       );
-      
-      console.log('Cart synchronized with backend');
+
+      console.log("Cart synchronized with backend");
     } catch (error) {
-      console.error('Failed to sync cart with backend:', error);
-      throw new Error('Cart synchronization failed');
+      console.error("Failed to sync cart with backend:", error);
+      throw new Error("Cart synchronization failed");
     }
   }
 
@@ -247,10 +273,12 @@ export class CartServiceImpl implements CartService {
    */
   async getLastSyncTimestamp(): Promise<Date | null> {
     try {
-      const timestamp = await AsyncStorage.getItem(CartServiceImpl.SYNC_TIMESTAMP_KEY);
+      const timestamp = await AsyncStorage.getItem(
+        CartServiceImpl.SYNC_TIMESTAMP_KEY
+      );
       return timestamp ? new Date(timestamp) : null;
     } catch (error) {
-      console.error('Failed to get sync timestamp:', error);
+      console.error("Failed to get sync timestamp:", error);
       return null;
     }
   }
