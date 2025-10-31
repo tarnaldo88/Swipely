@@ -136,9 +136,13 @@
     - Write tests for details screen actions and data loading
     - _Requirements: 6.1, 6.2, 6.3_
 
-- [ ] 6. Build cart and wishlist management
+- [-] 6. Build cart and wishlist management
 
-  - [ ] 6.1 Implement cart service and data management
+
+
+
+  - [-] 6.1 Implement cart service and data management
+
 
     - Create CartService with add, remove, and update quantity methods
     - Implement cart data persistence using local storage

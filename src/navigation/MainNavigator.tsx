@@ -18,14 +18,14 @@ const MainTabNavigator: React.FC = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#FFFFFF',
+          backgroundColor: '#221e27',
           borderTopWidth: 1,
-          borderTopColor: '#E0E0E0',
+          borderTopColor: '#221e27',
           paddingBottom: 8,
           paddingTop: 8,
           height: 60,
         },
-        tabBarActiveTintColor: '#1976D2',
+        tabBarActiveTintColor: '#08f88c',
         tabBarInactiveTintColor: '#757575',
         tabBarLabelStyle: {
           fontSize: 12,

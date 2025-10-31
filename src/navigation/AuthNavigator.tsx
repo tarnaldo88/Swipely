@@ -13,11 +13,11 @@ export const AuthNavigator: React.FC = () => {
       initialRouteName="Login"
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#fff',
+          backgroundColor: '#221e27',
           elevation: 0,
           shadowOpacity: 0,
         },
-        headerTintColor: '#007AFF',
+        headerTintColor: '#08f88c',
         headerTitleStyle: {
           fontWeight: '600',
         },
