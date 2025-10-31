@@ -11,6 +11,7 @@ import {
   Alert,
   RefreshControl,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { getCartService, CartService } from '../../services/CartService';
 import { CartItem, ProductCard } from '../../types';
 
@@ -26,7 +27,10 @@ export const CartScreen: React.FC = () => {
 
   const loadCartItems = useCallback(async () => {
     try {
+      console.log('Loading cart items...');
       const items = await cartService.getCartItemsWithDetails();
+      console.log('Loaded cart items:', items.length);
+      console.log('Cart items:', items.map(item => ({ id: item.productId, title: item.product.title, qty: item.quantity })));
       setCartItems(items);
     } catch (error) {
       console.error('Failed to load cart items:', error);
@@ -45,6 +49,14 @@ export const CartScreen: React.FC = () => {
   useEffect(() => {
     loadCartItems();
   }, [loadCartItems]);
+
+  // Reload cart when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      console.log('CartScreen focused, reloading items...');
+      loadCartItems();
+    }, [loadCartItems])
+  );
 
   const handleUpdateQuantity = async (productId: string, newQuantity: number) => {
     try {

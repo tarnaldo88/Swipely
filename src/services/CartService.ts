@@ -27,7 +27,7 @@ export class CartServiceImpl implements CartService {
   private isInitialized = false;
 
   constructor() {
-    this.initialize();
+    // Don't call initialize here since it's async
   }
 
   /**
@@ -37,9 +37,12 @@ export class CartServiceImpl implements CartService {
     if (this.isInitialized) return;
 
     try {
+      console.log('Initializing cart service...');
       const storedCart = await AsyncStorage.getItem(
         CartServiceImpl.CART_STORAGE_KEY
       );
+      console.log('Stored cart data:', storedCart);
+      
       if (storedCart) {
         this.cartItems = JSON.parse(storedCart);
         // Convert date strings back to Date objects
@@ -47,6 +50,9 @@ export class CartServiceImpl implements CartService {
           ...item,
           addedAt: new Date(item.addedAt),
         }));
+        console.log('Loaded cart items from storage:', this.cartItems.length);
+      } else {
+        console.log('No stored cart data found');
       }
       this.isInitialized = true;
     } catch (error) {
@@ -61,10 +67,12 @@ export class CartServiceImpl implements CartService {
    */
   private async saveToStorage(): Promise<void> {
     try {
+      console.log('Saving cart to storage:', this.cartItems.length, 'items');
       await AsyncStorage.setItem(
         CartServiceImpl.CART_STORAGE_KEY,
         JSON.stringify(this.cartItems)
       );
+      console.log('Successfully saved cart to storage');
     } catch (error) {
       console.error("Failed to save cart to storage:", error);
       throw new Error("Failed to save cart data");

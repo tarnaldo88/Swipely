@@ -74,13 +74,23 @@ export const FeedScreen: React.FC = () => {
       const { getWishlistService } = require('../../services/WishlistService');
       const wishlistService = getWishlistService();
       
-      // Add to wishlist and record swipe action
-      await Promise.all([
-        wishlistService.addToWishlist(productId),
-        ProductFeedService.recordSwipeAction(productId, 'like', MOCK_USER_ID)
-      ]);
+      console.log('Adding product to wishlist:', productId);
       
-      Alert.alert('Added to Wishlist!', 'Product has been added to your wishlist.');
+      // Add to wishlist and record swipe action
+      await wishlistService.addToWishlist(productId);
+      console.log('Successfully added to wishlist');
+      
+      await ProductFeedService.recordSwipeAction(productId, 'like', MOCK_USER_ID);
+      console.log('Successfully recorded swipe action');
+      
+      // Check if it was actually added
+      const isInWishlist = await wishlistService.isInWishlist(productId);
+      console.log('Product is in wishlist:', isInWishlist);
+      
+      const wishlistCount = await wishlistService.getWishlistCount();
+      console.log('Total wishlist items:', wishlistCount);
+      
+      Alert.alert('Added to Wishlist!', `Product has been added to your wishlist. Total items: ${wishlistCount}`);
       setCurrentCardIndex(prev => prev + 1);
     } catch (error) {
       console.error('Error adding to wishlist:', error);
@@ -96,8 +106,15 @@ export const FeedScreen: React.FC = () => {
       const { getCartService } = require('../../services/CartService');
       const cartService = getCartService();
       
+      console.log('Adding product to cart:', productId);
       await cartService.addToCart(productId, 1);
-      Alert.alert('Added to Cart!', 'Product has been added to your cart.');
+      console.log('Successfully added to cart');
+      
+      // Check if it was actually added
+      const cartCount = await cartService.getCartCount();
+      console.log('Total cart items:', cartCount);
+      
+      Alert.alert('Added to Cart!', `Product has been added to your cart. Total items: ${cartCount}`);
     } catch (error) {
       console.error('Error adding to cart:', error);
       Alert.alert('Error', 'Failed to add product to cart. Please try again.');

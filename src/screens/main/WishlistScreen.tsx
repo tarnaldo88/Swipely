@@ -12,6 +12,7 @@ import {
   RefreshControl,
   Dimensions,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { getWishlistService, WishlistService, WishlistItem } from '../../services/WishlistService';
 import { getCartService, CartService } from '../../services/CartService';
 import { ProductCard } from '../../types';
@@ -33,7 +34,10 @@ export const WishlistScreen: React.FC = () => {
 
   const loadWishlistItems = useCallback(async () => {
     try {
+      console.log('Loading wishlist items...');
       const items = await wishlistService.getWishlistItemsWithDetails();
+      console.log('Loaded wishlist items:', items.length);
+      console.log('Wishlist items:', items.map(item => ({ id: item.productId, title: item.product.title })));
       setWishlistItems(items);
     } catch (error) {
       console.error('Failed to load wishlist items:', error);
@@ -52,6 +56,14 @@ export const WishlistScreen: React.FC = () => {
   useEffect(() => {
     loadWishlistItems();
   }, [loadWishlistItems]);
+
+  // Reload wishlist when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      console.log('WishlistScreen focused, reloading items...');
+      loadWishlistItems();
+    }, [loadWishlistItems])
+  );
 
   const handleRemoveFromWishlist = async (productId: string) => {
     Alert.alert(
@@ -214,7 +226,7 @@ export const WishlistScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: '#221e27',
   },
   loadingContainer: {
     flex: 1,
@@ -231,14 +243,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#221e27',
     borderBottomWidth: 1,
-    borderBottomColor: '#E9ECEF',
+    borderBottomColor: '#221e27',
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#212529',
+    color: '#f6f9fdff',
   },
   headerActions: {
     flexDirection: 'row',
@@ -246,7 +258,7 @@ const styles = StyleSheet.create({
   },
   itemCount: {
     fontSize: 14,
-    color: '#6C757D',
+    color: '#eaf0f5ff',
     marginRight: 12,
   },
   viewModeButton: {
@@ -331,7 +343,7 @@ const styles = StyleSheet.create({
   },
   addToCartButton: {
     flex: 1,
-    backgroundColor: '#007BFF',
+    backgroundColor: '#08f88c',
     borderRadius: 8,
     paddingVertical: 8,
     paddingHorizontal: 12,
@@ -393,7 +405,7 @@ const styles = StyleSheet.create({
   listItemPrice: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#007BFF',
+    color: '#00ff15ff',
     marginBottom: 4,
   },
   addedDate: {

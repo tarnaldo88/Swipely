@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -11,12 +11,12 @@ import {
   SafeAreaView,
   ActivityIndicator,
   Alert,
-} from 'react-native';
+} from "react-native";
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
   State,
-} from 'react-native-gesture-handler';
+} from "react-native-gesture-handler";
 import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
@@ -26,19 +26,25 @@ import Animated, {
   runOnJS,
   interpolate,
   Extrapolate,
-} from 'react-native-reanimated';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { MainStackParamList, ProductCard, Product } from '../../types';
-import { AddToCartButton } from '../../components/product/AddToCartButton';
-import { getSwipeActionService } from '../../services/SwipeActionService';
-import { ImageGallery } from '../../components/product/ImageGallery';
-import { ProductDetailsService } from '../../services/ProductDetailsService';
+} from "react-native-reanimated";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { MainStackParamList, ProductCard, Product } from "../../types";
+import { AddToCartButton } from "../../components/product/AddToCartButton";
+import { getSwipeActionService } from "../../services/SwipeActionService";
+import { ImageGallery } from "../../components/product/ImageGallery";
+import { ProductDetailsService } from "../../services/ProductDetailsService";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-type ProductDetailsScreenRouteProp = RouteProp<MainStackParamList, 'ProductDetails'>;
-type ProductDetailsScreenNavigationProp = StackNavigationProp<MainStackParamList, 'ProductDetails'>;
+type ProductDetailsScreenRouteProp = RouteProp<
+  MainStackParamList,
+  "ProductDetails"
+>;
+type ProductDetailsScreenNavigationProp = StackNavigationProp<
+  MainStackParamList,
+  "ProductDetails"
+>;
 
 interface ProductDetailsScreenProps {}
 
@@ -47,7 +53,9 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
   const route = useRoute<ProductDetailsScreenRouteProp>();
   const { productId, product: initialProduct } = route.params;
 
-  const [product, setProduct] = useState<ProductCard | null>(initialProduct || null);
+  const [product, setProduct] = useState<ProductCard | null>(
+    initialProduct || null
+  );
   const [loading, setLoading] = useState(!initialProduct);
   const [error, setError] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(true);
@@ -59,7 +67,7 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
   const opacity = useSharedValue(0);
 
   // Mock user ID - in real app this would come from auth context
-  const userId = 'mock-user-id';
+  const userId = "mock-user-id";
   const swipeActionService = getSwipeActionService(userId);
 
   useEffect(() => {
@@ -77,26 +85,29 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
     try {
       if (isRetry) {
         setIsRetrying(true);
-        setRetryCount(prev => prev + 1);
+        setRetryCount((prev) => prev + 1);
       } else {
         setLoading(true);
       }
       setError(null);
-      
+
       // Use ProductDetailsService for optimized loading with caching
-      const productDetails = await ProductDetailsService.getProductDetails(productId);
+      const productDetails = await ProductDetailsService.getProductDetails(
+        productId
+      );
       setProduct(productDetails);
-      
+
       // Reset retry count on success
       if (isRetry) {
         setRetryCount(0);
       }
     } catch (err) {
-      const errorMessage = retryCount >= 2 
-        ? 'Unable to load product details. Please check your connection and try again.'
-        : 'Failed to load product details';
+      const errorMessage =
+        retryCount >= 2
+          ? "Unable to load product details. Please check your connection and try again."
+          : "Failed to load product details";
       setError(errorMessage);
-      console.error('Error loading product details:', err);
+      console.error("Error loading product details:", err);
     } finally {
       setLoading(false);
       setIsRetrying(false);
@@ -142,37 +153,40 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
 
   const handleLike = useCallback(async () => {
     if (!product) return;
-    
+
     try {
       await swipeActionService.onSwipeRight(product.id);
-      Alert.alert('Added to Wishlist', 'Product has been added to your wishlist!');
+      Alert.alert(
+        "Added to Wishlist",
+        "Product has been added to your wishlist!"
+      );
     } catch (error) {
-      console.error('Error liking product:', error);
-      Alert.alert('Error', 'Failed to add product to wishlist');
+      console.error("Error liking product:", error);
+      Alert.alert("Error", "Failed to add product to wishlist");
     }
   }, [product, swipeActionService]);
 
   const handleSkip = useCallback(async () => {
     if (!product) return;
-    
+
     try {
       await swipeActionService.onSwipeLeft(product.id);
       handleClose();
     } catch (error) {
-      console.error('Error skipping product:', error);
+      console.error("Error skipping product:", error);
       handleClose();
     }
   }, [product, swipeActionService, handleClose]);
 
   const handleAddToCart = useCallback(async () => {
     if (!product) return;
-    
+
     try {
       await swipeActionService.onAddToCart(product.id);
-      Alert.alert('Added to Cart', 'Product has been added to your cart!');
+      Alert.alert("Added to Cart", "Product has been added to your cart!");
     } catch (error) {
-      console.error('Error adding to cart:', error);
-      Alert.alert('Error', 'Failed to add product to cart');
+      console.error("Error adding to cart:", error);
+      Alert.alert("Error", "Failed to add product to cart");
     }
   }, [product, swipeActionService]);
 
@@ -213,13 +227,19 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
               {loading ? (
                 <View style={styles.loadingContainer}>
                   <ActivityIndicator size="large" color="#1976D2" />
-                  <Text style={styles.loadingText}>Loading product details...</Text>
+                  <Text style={styles.loadingText}>
+                    Loading product details...
+                  </Text>
                 </View>
               ) : error ? (
                 <View style={styles.errorContainer}>
                   <Text style={styles.errorText}>{error}</Text>
-                  <TouchableOpacity 
-                    style={[styles.retryButton, (isRetrying || retryCount >= 3) && styles.retryButtonDisabled]} 
+                  <TouchableOpacity
+                    style={[
+                      styles.retryButton,
+                      (isRetrying || retryCount >= 3) &&
+                        styles.retryButtonDisabled,
+                    ]}
                     onPress={handleRetry}
                     disabled={isRetrying || retryCount >= 3}
                   >
@@ -227,7 +247,7 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
                       <ActivityIndicator size="small" color="#FFFFFF" />
                     ) : (
                       <Text style={styles.retryButtonText}>
-                        {retryCount >= 3 ? 'Max retries reached' : 'Retry'}
+                        {retryCount >= 3 ? "Max retries reached" : "Retry"}
                       </Text>
                     )}
                   </TouchableOpacity>
@@ -238,10 +258,13 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
                   )}
                 </View>
               ) : product ? (
-                <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+                <ScrollView
+                  style={styles.content}
+                  showsVerticalScrollIndicator={false}
+                >
                   {/* Image Gallery with optimizations */}
-                  <ImageGallery 
-                    images={product.imageUrls} 
+                  <ImageGallery
+                    images={product.imageUrls}
                     enableLazyLoading={true}
                     preloadRadius={1}
                   />
@@ -250,28 +273,39 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
                   <View style={styles.productInfo}>
                     <Text style={styles.productTitle}>{product.title}</Text>
                     <Text style={styles.productPrice}>
-                      {product.currency}{product.price.toFixed(2)}
+                      {product.currency}
+                      {product.price.toFixed(2)}
                     </Text>
-                    <Text style={styles.productCategory}>{product.category.name}</Text>
-                    
+                    <Text style={styles.productCategory}>
+                      {product.category.name}
+                    </Text>
+
                     {!product.availability && (
                       <Text style={styles.outOfStock}>Out of Stock</Text>
                     )}
 
                     <Text style={styles.sectionTitle}>Description</Text>
-                    <Text style={styles.productDescription}>{product.description}</Text>
+                    <Text style={styles.productDescription}>
+                      {product.description}
+                    </Text>
 
                     {/* Specifications */}
                     {Object.keys(product.specifications).length > 0 && (
                       <>
                         <Text style={styles.sectionTitle}>Specifications</Text>
                         <View style={styles.specificationsContainer}>
-                          {Object.entries(product.specifications).map(([key, value]) => (
-                            <View key={key} style={styles.specificationRow}>
-                              <Text style={styles.specificationKey}>{key}:</Text>
-                              <Text style={styles.specificationValue}>{String(value)}</Text>
-                            </View>
-                          ))}
+                          {Object.entries(product.specifications).map(
+                            ([key, value]) => (
+                              <View key={key} style={styles.specificationRow}>
+                                <Text style={styles.specificationKey}>
+                                  {key}:
+                                </Text>
+                                <Text style={styles.specificationValue}>
+                                  {String(value)}
+                                </Text>
+                              </View>
+                            )
+                          )}
                         </View>
                       </>
                     )}
@@ -295,7 +329,9 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
                     disabled={!product.availability}
                     style={[styles.actionButton, styles.cartButton]}
                     textStyle={styles.cartButtonText}
-                    title={product.availability ? 'Add to Cart' : 'Out of Stock'}
+                    title={
+                      product.availability ? "Add to Cart" : "Out of Stock"
+                    }
                   />
 
                   <TouchableOpacity
@@ -318,11 +354,11 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-end",
   },
   modalContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     maxHeight: screenHeight * 0.9,
@@ -332,199 +368,199 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
+    borderBottomColor: "#F0F0F0",
   },
   dragIndicator: {
     width: 40,
     height: 4,
-    backgroundColor: '#E0E0E0',
+    backgroundColor: "#E0E0E0",
     borderRadius: 2,
-    alignSelf: 'center',
-    position: 'absolute',
+    alignSelf: "center",
+    position: "absolute",
     top: 8,
-    left: '50%',
+    left: "50%",
     marginLeft: -20,
   },
   closeButton: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#F5F5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 'auto',
+    backgroundColor: "#F5F5F5",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: "auto",
   },
   closeButtonText: {
     fontSize: 16,
-    color: '#666666',
-    fontWeight: '600',
+    color: "#666666",
+    fontWeight: "600",
   },
   content: {
     flex: 1,
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingVertical: 40,
   },
   loadingText: {
     marginTop: 16,
     fontSize: 16,
-    color: '#666666',
+    color: "#666666",
   },
   errorContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingVertical: 40,
     paddingHorizontal: 20,
   },
   errorText: {
     fontSize: 16,
-    color: '#F44336',
-    textAlign: 'center',
+    color: "#F44336",
+    textAlign: "center",
     marginBottom: 20,
   },
   retryButton: {
-    backgroundColor: '#1976D2',
+    backgroundColor: "#1976D2",
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
   },
   retryButtonText: {
-    color: '#FFFFFF',
-    fontWeight: '600',
+    color: "#FFFFFF",
+    fontWeight: "600",
     fontSize: 16,
   },
   retryButtonDisabled: {
-    backgroundColor: '#BDBDBD',
+    backgroundColor: "#BDBDBD",
     opacity: 0.6,
   },
   retryCountText: {
     fontSize: 12,
-    color: '#666666',
+    color: "#666666",
     marginTop: 8,
-    textAlign: 'center',
+    textAlign: "center",
   },
   productInfo: {
     padding: 20,
   },
   productTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333333',
+    fontWeight: "bold",
+    color: "#333333",
     marginBottom: 8,
     lineHeight: 32,
   },
   productPrice: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#2E7D32',
+    fontWeight: "bold",
+    color: "#2E7D32",
     marginBottom: 8,
   },
   productCategory: {
     fontSize: 16,
-    color: '#666666',
+    color: "#666666",
     marginBottom: 16,
-    textTransform: 'capitalize',
+    textTransform: "capitalize",
   },
   outOfStock: {
     fontSize: 14,
-    color: '#F44336',
-    fontWeight: '600',
-    textTransform: 'uppercase',
+    color: "#F44336",
+    fontWeight: "600",
+    textTransform: "uppercase",
     marginBottom: 16,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#333333',
+    fontWeight: "600",
+    color: "#333333",
     marginTop: 24,
     marginBottom: 12,
   },
   productDescription: {
     fontSize: 16,
-    color: '#666666',
+    color: "#666666",
     lineHeight: 24,
     marginBottom: 16,
   },
   specificationsContainer: {
-    backgroundColor: '#F8F9FA',
+    backgroundColor: "#F8F9FA",
     borderRadius: 8,
     padding: 16,
     marginBottom: 20,
   },
   specificationRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#E9ECEF',
+    borderBottomColor: "#E9ECEF",
   },
   specificationKey: {
     fontSize: 14,
-    color: '#495057',
-    fontWeight: '500',
+    color: "#495057",
+    fontWeight: "500",
     flex: 1,
   },
   specificationValue: {
     fontSize: 14,
-    color: '#333333',
-    fontWeight: '400',
+    color: "#333333",
+    fontWeight: "400",
     flex: 1,
-    textAlign: 'right',
+    textAlign: "right",
   },
   actionButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 16,
     paddingBottom: 20,
     gap: 12,
     borderTopWidth: 1,
-    borderTopColor: '#F0F0F0',
+    borderTopColor: "#F0F0F0",
   },
   actionButton: {
     flex: 1,
     paddingVertical: 14,
     borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   skipButton: {
-    backgroundColor: '#FFEBEE',
+    backgroundColor: "#FFEBEE",
     borderWidth: 1,
-    borderColor: '#F44336',
+    borderColor: "#F44336",
   },
   skipButtonText: {
-    color: '#F44336',
-    fontWeight: '600',
+    color: "#F44336",
+    fontWeight: "600",
     fontSize: 16,
   },
   cartButton: {
-    backgroundColor: '#1976D2',
+    backgroundColor: "#1976D2",
   },
   cartButtonText: {
-    color: '#FFFFFF',
-    fontWeight: '600',
+    color: "#FFFFFF",
+    fontWeight: "600",
     fontSize: 16,
   },
   likeButton: {
-    backgroundColor: '#E8F5E8',
+    backgroundColor: "#E8F5E8",
     borderWidth: 1,
-    borderColor: '#4CAF50',
+    borderColor: "#4CAF50",
   },
   likeButtonText: {
-    color: '#4CAF50',
-    fontWeight: '600',
+    color: "#4CAF50",
+    fontWeight: "600",
     fontSize: 16,
   },
 });

@@ -36,7 +36,7 @@ export class WishlistServiceImpl implements WishlistService {
   private isInitialized = false;
 
   constructor() {
-    this.initialize();
+    // Don't call initialize here since it's async
   }
 
   /**
@@ -46,7 +46,10 @@ export class WishlistServiceImpl implements WishlistService {
     if (this.isInitialized) return;
 
     try {
+      console.log('Initializing wishlist service...');
       const storedWishlist = await AsyncStorage.getItem(WishlistServiceImpl.WISHLIST_STORAGE_KEY);
+      console.log('Stored wishlist data:', storedWishlist);
+      
       if (storedWishlist) {
         this.wishlistItems = JSON.parse(storedWishlist);
         // Convert date strings back to Date objects
@@ -54,6 +57,9 @@ export class WishlistServiceImpl implements WishlistService {
           ...item,
           addedAt: new Date(item.addedAt)
         }));
+        console.log('Loaded wishlist items from storage:', this.wishlistItems.length);
+      } else {
+        console.log('No stored wishlist data found');
       }
       this.isInitialized = true;
     } catch (error) {
@@ -68,10 +74,12 @@ export class WishlistServiceImpl implements WishlistService {
    */
   private async saveToStorage(): Promise<void> {
     try {
+      console.log('Saving wishlist to storage:', this.wishlistItems.length, 'items');
       await AsyncStorage.setItem(
         WishlistServiceImpl.WISHLIST_STORAGE_KEY,
         JSON.stringify(this.wishlistItems)
       );
+      console.log('Successfully saved wishlist to storage');
     } catch (error) {
       console.error('Failed to save wishlist to storage:', error);
       throw new Error('Failed to save wishlist data');
