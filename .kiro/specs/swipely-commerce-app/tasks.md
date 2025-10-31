@@ -97,13 +97,7 @@
 
 - [x] 5. Implement product details and information display
 
-
-
-
-
-
   - [x] 5.1 Create product details screen and modal
-
 
     - Build ProductDetailsScreen with comprehensive product information
     - Implement modal presentation with smooth transitions
@@ -112,16 +106,12 @@
 
   - [x] 5.2 Add product details navigation and actions
 
-
-
     - Implement navigation from product cards to details screen
     - Add Like, Skip, and Add to Cart actions within details view
     - Create return navigation to main product feed
     - _Requirements: 6.2, 6.3, 6.4_
 
   - [x] 5.3 Optimize product details loading and performance
-
-
 
     - Implement lazy loading for product details data
     - Add loading states and error handling for details screen
@@ -130,40 +120,35 @@
 
   - [x] 5.4 Write product details functionality tests
 
-
-
     - Create tests for product details screen navigation
     - Write tests for details screen actions and data loading
     - _Requirements: 6.1, 6.2, 6.3_
 
-- [-] 6. Build cart and wishlist management
+- [x] 6. Build cart and wishlist management
 
 
-
-
-  - [-] 6.1 Implement cart service and data management
-
+  - [x] 6.1 Implement cart service and data management
 
     - Create CartService with add, remove, and update quantity methods
     - Implement cart data persistence using local storage
     - Add cart synchronization with backend API
     - _Requirements: 3.7, 5.3_
 
-  - [ ] 6.2 Create wishlist service for liked products
+  - [x] 6.2 Create wishlist service for liked products
 
     - Implement WishlistService for managing liked products
     - Code persistent storage for wishlist items
     - Add wishlist synchronization across devices
     - _Requirements: 5.1, 5.2, 5.4_
 
-  - [ ] 6.3 Build cart and wishlist screens
+  - [x] 6.3 Build cart and wishlist screens
 
     - Create CartScreen with item management and checkout flow
     - Implement WishlistScreen with grid/list view of liked products
     - Add remove and modify functionality for both screens
     - _Requirements: 5.2, 5.3, 5.4_
 
-  - [ ] 6.4 Write cart and wishlist tests
+  - [x] 6.4 Write cart and wishlist tests
 
     - Create unit tests for cart and wishlist services
     - Write integration tests for cart/wishlist screen functionality
