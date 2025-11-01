@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from 'react';
+import React, { useCallback, useState, useRef } from "react";
 import {
   View,
   Text,
@@ -9,15 +9,15 @@ import {
   Pressable,
   PanResponder,
   Animated,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { ProductCard, MainStackParamList } from '../../types';
-import { getSwipeActionService } from '../../services/SwipeActionService';
-import { AddToCartButton } from './AddToCartButton';
-import { ViewDetailsButton } from './ViewDetailsButton';
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { ProductCard, MainStackParamList } from "../../types";
+import { getSwipeActionService } from "../../services/SwipeActionService";
+import { AddToCartButton } from "./AddToCartButton";
+import { ViewDetailsButton } from "./ViewDetailsButton";
 
-const { width: screenWidth } = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get("window");
 const CARD_WIDTH = screenWidth * 0.9;
 const SWIPE_THRESHOLD = 100;
 
@@ -44,16 +44,16 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
 }) => {
   const navigation = useNavigation<MouseSwipeableCardNavigationProp>();
   const swipeActionService = getSwipeActionService(userId);
-  
+
   // Animation values
   const pan = useRef(new Animated.ValueXY()).current;
   const rotate = useRef(new Animated.Value(0)).current;
   const [isDragging, setIsDragging] = useState(false);
 
   const handleSwipeComplete = useCallback(
-    async (direction: 'left' | 'right') => {
+    async (direction: "left" | "right") => {
       try {
-        if (direction === 'left') {
+        if (direction === "left") {
           await swipeActionService.onSwipeLeft(product.id);
           onSwipeLeft?.(product.id);
         } else {
@@ -61,7 +61,7 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
           onSwipeRight?.(product.id);
         }
       } catch (error) {
-        console.error('Error handling swipe:', error);
+        console.error("Error handling swipe:", error);
       }
     },
     [product.id, swipeActionService, onSwipeLeft, onSwipeRight]
@@ -80,29 +80,35 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
     ]).start();
   }, [pan, rotate]);
 
-  const animateSwipe = useCallback((direction: 'left' | 'right') => {
-    const toValue = direction === 'left' ? -screenWidth : screenWidth;
-    
-    Animated.parallel([
-      Animated.timing(pan, {
-        toValue: { x: toValue, y: -100 },
-        duration: 300,
-        useNativeDriver: false,
-      }),
-      Animated.timing(rotate, {
-        toValue: direction === 'left' ? -0.3 : 0.3,
-        duration: 300,
-        useNativeDriver: false,
-      }),
-    ]).start(() => {
-      handleSwipeComplete(direction);
-    });
-  }, [pan, rotate, handleSwipeComplete]);
+  const animateSwipe = useCallback(
+    (direction: "left" | "right") => {
+      const toValue = direction === "left" ? -screenWidth : screenWidth;
+
+      Animated.parallel([
+        Animated.timing(pan, {
+          toValue: { x: toValue, y: -100 },
+          duration: 300,
+          useNativeDriver: false,
+        }),
+        Animated.timing(rotate, {
+          toValue: direction === "left" ? -0.3 : 0.3,
+          duration: 300,
+          useNativeDriver: false,
+        }),
+      ]).start(() => {
+        handleSwipeComplete(direction);
+      });
+    },
+    [pan, rotate, handleSwipeComplete]
+  );
 
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponder: (evt, gestureState) => {
       // Only respond to horizontal swipes
-      return Math.abs(gestureState.dx) > Math.abs(gestureState.dy) && Math.abs(gestureState.dx) > 10;
+      return (
+        Math.abs(gestureState.dx) > Math.abs(gestureState.dy) &&
+        Math.abs(gestureState.dx) > 10
+      );
     },
     onPanResponderGrant: () => {
       setIsDragging(true);
@@ -125,9 +131,9 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
       const shouldSwipeRight = dx > SWIPE_THRESHOLD || vx > 0.5;
 
       if (shouldSwipeLeft) {
-        animateSwipe('left');
+        animateSwipe("left");
       } else if (shouldSwipeRight) {
-        animateSwipe('right');
+        animateSwipe("right");
       } else {
         resetPosition();
       }
@@ -139,69 +145,88 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
       await swipeActionService.onAddToCart(product.id);
       onAddToCart?.(product.id);
     } catch (error) {
-      console.error('Error handling add to cart:', error);
+      console.error("Error handling add to cart:", error);
     }
   }, [product.id, swipeActionService, onAddToCart]);
 
   const handleViewDetails = useCallback(async () => {
     if (isDragging) return; // Don't navigate while dragging
-    
+
     try {
       await swipeActionService.onViewDetails(product.id);
-      navigation.navigate('ProductDetails', { 
-        productId: product.id, 
-        product: product 
+      navigation.navigate("ProductDetails", {
+        productId: product.id,
+        product: product,
       });
       onViewDetails?.(product.id);
     } catch (error) {
-      console.error('Error handling view details:', error);
+      console.error("Error handling view details:", error);
     }
   }, [product, swipeActionService, navigation, onViewDetails, isDragging]);
 
-  const primaryImage = product.imageUrls[0] || 'https://via.placeholder.com/300x400';
+  const primaryImage =
+    product.imageUrls[0] || "https://via.placeholder.com/300x400";
   const formattedPrice = `${product.currency}${product.price.toFixed(2)}`;
 
   // Calculate overlay opacity based on pan position
   const likeOpacity = pan.x.interpolate({
     inputRange: [0, SWIPE_THRESHOLD],
     outputRange: [0, 1],
-    extrapolate: 'clamp',
+    extrapolate: "clamp",
   });
 
   const skipOpacity = pan.x.interpolate({
     inputRange: [-SWIPE_THRESHOLD, 0],
     outputRange: [1, 0],
-    extrapolate: 'clamp',
+    extrapolate: "clamp",
   });
 
   const cardStyle = {
     transform: [
       { translateX: pan.x },
       { translateY: pan.y },
-      { 
+      {
         rotate: rotate.interpolate({
           inputRange: [-0.3, 0, 0.3],
-          outputRange: ['-15deg', '0deg', '15deg'],
-        })
+          outputRange: ["-15deg", "0deg", "15deg"],
+        }),
       },
     ],
   };
 
   return (
     <View style={styles.cardContainer}>
-      <Animated.View style={[styles.card, cardStyle]} {...panResponder.panHandlers}>
+      <Animated.View
+        style={[styles.card, cardStyle]}
+        {...panResponder.panHandlers}
+      >
         <Pressable style={styles.cardContent} onPress={handleViewDetails}>
           {/* Product Image */}
           <View style={styles.imageContainer}>
             <Image source={{ uri: primaryImage }} style={styles.productImage} />
-            
+
             {/* Swipe Overlays */}
-            <Animated.View style={[styles.overlay, styles.likeOverlay, { opacity: likeOpacity }]}>
-              <Image source={require('../../../assets/SwipelyBag.png')} style={styles.logo} />
+            <Animated.View
+              style={[
+                styles.overlay,
+                styles.likeOverlay,
+                { opacity: likeOpacity },
+              ]}
+            >
+              <Image
+                source={require("../../../assets/SwipelyBag.png")}
+                style={styles.logo}
+              />
               <Text style={styles.overlayText}>LIKE</Text>
             </Animated.View>
-            
-            <Animated.View style={[styles.overlay, styles.skipOverlay, { opacity: skipOpacity }]}>
+
+            <Animated.View
+              style={[
+                styles.overlay,
+                styles.skipOverlay,
+                { opacity: skipOpacity },
+              ]}
+            >
               <Text style={styles.overlayText}>SKIP</Text>
             </Animated.View>
           </View>
@@ -213,7 +238,7 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
             </Text>
             <Text style={styles.productPrice}> {formattedPrice}</Text>
             <Text style={styles.productCategory}>{product.category.name}</Text>
-            
+
             {!product.availability && (
               <Text style={styles.outOfStock}>Out of Stock</Text>
             )}
@@ -223,7 +248,7 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
           <View style={styles.actionButtons}>
             <TouchableOpacity
               style={[styles.actionButton, styles.skipButton]}
-              onPress={() => animateSwipe('left')}
+              onPress={() => animateSwipe("left")}
               activeOpacity={0.7}
             >
               <Text style={styles.skipButtonText}>Skip</Text>
@@ -234,12 +259,12 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
               disabled={!product.availability}
               style={[styles.actionButton, styles.cartButton]}
               textStyle={styles.cartButtonText}
-              title={product.availability ? 'Add to Cart' : 'Out of Stock'}
+              title={product.availability ? "Add to Cart" : "Out of Stock"}
             />
 
             <TouchableOpacity
               style={[styles.actionButton, styles.likeButton]}
-              onPress={() => animateSwipe('right')}
+              onPress={() => animateSwipe("right")}
               activeOpacity={0.7}
             >
               <Text style={styles.likeButtonText}>Like</Text>
@@ -275,17 +300,17 @@ const styles = StyleSheet.create({
     width: 408,
     height: 204,
     marginBottom: 20,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   cardContainer: {
-    paddingTop:30,
-    alignSelf: 'center',  
+    paddingTop: 30,
+    alignSelf: "center",
   },
   card: {
     width: CARD_WIDTH,
-    backgroundColor: '#221e27',
+    backgroundColor: "#221e27",
     borderRadius: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 4,
@@ -296,38 +321,38 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     borderRadius: 16,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   imageContainer: {
-    position: 'relative',
+    position: "relative",
     height: 400,
   },
   productImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   overlay: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 16,
   },
   likeOverlay: {
-    backgroundColor: 'rgba(76, 175, 80, 0.8)',
+    backgroundColor: "rgba(76, 175, 80, 0.8)",
   },
   skipOverlay: {
-    backgroundColor: 'rgba(244, 67, 54, 0.8)',
+    backgroundColor: "rgba(244, 67, 54, 0.8)",
   },
   overlayText: {
     fontSize: 32,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    fontWeight: "bold",
+    color: "#FFFFFF",
+    textShadowColor: "rgba(0, 0, 0, 0.3)",
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
@@ -336,31 +361,31 @@ const styles = StyleSheet.create({
   },
   productTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#e7e7e7ff',
+    fontWeight: "600",
+    color: "#e7e7e7ff",
     marginBottom: 8,
     lineHeight: 24,
   },
   productPrice: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#2E7D32',
+    fontWeight: "bold",
+    color: "#2E7D32",
     marginBottom: 4,
   },
   productCategory: {
     fontSize: 14,
-    color: '#cececeff',
+    color: "#cececeff",
     marginBottom: 8,
   },
   outOfStock: {
     fontSize: 12,
-    color: '#F44336',
-    fontWeight: '500',
-    textTransform: 'uppercase',
+    color: "#F44336",
+    fontWeight: "500",
+    textTransform: "uppercase",
   },
   actionButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingBottom: 16,
     gap: 8,
@@ -369,35 +394,35 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   skipButton: {
-    backgroundColor:'#fff',
-    borderColor: '#c725f8ff',
+    backgroundColor: "#fff",
+    borderColor: "#c725f8ff",
     borderWidth: 1,
   },
   skipButtonText: {
-    color: '#b91decff',
-    fontWeight: '600',
+    color: "#b91decff",
+    fontWeight: "600",
     fontSize: 14,
   },
   cartButton: {
-    backgroundColor: '#08f88c',
+    backgroundColor: "#08f88c",
   },
   cartButtonText: {
-    color: '#FFFFFF',
-    fontWeight: '600',
+    color: "#FFFFFF",
+    fontWeight: "600",
     fontSize: 14,
   },
   likeButton: {
-    backgroundColor: '#c725f8ff',
+    backgroundColor: "#c725f8ff",
     borderWidth: 1,
-    borderColor: '#2bee31ff',
+    borderColor: "#2bee31ff",
   },
   likeButtonText: {
-    color: '#f1fcf1ff',
-    fontWeight: '600',
+    color: "#f1fcf1ff",
+    fontWeight: "600",
     fontSize: 14,
   },
   detailsButtonContainer: {
@@ -405,27 +430,27 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   detailsButton: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: '#21fa501c',
+    borderColor: "#21fa501c",
     paddingVertical: 10,
   },
   detailsButtonText: {
-    color: '#bbb8b8ff',
+    color: "#bbb8b8ff",
     fontSize: 13,
   },
   instructionsContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: -40,
     left: 0,
     right: 0,
-    alignItems: 'center',
+    alignItems: "center",
   },
   instructionsText: {
     fontSize: 12,
-    color: '#666666',
-    textAlign: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    color: "#666666",
+    textAlign: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,

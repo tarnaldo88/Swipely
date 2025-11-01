@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, Platform } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MainStackParamList, MainTabParamList } from '../types';
@@ -10,28 +10,38 @@ import { FeedScreen } from '../screens/main/FeedScreen';
 import { WishlistScreen } from '../screens/main/WishlistScreen';
 import { CartScreen } from '../screens/main/CartScreen';
 import { ProfileScreen } from '../screens/main/ProfileScreen';
+import { getIOSNavigationOptions, getIOSModalOptions, getPlatformFeatures } from '../utils/PlatformUtils';
+import { IOSStyles } from '../styles/IOSStyles';
+import { getAndroidNavigationOptions, getAndroidModalOptions, AndroidBackHandler } from '../utils/AndroidUtils';
+import { AndroidStyles, MaterialColors } from '../styles/AndroidStyles';
 
 const Stack = createStackNavigator<MainStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
 const MainTabNavigator: React.FC = () => {
+  const platformFeatures = getPlatformFeatures();
+  
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: {
-          backgroundColor: '#221e27',
-          borderTopWidth: 1,
-          borderTopColor: '#221e27',
-          paddingBottom: 8,
-          paddingTop: 8,
-          height: 60,
+        tabBarStyle: Platform.OS === 'ios' ? {
+          ...IOSStyles.tabBar,
+          backgroundColor: '#F2F2F7',
+          borderTopColor: '#C6C6C8',
+        } : {
+          ...AndroidStyles.bottomNavigation,
+          backgroundColor: MaterialColors.surface,
+          borderTopColor: MaterialColors.divider,
         },
-        tabBarActiveTintColor: '#08f88c',
-        tabBarInactiveTintColor: '#757575',
-        tabBarLabelStyle: {
+        tabBarActiveTintColor: Platform.OS === 'ios' ? '#007AFF' : MaterialColors.primary,
+        tabBarInactiveTintColor: Platform.OS === 'ios' ? '#8E8E93' : MaterialColors.textSecondary,
+        tabBarLabelStyle: Platform.OS === 'ios' ? {
+          fontSize: 10,
+          fontWeight: '400',
+        } : {
           fontSize: 12,
-          fontWeight: '600',
+          fontWeight: '500',
         },
       }}
     >
@@ -80,10 +90,17 @@ const MainTabNavigator: React.FC = () => {
 };
 
 export const MainNavigator: React.FC = () => {
+  const iosNavigationOptions = Platform.OS === 'ios' ? getIOSNavigationOptions() : {};
+  const iosModalOptions = Platform.OS === 'ios' ? getIOSModalOptions() : {};
+  const androidNavigationOptions = Platform.OS === 'android' ? getAndroidNavigationOptions() : {};
+  const androidModalOptions = Platform.OS === 'android' ? getAndroidModalOptions() : {};
+  
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+        ...(Platform.OS === 'ios' && iosNavigationOptions),
+        ...(Platform.OS === 'android' && androidNavigationOptions),
       }}
     >
       <Stack.Screen 
@@ -93,23 +110,27 @@ export const MainNavigator: React.FC = () => {
       <Stack.Screen 
         name="ProductDetails" 
         component={SimpleProductDetailsScreen}
-        options={{
-          presentation: 'modal',
+        options={Platform.OS === 'ios' ? {
+          ...iosModalOptions,
+          headerShown: true,
+          title: 'Product Details',
+        } : {
+          ...androidModalOptions,
+          headerShown: true,
+          title: 'Product Details',
         }}
       />
       <Stack.Screen 
         name="CategorySelection" 
         component={CategorySelectionScreen}
-        options={{
+        options={Platform.OS === 'ios' ? {
+          ...iosNavigationOptions,
           title: 'Categories',
           headerShown: true,
-          headerStyle: {
-            backgroundColor: '#FFFFFF',
-          },
-          headerTintColor: '#08f88c',
-          headerTitleStyle: {
-            fontWeight: '600',
-          },
+        } : {
+          ...androidNavigationOptions,
+          title: 'Categories',
+          headerShown: true,
         }}
       />
       <Stack.Screen 
