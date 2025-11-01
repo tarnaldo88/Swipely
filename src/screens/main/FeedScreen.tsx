@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import {
   View,
   Text,
@@ -19,6 +19,9 @@ import { MouseSwipeableCard } from '../../components/product/MouseSwipeableCard'
 import { ProductCard, MainStackParamList } from '../../types';
 import { ProductFeedService } from '../../services/ProductFeedService';
 import { getSkippedProductsService } from '../../services/SkippedProductsService';
+import { OptimizedFlatList } from '../../components/common/OptimizedFlatList';
+import { PerformanceMonitor, MemoryManager } from '../../utils/PerformanceUtils';
+import { useErrorHandler } from '../../hooks/useErrorHandler';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -27,7 +30,7 @@ type FeedScreenNavigationProp = StackNavigationProp<MainStackParamList>;
 // Mock user ID - in real app this would come from auth context
 const MOCK_USER_ID = 'mock-user-123';
 
-export const FeedScreen: React.FC = () => {
+export const FeedScreen: React.FC = memo(() => {
   const navigation = useNavigation<FeedScreenNavigationProp>();
   const [products, setProducts] = useState<ProductCard[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,6 +40,8 @@ export const FeedScreen: React.FC = () => {
   const [skippedCategories, setSkippedCategories] = useState<{ category: string; count: number }[]>([]);
   
   const skippedProductsService = getSkippedProductsService();
+  const { handleError, executeWithRetry } = useErrorHandler();
+  const performanceMonitor = PerformanceMonitor.getInstance();
 
   useEffect(() => {
     loadProducts();
@@ -390,7 +395,9 @@ export const FeedScreen: React.FC = () => {
       </Modal>
     </SafeAreaView>
   );
-};
+});
+
+FeedScreen.displayName = 'FeedScreen';
 
 const styles = StyleSheet.create({
   container: {

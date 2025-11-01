@@ -1,8 +1,7 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, memo } from 'react';
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
@@ -29,6 +28,9 @@ import { ProductCard, MainStackParamList } from '../../types';
 import { getSwipeActionService } from '../../services/SwipeActionService';
 import { AddToCartButton } from './AddToCartButton';
 import { ViewDetailsButton } from './ViewDetailsButton';
+import { OptimizedImage } from '../common/OptimizedImage';
+import { GesturePerformanceManager } from '../../utils/PerformanceUtils';
+import { useErrorHandler } from '../../hooks/useErrorHandler';
 
 const { width: screenWidth } = Dimensions.get('window');
 const CARD_WIDTH = screenWidth * 0.9;
@@ -46,7 +48,7 @@ interface SwipeableCardProps {
   isTopCard?: boolean;
 }
 
-export const SwipeableCard: React.FC<SwipeableCardProps> = ({
+export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
   product,
   userId,
   onSwipeLeft,
@@ -62,6 +64,7 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = ({
   const opacity = useSharedValue(isTopCard ? 1 : 0.8);
 
   const swipeActionService = getSwipeActionService(userId);
+  const { handleError } = useErrorHandler();
 
   const handleSwipeComplete = useCallback(
     async (direction: 'left' | 'right') => {
@@ -75,6 +78,11 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = ({
         }
       } catch (error) {
         console.error('Error handling swipe:', error);
+        handleError(error, {
+          productId: product.id,
+          direction,
+          component: 'SwipeableCard',
+        });
       }
     },
     [product.id, swipeActionService, onSwipeLeft, onSwipeRight]
@@ -87,6 +95,7 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = ({
     onStart: (_, context) => {
       context.startX = translateX.value;
       context.startY = translateY.value;
+      runOnJS(GesturePerformanceManager.startGestureTracking)();
     },
     onActive: (event, context) => {
       translateX.value = context.startX + event.translationX;
@@ -101,15 +110,18 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = ({
         translateY.value = withTiming(-100, { duration: 300 });
         opacity.value = withTiming(0, { duration: 300 });
         runOnJS(handleSwipeComplete)('left');
+        runOnJS(GesturePerformanceManager.endGestureTracking)('swipe-left');
       } else if (shouldSwipeRight) {
         translateX.value = withTiming(screenWidth * 1.5, { duration: 300 });
         translateY.value = withTiming(-100, { duration: 300 });
         opacity.value = withTiming(0, { duration: 300 });
         runOnJS(handleSwipeComplete)('right');
+        runOnJS(GesturePerformanceManager.endGestureTracking)('swipe-right');
       } else {
         // Snap back to center
         translateX.value = withSpring(0);
         translateY.value = withSpring(0);
+        runOnJS(GesturePerformanceManager.endGestureTracking)('swipe-cancel');
       }
     },
   });
@@ -190,11 +202,25 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = ({
         <Pressable style={styles.card} onPress={handleViewDetails}>
           {/* Product Image */}
           <View style={styles.imageContainer}>
-            <Image source={{ uri: primaryImage }} style={styles.productImage} />
+            <OptimizedImage 
+              uri={primaryImage} 
+              style={styles.productImage}
+              width={CARD_WIDTH}
+              height={400}
+              quality="high"
+              resizeMode="cover"
+            />
             
             {/* Swipe Overlays */}
             <Animated.View style={[styles.overlay, styles.likeOverlay, likeOverlayStyle]}>
-              <Image source={require('../../../assets/SwipelyBag.png')} style={styles.logo} />
+              <OptimizedImage 
+                uri={require('../../../assets/SwipelyBag.png')} 
+                style={styles.logo}
+                width={408}
+                height={204}
+                quality="medium"
+                resizeMode="contain"
+              />
               <Text style={styles.overlayText}>LIKE</Text>
             </Animated.View>
             
@@ -256,7 +282,9 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = ({
       </Animated.View>
     </PanGestureHandler>
   );
-};
+});
+
+SwipeableCard.displayName = 'SwipeableCard';
 
 const styles = StyleSheet.create({
   logo: {

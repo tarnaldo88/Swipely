@@ -485,7 +485,15 @@ export class ProductFeedService {
       };
     } catch (error) {
       console.error('Error recording swipe action:', error);
-      throw new Error('Failed to record swipe action');
+      throw ErrorFactory.createNetworkError(
+        'Failed to record swipe action',
+        {
+          endpoint: '/swipe-actions',
+          method: 'POST',
+          retryable: true,
+          originalError: error instanceof Error ? error : undefined,
+        }
+      );
     }
   }
 
