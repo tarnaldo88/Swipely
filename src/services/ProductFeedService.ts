@@ -6,6 +6,8 @@ import {
   SwipeActionResponse 
 } from '../types';
 import { CategoryPreferenceService } from './CategoryPreferenceService';
+import { ErrorFactory } from '../utils/ErrorFactory';
+import { ErrorType } from '../types/errors';
 
 interface FeedFilters {
   categories?: string[];
@@ -390,7 +392,15 @@ export class ProductFeedService {
       };
     } catch (error) {
       console.error('Error fetching products:', error);
-      throw new Error('Failed to fetch products');
+      throw ErrorFactory.createNetworkError(
+        'Failed to fetch products',
+        {
+          endpoint: '/products',
+          method: 'GET',
+          retryable: true,
+          originalError: error instanceof Error ? error : undefined,
+        }
+      );
     }
   }
 
@@ -418,7 +428,15 @@ export class ProductFeedService {
       return await this.getProducts(pagination, filters);
     } catch (error) {
       console.error('Error getting personalized feed:', error);
-      throw new Error('Failed to get personalized feed');
+      throw ErrorFactory.createNetworkError(
+        'Failed to get personalized feed',
+        {
+          endpoint: '/feed/personalized',
+          method: 'GET',
+          retryable: true,
+          originalError: error instanceof Error ? error : undefined,
+        }
+      );
     }
   }
 
