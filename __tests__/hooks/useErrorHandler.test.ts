@@ -3,7 +3,7 @@
  * Requirements: 1.4, 3.1, 6.5
  */
 
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react-native';
 import { Alert } from 'react-native';
 import { useErrorHandler, useAsyncOperation, useNetworkRequest } from '../../src/hooks/useErrorHandler';
 import { ErrorFactory } from '../../src/utils/ErrorFactory';
