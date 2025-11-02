@@ -1,3 +1,4 @@
+import React from 'react';
 import { Platform, InteractionManager, LayoutAnimation } from 'react-native';
 
 export class IOSPerformanceOptimizer {
