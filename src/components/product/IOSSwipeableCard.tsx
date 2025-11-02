@@ -163,16 +163,32 @@ export const IOSSwipeableCard: React.FC<IOSSwipeableCardProps> = ({
     };
   });
 
+  // Helper function to animate card swipe programmatically
+  const animateSwipe = useCallback((direction: 'left' | 'right') => {
+    const targetX = direction === 'right' ? screenWidth * 1.5 : -screenWidth * 1.5;
+    const targetRotation = direction === 'right' ? 30 : -30;
+
+    translateX.value = withTiming(targetX, IOSAnimations.timing);
+    translateY.value = withTiming(-100, IOSAnimations.timing);
+    opacity.value = withTiming(0, IOSAnimations.timing);
+    rotation.value = withTiming(targetRotation, IOSAnimations.timing);
+    
+    runOnJS(handleSwipeComplete)(direction);
+  }, [translateX, translateY, opacity, rotation, handleSwipeComplete]);
+
   const handleAddToCart = useCallback(async () => {
     try {
       HapticFeedback.medium();
       await swipeActionService.onAddToCart(product.id);
       onAddToCart?.(product.id);
+      
+      // Automatically swipe to next card after adding to cart
+      animateSwipe('right');
     } catch (error) {
       HapticFeedback.error();
       console.error('Error handling add to cart:', error);
     }
-  }, [product.id, swipeActionService, onAddToCart]);
+  }, [product.id, swipeActionService, onAddToCart, animateSwipe]);
 
   const handleViewDetails = useCallback(async () => {
     try {
@@ -203,19 +219,17 @@ export const IOSSwipeableCard: React.FC<IOSSwipeableCardProps> = ({
           <View style={styles.imageContainer}>
             <Image source={{ uri: primaryImage }} style={styles.productImage} />
             
-            {/* iOS-style Swipe Overlays */}
+            {/* Swipe Overlays */}
             <Animated.View style={[styles.overlay, styles.likeOverlay, likeOverlayStyle]}>
-              <View style={styles.overlayContent}>
-                <Text style={styles.overlayEmoji}>💚</Text>
-                <Text style={styles.overlayText}>LIKE</Text>
-              </View>
+              <Image
+                source={require('../../../assets/SwipelyBag.png')}
+                style={styles.logo}
+              />
+              <Text style={styles.overlayText}>LIKE</Text>
             </Animated.View>
             
             <Animated.View style={[styles.overlay, styles.skipOverlay, skipOverlayStyle]}>
-              <View style={styles.overlayContent}>
-                <Text style={styles.overlayEmoji}>👎</Text>
-                <Text style={styles.overlayText}>SKIP</Text>
-              </View>
+              <Text style={styles.overlayText}>SKIP</Text>
             </Animated.View>
           </View>
 
@@ -232,33 +246,33 @@ export const IOSSwipeableCard: React.FC<IOSSwipeableCardProps> = ({
             )}
           </View>
 
-          {/* iOS-style Action Buttons */}
+          {/* Action Buttons */}
           <View style={styles.actionButtons}>
             <TouchableOpacity
-              style={[IOSStyles.secondaryButton, styles.skipButton]}
-              onPress={() => handleSwipeComplete('left')}
-              activeOpacity={0.6}
+              style={[styles.actionButton, styles.skipButton]}
+              onPress={() => animateSwipe('left')}
+              activeOpacity={0.7}
             >
-              <Text style={[IOSStyles.secondaryButtonText, { color: '#FF3B30' }]}>Skip</Text>
+              <Text style={styles.skipButtonText}>Skip</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[IOSStyles.primaryButton, styles.cartButton, !product.availability && styles.disabledButton]}
+              style={[styles.actionButton, styles.cartButton, !product.availability && styles.disabledButton]}
               onPress={handleAddToCart}
               disabled={!product.availability}
-              activeOpacity={0.6}
+              activeOpacity={0.7}
             >
-              <Text style={[IOSStyles.primaryButtonText, !product.availability && styles.disabledButtonText]}>
+              <Text style={[styles.cartButtonText, !product.availability && styles.disabledButtonText]}>
                 {product.availability ? 'Add to Cart' : 'Out of Stock'}
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[IOSStyles.secondaryButton, styles.likeButton]}
-              onPress={() => handleSwipeComplete('right')}
-              activeOpacity={0.6}
+              style={[styles.actionButton, styles.likeButton]}
+              onPress={() => animateSwipe('right')}
+              activeOpacity={0.7}
             >
-              <Text style={[IOSStyles.secondaryButtonText, { color: '#34C759' }]}>Like</Text>
+              <Text style={styles.likeButtonText}>Like</Text>
             </TouchableOpacity>
           </View>
 
@@ -279,6 +293,12 @@ export const IOSSwipeableCard: React.FC<IOSSwipeableCardProps> = ({
 };
 
 const styles = StyleSheet.create({
+  logo: {
+    width: 408,
+    height: 204,
+    marginBottom: 20,
+    resizeMode: 'contain',
+  },
   cardContainer: {
     position: 'absolute',
     alignSelf: 'center',
@@ -316,13 +336,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 16,
   },
-  overlayContent: {
-    alignItems: 'center',
-  },
-  overlayEmoji: {
-    fontSize: 48,
-    marginBottom: 8,
-  },
+
   likeOverlay: {
     backgroundColor: 'rgba(52, 199, 89, 0.85)',
   },
@@ -418,16 +432,15 @@ const styles = StyleSheet.create({
   },
   detailsButton: {
     backgroundColor: 'transparent',
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#C6C6C8',
+    borderWidth: 1,
+    borderColor: '#21fa501c',
     borderRadius: 8,
-    paddingVertical: 12,
+    paddingVertical: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   detailsButtonText: {
-    color: '#007AFF',
-    fontSize: 15,
-    fontWeight: '400',
+    color: '#bbb8b8ff',
+    fontSize: 13,
   },
 });

@@ -305,6 +305,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     paddingTop: 30,
     alignSelf: "center",
+    borderColor: "#221e27",
   },
   card: {
     width: CARD_WIDTH,
@@ -318,6 +319,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 8,
     elevation: 8,
+    borderColor: "#221e27",
   },
   cardContent: {
     borderRadius: 16,
