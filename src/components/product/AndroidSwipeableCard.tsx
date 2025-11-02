@@ -7,7 +7,6 @@ import {
   Dimensions,
   TouchableOpacity,
   TouchableNativeFeedback,
-  Pressable,
   Platform,
 } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -25,15 +24,12 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ProductCard, MainStackParamList } from '../../types';
 import { getSwipeActionService } from '../../services/SwipeActionService';
-import { AddToCartButton } from './AddToCartButton';
-import { ViewDetailsButton } from './ViewDetailsButton';
-import { AndroidToast, getAndroidFeatures } from '../../utils/AndroidUtils';
+import { AndroidToast } from '../../utils/AndroidUtils';
 import { AndroidStyles, MaterialColors, MaterialAnimations, AndroidGestures } from '../../styles/AndroidStyles';
 
 const { width: screenWidth } = Dimensions.get('window');
 const CARD_WIDTH = screenWidth * 0.9;
 const SWIPE_THRESHOLD = screenWidth * 0.25;
-const androidFeatures = getAndroidFeatures();
 
 type SwipeableCardNavigationProp = StackNavigationProp<MainStackParamList>;
 
@@ -194,16 +190,44 @@ export const AndroidSwipeableCard: React.FC<AndroidSwipeableCardProps> = ({
     };
   });
 
+  // Helper function to animate card swipe programmatically
+  const animateSwipe = useCallback((direction: 'left' | 'right') => {
+    const targetX = direction === 'right' ? screenWidth * 1.5 : -screenWidth * 1.5;
+    const targetRotation = direction === 'right' ? 25 : -25;
+
+    translateX.value = withTiming(targetX, {
+      duration: MaterialAnimations.standard.duration,
+      easing: Easing.out(Easing.cubic),
+    });
+    translateY.value = withTiming(-80, {
+      duration: MaterialAnimations.standard.duration,
+      easing: Easing.out(Easing.cubic),
+    });
+    opacity.value = withTiming(0, {
+      duration: MaterialAnimations.standard.duration,
+      easing: Easing.out(Easing.cubic),
+    });
+    rotation.value = withTiming(targetRotation, {
+      duration: MaterialAnimations.standard.duration,
+      easing: Easing.out(Easing.cubic),
+    });
+    
+    runOnJS(handleSwipeComplete)(direction);
+  }, [translateX, translateY, opacity, rotation, handleSwipeComplete]);
+
   const handleAddToCart = useCallback(async () => {
     try {
       await swipeActionService.onAddToCart(product.id);
       AndroidToast.show('Added to cart!', 'SHORT');
       onAddToCart?.(product.id);
+      
+      // Automatically swipe to next card after adding to cart
+      animateSwipe('right');
     } catch (error) {
       AndroidToast.show('Error adding to cart', 'SHORT');
       console.error('Error handling add to cart:', error);
     }
-  }, [product.id, swipeActionService, onAddToCart]);
+  }, [product.id, swipeActionService, onAddToCart, animateSwipe]);
 
   const handleViewDetails = useCallback(async () => {
     try {
@@ -273,7 +297,7 @@ export const AndroidSwipeableCard: React.FC<AndroidSwipeableCardProps> = ({
             {/* Material Design Action Buttons */}
             <View style={[styles.actionButtons, AndroidStyles.cardActions]}>
               <TouchableNativeFeedback
-                onPress={() => handleSwipeComplete('left')}
+                onPress={() => animateSwipe('left')}
                 background={TouchableNativeFeedback.Ripple(MaterialColors.error, true)}
               >
                 <View style={[AndroidStyles.secondaryButton, styles.skipButton, { borderColor: MaterialColors.error }]}>
@@ -301,7 +325,7 @@ export const AndroidSwipeableCard: React.FC<AndroidSwipeableCardProps> = ({
               </TouchableNativeFeedback>
 
               <TouchableNativeFeedback
-                onPress={() => handleSwipeComplete('right')}
+                onPress={() => animateSwipe('right')}
                 background={TouchableNativeFeedback.Ripple('#4CAF50', true)}
               >
                 <View style={[AndroidStyles.secondaryButton, styles.likeButton, { borderColor: '#4CAF50' }]}>
