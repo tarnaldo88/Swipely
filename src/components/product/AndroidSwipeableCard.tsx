@@ -265,19 +265,17 @@ export const AndroidSwipeableCard: React.FC<AndroidSwipeableCardProps> = ({
             <View style={styles.imageContainer}>
               <Image source={{ uri: primaryImage }} style={styles.productImage} />
               
-              {/* Material Design Swipe Overlays */}
+              {/* Swipe Overlays */}
               <Animated.View style={[styles.overlay, styles.likeOverlay, likeOverlayStyle]}>
-                <View style={styles.overlayContent}>
-                  <Text style={styles.overlayIcon}>👍</Text>
-                  <Text style={styles.overlayText}>LIKE</Text>
-                </View>
+                <Image
+                  source={require('../../../assets/SwipelyBag.png')}
+                  style={styles.logo}
+                />
+                <Text style={styles.overlayText}>LIKE</Text>
               </Animated.View>
               
               <Animated.View style={[styles.overlay, styles.skipOverlay, skipOverlayStyle]}>
-                <View style={styles.overlayContent}>
-                  <Text style={styles.overlayIcon}>👎</Text>
-                  <Text style={styles.overlayText}>SKIP</Text>
-                </View>
+                <Text style={styles.overlayText}>SKIP</Text>
               </Animated.View>
             </View>
 
@@ -298,38 +296,31 @@ export const AndroidSwipeableCard: React.FC<AndroidSwipeableCardProps> = ({
             <View style={[styles.actionButtons, AndroidStyles.cardActions]}>
               <TouchableNativeFeedback
                 onPress={() => animateSwipe('left')}
-                background={TouchableNativeFeedback.Ripple(MaterialColors.error, true)}
+                background={TouchableNativeFeedback.Ripple('#b91decff', true)}
               >
-                <View style={[AndroidStyles.secondaryButton, styles.skipButton, { borderColor: MaterialColors.error }]}>
-                  <Text style={[AndroidStyles.secondaryButtonText, { color: MaterialColors.error }]}>SKIP</Text>
+                <View style={[styles.actionButton, styles.skipButton]}>
+                  <Text style={styles.skipButtonText}>Skip</Text>
                 </View>
               </TouchableNativeFeedback>
 
               <TouchableNativeFeedback
                 onPress={handleAddToCart}
                 disabled={!product.availability}
-                background={TouchableNativeFeedback.Ripple(MaterialColors.onPrimary, true)}
+                background={TouchableNativeFeedback.Ripple('#FFFFFF', true)}
               >
-                <View style={[
-                  AndroidStyles.primaryButton, 
-                  styles.cartButton,
-                  !product.availability && styles.disabledButton
-                ]}>
-                  <Text style={[
-                    AndroidStyles.primaryButtonText,
-                    !product.availability && styles.disabledButtonText
-                  ]}>
-                    {product.availability ? 'ADD TO CART' : 'OUT OF STOCK'}
+                <View style={[styles.actionButton, styles.cartButton, !product.availability && styles.disabledButton]}>
+                  <Text style={[styles.cartButtonText, !product.availability && styles.disabledButtonText]}>
+                    {product.availability ? 'Add to Cart' : 'Out of Stock'}
                   </Text>
                 </View>
               </TouchableNativeFeedback>
 
               <TouchableNativeFeedback
                 onPress={() => animateSwipe('right')}
-                background={TouchableNativeFeedback.Ripple('#4CAF50', true)}
+                background={TouchableNativeFeedback.Ripple('#f1fcf1ff', true)}
               >
-                <View style={[AndroidStyles.secondaryButton, styles.likeButton, { borderColor: '#4CAF50' }]}>
-                  <Text style={[AndroidStyles.secondaryButtonText, { color: '#4CAF50' }]}>LIKE</Text>
+                <View style={[styles.actionButton, styles.likeButton]}>
+                  <Text style={styles.likeButtonText}>Like</Text>
                 </View>
               </TouchableNativeFeedback>
             </View>
@@ -353,14 +344,28 @@ export const AndroidSwipeableCard: React.FC<AndroidSwipeableCardProps> = ({
 };
 
 const styles = StyleSheet.create({
+  logo: {
+    width: 408,
+    height: 204,
+    marginBottom: 20,
+    resizeMode: 'contain',
+  },
   cardContainer: {
     position: 'absolute',
     alignSelf: 'center',
   },
   card: {
     width: CARD_WIDTH,
-    backgroundColor: MaterialColors.surface,
-    borderRadius: 8,
+    backgroundColor: '#221e27',
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 8,
     overflow: 'hidden',
   },
   imageContainer: {
@@ -380,15 +385,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: 16,
   },
-  overlayContent: {
-    alignItems: 'center',
-  },
-  overlayIcon: {
-    fontSize: 48,
-    marginBottom: 8,
-  },
+
   likeOverlay: {
     backgroundColor: 'rgba(76, 175, 80, 0.85)',
   },
@@ -396,78 +395,104 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(244, 67, 54, 0.85)',
   },
   overlayText: {
-    fontSize: 20,
-    fontWeight: '700',
+    fontSize: 32,
+    fontWeight: 'bold',
     color: '#FFFFFF',
-    letterSpacing: 1,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   productInfo: {
     padding: 16,
   },
   productTitle: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: MaterialColors.textPrimary,
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#e7e7e7ff',
     marginBottom: 8,
-    lineHeight: 20,
+    lineHeight: 24,
   },
   productPrice: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: MaterialColors.primary,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#2E7D32',
     marginBottom: 4,
   },
   productCategory: {
     fontSize: 14,
-    color: MaterialColors.textSecondary,
+    color: '#cececeff',
     marginBottom: 8,
   },
   outOfStock: {
     fontSize: 12,
-    color: MaterialColors.error,
+    color: '#F44336',
     fontWeight: '500',
     textTransform: 'uppercase',
   },
   actionButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 8,
-    paddingBottom: 8,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
     gap: 8,
   },
-  skipButton: {
+  actionButton: {
     flex: 1,
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  skipButton: {
+    backgroundColor: '#fff',
+    borderColor: '#c725f8ff',
+    borderWidth: 1,
+  },
+  skipButtonText: {
+    color: '#b91decff',
+    fontWeight: '600',
+    fontSize: 14,
   },
   cartButton: {
-    flex: 1.5,
+    backgroundColor: '#08f88c',
+  },
+  cartButtonText: {
+    color: '#FFFFFF',
+    fontWeight: '600',
+    fontSize: 14,
   },
   likeButton: {
-    flex: 1,
+    backgroundColor: '#c725f8ff',
+    borderWidth: 1,
+    borderColor: '#2bee31ff',
+  },
+  likeButtonText: {
+    color: '#f1fcf1ff',
+    fontWeight: '600',
+    fontSize: 14,
   },
   disabledButton: {
     backgroundColor: '#E0E0E0',
     elevation: 0,
   },
   disabledButtonText: {
-    color: MaterialColors.textHint,
+    color: '#999',
   },
   detailsButtonContainer: {
-    paddingHorizontal: 8,
-    paddingBottom: 8,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   detailsButton: {
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: MaterialColors.divider,
-    borderRadius: 4,
-    paddingVertical: 12,
+    borderColor: '#21fa501c',
+    borderRadius: 8,
+    paddingVertical: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   detailsButtonText: {
-    color: MaterialColors.textSecondary,
-    fontSize: 14,
-    fontWeight: '500',
-    textTransform: 'uppercase',
+    color: '#bbb8b8ff',
+    fontSize: 13,
   },
 });
