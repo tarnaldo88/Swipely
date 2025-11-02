@@ -19,6 +19,7 @@ import Animated, {
   runOnJS,
   interpolate,
   Extrapolation,
+  Easing,
 } from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -103,16 +104,40 @@ export const AndroidSwipeableCard: React.FC<AndroidSwipeableCardProps> = ({
       const shouldSwipeRight = translateX.value > SWIPE_THRESHOLD || event.velocityX > AndroidGestures.velocityThreshold;
 
       if (shouldSwipeLeft) {
-        translateX.value = withTiming(-screenWidth * 1.5, MaterialAnimations.standard);
-        translateY.value = withTiming(-80, MaterialAnimations.standard);
-        opacity.value = withTiming(0, MaterialAnimations.standard);
-        rotation.value = withTiming(-25, MaterialAnimations.standard);
+        translateX.value = withTiming(-screenWidth * 1.5, {
+          duration: MaterialAnimations.standard.duration,
+          easing: Easing.out(Easing.cubic),
+        });
+        translateY.value = withTiming(-80, {
+          duration: MaterialAnimations.standard.duration,
+          easing: Easing.out(Easing.cubic),
+        });
+        opacity.value = withTiming(0, {
+          duration: MaterialAnimations.standard.duration,
+          easing: Easing.out(Easing.cubic),
+        });
+        rotation.value = withTiming(-25, {
+          duration: MaterialAnimations.standard.duration,
+          easing: Easing.out(Easing.cubic),
+        });
         runOnJS(handleSwipeComplete)('left');
       } else if (shouldSwipeRight) {
-        translateX.value = withTiming(screenWidth * 1.5, MaterialAnimations.standard);
-        translateY.value = withTiming(-80, MaterialAnimations.standard);
-        opacity.value = withTiming(0, MaterialAnimations.standard);
-        rotation.value = withTiming(25, MaterialAnimations.standard);
+        translateX.value = withTiming(screenWidth * 1.5, {
+          duration: MaterialAnimations.standard.duration,
+          easing: Easing.out(Easing.cubic),
+        });
+        translateY.value = withTiming(-80, {
+          duration: MaterialAnimations.standard.duration,
+          easing: Easing.out(Easing.cubic),
+        });
+        opacity.value = withTiming(0, {
+          duration: MaterialAnimations.standard.duration,
+          easing: Easing.out(Easing.cubic),
+        });
+        rotation.value = withTiming(25, {
+          duration: MaterialAnimations.standard.duration,
+          easing: Easing.out(Easing.cubic),
+        });
         runOnJS(handleSwipeComplete)('right');
       } else {
         // Material Design spring animation back to center
