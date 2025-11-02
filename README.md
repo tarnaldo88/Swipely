@@ -1,78 +1,154 @@
 # Swipely Commerce App
 
-A React Native mobile commerce application with Tinder-style product discovery interface.
+<div align="center">
+  <img src="assets/SwipelyBag.png" alt="Swipely Logo" width="200" height="100">
+  
+  **A modern React Native e-commerce application featuring Tinder-style product discovery**
+  
+  [![React Native](https://img.shields.io/badge/React%20Native-0.72+-blue.svg)](https://reactnative.dev/)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
+  [![Expo](https://img.shields.io/badge/Expo-49+-black.svg)](https://expo.dev/)
+  [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+</div>
 
-## Project Structure
+## 🚀 Overview
 
+Swipely revolutionizes mobile commerce with an intuitive swipe-based product discovery experience. Built with React Native and TypeScript, it delivers a seamless shopping experience across iOS, Android, and web platforms.
+
+## ✨ Key Features
+
+### 🛍️ **Smart Product Discovery**
+- **Tinder-style Interface**: Swipe left to skip, right to like products
+- **Intelligent Recommendations**: AI-powered product suggestions based on user preferences
+- **Category Filtering**: Browse products by specific categories
+- **Real-time Feed**: Dynamic product loading with infinite scroll
+
+### 🎨 **Platform-Optimized Experience**
+- **Material Design (Android)**: Native Android UI patterns with ripple effects
+- **Human Interface Guidelines (iOS)**: iOS-native design with haptic feedback
+- **Responsive Web**: Mouse and keyboard optimized for desktop browsers
+- **Cohesive Styling**: Unified visual experience across all platforms
+
+### 🔐 **Secure Authentication**
+- **Firebase Integration**: Enterprise-grade authentication system
+- **Multi-provider Support**: Email, Google, Facebook, and Apple Sign-In
+- **Secure Session Management**: Persistent login with automatic token refresh
+- **Password Recovery**: Secure password reset functionality
+
+### 🛒 **Advanced Shopping Features**
+- **Smart Cart Management**: Add, remove, and modify cart items
+- **Wishlist System**: Save products for later with organized collections
+- **Offline Support**: Continue browsing and shopping without internet
+- **Data Synchronization**: Seamless sync across devices
+
+### 📱 **Performance & Optimization**
+- **Image Optimization**: Lazy loading, caching, and responsive sizing
+- **Memory Management**: Efficient resource usage and cleanup
+- **Gesture Performance**: Smooth 60fps animations and interactions
+- **Error Handling**: Comprehensive error recovery and user feedback
+
+### 📊 **Analytics & Insights**
+- **User Behavior Tracking**: Swipe patterns and engagement metrics
+- **A/B Testing Framework**: Optimize UI/UX with data-driven decisions
+- **Crash Reporting**: Real-time error monitoring and diagnostics
+- **Performance Monitoring**: Track app performance and user experience
+
+## 🏗️ Architecture
+
+### **Project Structure**
 ```
 src/
-├── components/          # Reusable UI components
-│   ├── common/         # Common components (buttons, inputs, etc.)
-│   └── product/        # Product-specific components
-├── screens/            # Screen components
-│   ├── auth/          # Authentication screens
-│   └── main/          # Main app screens
-├── services/          # API services and business logic
-├── store/             # Redux store configuration
-├── navigation/        # Navigation configuration
-├── types/             # TypeScript type definitions
-└── utils/             # Utility functions and helpers
+├── components/              # Reusable UI components
+│   ├── common/             # Shared components (buttons, inputs, etc.)
+│   │   ├── ErrorBoundary.tsx
+│   │   ├── OptimizedImage.tsx
+│   │   └── OptimizedFlatList.tsx
+│   └── product/            # Product-specific components
+│       ├── SwipeableCard.tsx
+│       ├── AndroidSwipeableCard.tsx
+│       ├── IOSSwipeableCard.tsx
+│       └── MouseSwipeableCard.tsx
+├── screens/                # Screen components
+│   ├── auth/              # Authentication screens
+│   └── main/              # Main application screens
+├── services/              # Business logic and API services
+│   ├── AuthService.ts
+│   ├── ProductFeedService.ts
+│   ├── AnalyticsService.ts
+│   ├── ErrorHandlingService.ts
+│   └── CrashReportingService.ts
+├── hooks/                 # Custom React hooks
+│   ├── useErrorHandler.ts
+│   ├── useAnalytics.ts
+│   └── useABTesting.ts
+├── utils/                 # Utility functions and helpers
+│   ├── PerformanceUtils.ts
+│   ├── ErrorFactory.ts
+│   └── PlatformUtils.ts
+├── styles/                # Platform-specific styling
+│   ├── AndroidStyles.ts
+│   └── IOSStyles.ts
+├── navigation/            # Navigation configuration
+├── types/                 # TypeScript type definitions
+└── store/                 # State management
 ```
 
-## Tech Stack
+### **Technology Stack**
+- **Framework**: React Native 0.72+ with Expo 49+
+- **Language**: TypeScript 5.0+ for type safety
+- **State Management**: Redux Toolkit with RTK Query
+- **Navigation**: React Navigation 6 with native stack
+- **Gestures**: React Native Gesture Handler 2.0+
+- **Animations**: React Native Reanimated 3.0+
+- **Storage**: AsyncStorage with encryption
+- **Authentication**: Firebase Auth with multi-provider support
+- **Analytics**: Custom analytics with A/B testing framework
+- **Testing**: Jest with React Native Testing Library
 
-- **Framework**: React Native with Expo
-- **Language**: TypeScript
-- **State Management**: Redux Toolkit
-- **Navigation**: React Navigation 6
-- **Gestures**: React Native Gesture Handler
-- **Animations**: React Native Reanimated 3
-- **Storage**: AsyncStorage
+## 🚀 Getting Started
 
-## Getting Started
+### **Prerequisites**
+- Node.js 18+ and npm/yarn
+- React Native development environment
+- iOS: Xcode 14+ (macOS required)
+- Android: Android Studio with SDK 33+
 
-1. Install dependencies:
+### **Installation**
 
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-org/swipely-commerce-app.git
+   cd swipely-commerce-app
+   ```
+
+2. **Install dependencies**
    ```bash
    npm install
+   # or
+   yarn install
    ```
 
-2. Start the development server:
+3. **Configure environment**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your Firebase and API configurations
+   ```
 
+4. **Start development server**
    ```bash
    npm start
+   # or
+   yarn start
    ```
 
-3. Run on specific platform:
+5. **Run on specific platforms**
    ```bash
-   npm run android  # Android
-   npm run ios      # iOS (macOS required)
-   npm run web      # Web
+   npm run android    # Android emulator/device
+   npm run ios        # iOS simulator/device (macOS only)
+   npm run web        # Web browser
    ```
 
-## Features Implemented
-
-### Authentication System
-
-- ✅ Firebase Authentication integration
-- ✅ Email/password login and registration
-- ✅ Password reset functionality
-- ✅ Persistent authentication state
-
-### Product Discovery
-
-- ✅ Tinder-style swipeable product cards
-- ✅ Product details modal with image gallery
-- ✅ Swipe gestures (left to skip, right to like)
-- ✅ Add to cart functionality
-- ✅ Optimized image loading and caching
-- ✅ Performance optimizations with lazy loading
-
-### Navigation
-
-- ✅ Tab-based navigation (Discover, Wishlist, Cart, Profile)
-- ✅ Modal presentation for product details
-- ✅ Smooth transitions and animations
+## 🎯 Feature Showcase
 
 ## Testing the App
 

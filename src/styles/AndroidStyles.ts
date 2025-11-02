@@ -12,7 +12,7 @@ export const AndroidStyles = StyleSheet.create({
   // Material Design navigation styles
   navigationHeader: {
     height: 56,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#221e27",
     elevation: 4,
     shadowColor: "transparent", // Use elevation instead of shadow on Android
     justifyContent: "center",
@@ -201,7 +201,7 @@ export const AndroidStyles = StyleSheet.create({
   bottomNavigation: {
     backgroundColor: "#221e27",
     borderTopWidth: 1,
-    borderTopColor: "#E0E0E0",
+    borderTopColor: "#221e27",
     elevation: 8,
     height: 56,
     flexDirection: "row",
@@ -225,7 +225,7 @@ export const AndroidStyles = StyleSheet.create({
   },
 
   bottomNavigationLabelInactive: {
-    color: "#757575",
+    color: "#cecacaff",
   },
 
   // Material Design ripple effect simulation

@@ -27,15 +27,15 @@ const MainTabNavigator: React.FC = () => {
         headerShown: false,
         tabBarStyle: Platform.OS === 'ios' ? {
           ...IOSStyles.tabBar,
-          backgroundColor: '#F2F2F7',
-          borderTopColor: '#C6C6C8',
+          backgroundColor: '#221e27',
+          borderTopColor: '#221e27',
         } : {
           ...AndroidStyles.bottomNavigation,
           backgroundColor: MaterialColors.surface,
           borderTopColor: MaterialColors.divider,
         },
         tabBarActiveTintColor: Platform.OS === 'ios' ? '#007AFF' : MaterialColors.primary,
-        tabBarInactiveTintColor: Platform.OS === 'ios' ? '#8E8E93' : MaterialColors.textSecondary,
+        tabBarInactiveTintColor: Platform.OS === 'ios' ? '#d2d2d6ff' : MaterialColors.textSecondary,
         tabBarLabelStyle: Platform.OS === 'ios' ? {
           fontSize: 10,
           fontWeight: '400',
@@ -71,7 +71,7 @@ const MainTabNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Cart',
           tabBarIcon: ({ focused, color }) => (
-            <Text style={{ fontSize: 20, color }}>{focused ? '🛒' : '🛍️'}</Text>
+            <Text style={{ fontSize: 20, color }}>{focused ? '🛒' : '🛒'}</Text>
           ),
         }}
       />
