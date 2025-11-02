@@ -409,10 +409,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Firebase Team** for authentication and backend services
 
 ---
-
-<div align="center">
-  <p>Built with ❤️ by the Arnaldo Torres</p>
-  <p>    
-    <a href="https://github.com/swipely/issues">Issues</a> •
-  </p>
-</div>
+Built by the Arnaldo Torres
