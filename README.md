@@ -409,4 +409,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Firebase Team** for authentication and backend services
 
 ---
-Built by the Arnaldo Torres
+Built by Arnaldo Torres
