@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import { ProductCategory, CategoryPreferences } from '../../types';
 import { CategoryPreferenceService } from '../../services/CategoryPreferenceService';
-import { SafeAreaView } from "react-native-safe-area-context/lib/typescript/src/SafeAreaView";
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 interface CategorySelectionScreenProps {
   navigation: any;

@@ -33,7 +33,7 @@ import { AddToCartButton } from "../../components/product/AddToCartButton";
 import { getSwipeActionService } from "../../services/SwipeActionService";
 import { ImageGallery } from "../../components/product/ImageGallery";
 import { ProductDetailsService } from "../../services/ProductDetailsService";
-import { SafeAreaView } from "react-native-safe-area-context/lib/typescript/src/SafeAreaView";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 

@@ -16,7 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { getAuthService } from "../../services";
 import { User, CategoryPreferences, MainStackParamList } from "../../types";
-import { SafeAreaView } from "react-native-safe-area-context/lib/typescript/src/SafeAreaView";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 type ProfileScreenNavigationProp = StackNavigationProp<MainStackParamList>;

@@ -14,7 +14,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { User, CategoryPreferences, MainStackParamList } from "../../types";
 import { getAuthService } from "../../services";
 import { CategoryPreferenceService } from "../../services/CategoryPreferenceService";
-import { SafeAreaView } from "react-native-safe-area-context/lib/typescript/src/SafeAreaView";
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 type ProfileScreenNavigationProp = StackNavigationProp<MainStackParamList>;
 
@@ -203,9 +204,12 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Account</Text>
 
-          <TouchableOpacity style={styles.accountItem} onPress={() =>  {
-            navigation.navigate("AccountSettings",{});
-          }}>
+          <TouchableOpacity
+            style={styles.accountItem}
+            onPress={() => {
+              navigation.navigate("AccountSettings", {});
+            }}
+          >
             <Text style={styles.accountLabel}>Account Settings</Text>
             <Text style={styles.chevron}>›</Text>
           </TouchableOpacity>
