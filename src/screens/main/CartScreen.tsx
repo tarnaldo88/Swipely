@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
   FlatList,
   TouchableOpacity,
@@ -11,6 +10,7 @@ import {
   Alert,
   RefreshControl,
 } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context/lib/typescript/src/SafeAreaView";
 import { useFocusEffect } from '@react-navigation/native';
 import { getCartService, CartService } from '../../services/CartService';
 import { CartItem, ProductCard } from '../../types';

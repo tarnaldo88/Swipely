@@ -3,12 +3,12 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
   Alert,
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context/lib/typescript/src/SafeAreaView";
 import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MouseSwipeableCard } from '../../components/product/MouseSwipeableCard';

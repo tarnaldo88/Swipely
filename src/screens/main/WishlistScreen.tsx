@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
   FlatList,
   TouchableOpacity,
@@ -12,6 +11,7 @@ import {
   RefreshControl,
   Dimensions,
 } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context/lib/typescript/src/SafeAreaView";
 import { useFocusEffect } from '@react-navigation/native';
 import { getWishlistService, WishlistService, WishlistItem } from '../../services/WishlistService';
 import { getCartService, CartService } from '../../services/CartService';
