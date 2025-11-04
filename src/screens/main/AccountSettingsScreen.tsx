@@ -55,8 +55,17 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = () =>
                 <View style={styles.header}>
                   <Text>Account Settings</Text>
                 </View>
+                {/* Account Settings options */}
                 <View>
-
+                  <TouchableOpacity style={styles.accountItem}>
+                    <Text style={styles.accountLabel}>Option 1</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.accountItem}>
+                    <Text style={styles.accountLabel}>Option 1</Text>
+                  </TouchableOpacity> 
+                  <TouchableOpacity style={styles.accountItem}>
+                    <Text style={styles.accountLabel}>Option 1</Text>
+                  </TouchableOpacity>                   
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -70,6 +79,18 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+  },
+  accountItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E9ECEF",
+  },
+  accountLabel: {
+    flex: 1,
+    fontSize: 16,
+    color: "#212529",
   },
   header: {
     paddingHorizontal: 20,
