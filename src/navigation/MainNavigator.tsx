@@ -22,6 +22,8 @@ import {
   AndroidBackHandler,
 } from "../utils/AndroidUtils";
 import { AndroidStyles, MaterialColors } from "../styles/AndroidStyles";
+import { StackScreen } from "react-native-screens";
+import { AccountSettingsScreen } from "@/screens/main/AccountSettingsScreen";
 
 const Stack = createStackNavigator<MainStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -162,6 +164,13 @@ export const MainNavigator: React.FC = () => {
         component={SkippedProductsScreen}
         options={{
           headerShown: false,
+        }}
+      />
+      <Stack.Screen 
+        name="AccountSettings"
+        component={AccountSettingsScreen}      
+        options={{
+          headerShown:true,
         }}
       />
     </Stack.Navigator>

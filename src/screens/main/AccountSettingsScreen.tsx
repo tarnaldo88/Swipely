@@ -35,41 +35,41 @@ interface AccountSettings {
 }
 
 export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = () => {
-    const navigation = useNavigation<ProfileScreenNavigationProp>();
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+  const navigation = useNavigation<ProfileScreenNavigationProp>();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    if(!user) {
-      <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Unable to load profile</Text>
-        </View>
-      </SafeAreaView>
-    } 
+  if(!user) {
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>Unable to load profile</Text>
+      </View>
+    </SafeAreaView>
+  } 
 
-    return(
-        <SafeAreaView style={styles.container}>
-            <ScrollView style={styles.scrollView}>
-                {/* Header */}
-                <View style={styles.header}>
-                  <Text>Account Settings</Text>
-                </View>
-                {/* Account Settings options */}
-                <View>
-                  <TouchableOpacity style={styles.accountItem}>
-                    <Text style={styles.accountLabel}>Option 1</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.accountItem}>
-                    <Text style={styles.accountLabel}>Option 1</Text>
-                  </TouchableOpacity> 
-                  <TouchableOpacity style={styles.accountItem}>
-                    <Text style={styles.accountLabel}>Option 1</Text>
-                  </TouchableOpacity>                   
-                </View>
-            </ScrollView>
-        </SafeAreaView>
-    );
+  return(
+    <SafeAreaView style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+            {/* Header */}
+            <View style={styles.header}>
+              <Text>Account Settings</Text>
+            </View>
+            {/* Account Settings options */}
+            <View>
+              <TouchableOpacity style={styles.accountItem}>
+                <Text style={styles.accountLabel}>Option 1</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.accountItem}>
+                <Text style={styles.accountLabel}>Option 2</Text>
+              </TouchableOpacity> 
+              <TouchableOpacity style={styles.accountItem}>
+                <Text style={styles.accountLabel}>Option 3</Text>
+              </TouchableOpacity>                   
+            </View>
+        </ScrollView>
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({
