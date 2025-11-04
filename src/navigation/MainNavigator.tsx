@@ -99,7 +99,7 @@ const MainTabNavigator: React.FC = () => {
         options={{
           tabBarLabel: "Profile",
           tabBarIcon: ({ focused, color }) => (
-            <Text style={{ fontSize: 20, color }}>{focused ? "👤" : "👥"}</Text>
+            <Text style={{ fontSize: 20, color }}>{focused ? "👤" : "👤"}</Text>
           ),
         }}
       />

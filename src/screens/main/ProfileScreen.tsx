@@ -203,7 +203,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Account</Text>
 
-          <TouchableOpacity style={styles.accountItem}>
+          <TouchableOpacity style={styles.accountItem} onPress={() =>  {
+            navigation.navigate("AccountSettings",{});
+          }}>
             <Text style={styles.accountLabel}>Account Settings</Text>
             <Text style={styles.chevron}>›</Text>
           </TouchableOpacity>
