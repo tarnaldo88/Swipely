@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
   TouchableOpacity,
   ScrollView,
@@ -15,6 +14,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { User, CategoryPreferences, MainStackParamList } from "../../types";
 import { getAuthService } from "../../services";
 import { CategoryPreferenceService } from "../../services/CategoryPreferenceService";
+import { SafeAreaView } from "react-native-safe-area-context/lib/typescript/src/SafeAreaView";
 
 type ProfileScreenNavigationProp = StackNavigationProp<MainStackParamList>;
 

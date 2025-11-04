@@ -5,11 +5,11 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  SafeAreaView,
   Alert,
 } from 'react-native';
 import { ProductCategory, CategoryPreferences } from '../../types';
 import { CategoryPreferenceService } from '../../services/CategoryPreferenceService';
+import { SafeAreaView } from "react-native-safe-area-context/lib/typescript/src/SafeAreaView";
 
 interface CategorySelectionScreenProps {
   navigation: any;
