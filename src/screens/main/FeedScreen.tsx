@@ -156,9 +156,14 @@ export const FeedScreen: React.FC = memo(() => {
       console.log('Total cart items:', cartCount);
       
       Alert.alert('Added to Cart!', `Product has been added to your cart. Total items: ${cartCount}`);
+      
+      // Automatically advance to next card
+      setCurrentCardIndex(prev => prev + 1);
     } catch (error) {
       console.error('Error adding to cart:', error);
       Alert.alert('Error', 'Failed to add product to cart. Please try again.');
+      // Still advance to next card even if there was an error
+      setCurrentCardIndex(prev => prev + 1);
     }
   }, []);
 

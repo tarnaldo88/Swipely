@@ -12,10 +12,11 @@ import {
   Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { getWishlistService, WishlistService, WishlistItem } from '../../services/WishlistService';
 import { getCartService, CartService } from '../../services/CartService';
-import { ProductCard } from '../../types';
+import { ProductCard, MainStackParamList } from '../../types';
 
 interface WishlistItemWithProduct extends WishlistItem {
   product: ProductCard;
