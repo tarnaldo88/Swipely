@@ -25,7 +25,10 @@ interface WishlistItemWithProduct extends WishlistItem {
 const { width } = Dimensions.get('window');
 const ITEM_WIDTH = (width - 48) / 2; // 2 columns with margins
 
+type WishlistScreenNavigationProp = StackNavigationProp<MainStackParamList>;
+
 export const WishlistScreen: React.FC = () => {
+  const navigation = useNavigation<WishlistScreenNavigationProp>();
   const [wishlistItems, setWishlistItems] = useState<WishlistItemWithProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -99,8 +102,19 @@ export const WishlistScreen: React.FC = () => {
     }
   };
 
+  const handleViewDetails = (item: WishlistItemWithProduct) => {
+    navigation.navigate('ProductDetails', {
+      productId: item.productId,
+      product: item.product,
+    });
+  };
+
   const renderGridItem = ({ item }: { item: WishlistItemWithProduct }) => (
-    <View style={styles.gridItem}>
+    <TouchableOpacity 
+      style={styles.gridItem}
+      onPress={() => handleViewDetails(item)}
+      activeOpacity={0.7}
+    >
       <Image
         source={{ uri: item.product.imageUrls[0] }}
         style={styles.gridImage}
@@ -116,23 +130,33 @@ export const WishlistScreen: React.FC = () => {
         <View style={styles.gridItemActions}>
           <TouchableOpacity
             style={styles.addToCartButton}
-            onPress={() => handleAddToCart(item.productId)}
+            onPress={(e) => {
+              e.stopPropagation();
+              handleAddToCart(item.productId);
+            }}
           >
             <Text style={styles.addToCartButtonText}>Add to Cart</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.removeButton}
-            onPress={() => handleRemoveFromWishlist(item.productId)}
+            onPress={(e) => {
+              e.stopPropagation();
+              handleRemoveFromWishlist(item.productId);
+            }}
           >
             <Text style={styles.removeButtonText}>✕</Text>
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   const renderListItem = ({ item }: { item: WishlistItemWithProduct }) => (
-    <View style={styles.listItem}>
+    <TouchableOpacity 
+      style={styles.listItem}
+      onPress={() => handleViewDetails(item)}
+      activeOpacity={0.7}
+    >
       <Image
         source={{ uri: item.product.imageUrls[0] }}
         style={styles.listImage}
@@ -152,18 +176,24 @@ export const WishlistScreen: React.FC = () => {
       <View style={styles.listItemActions}>
         <TouchableOpacity
           style={styles.listAddToCartButton}
-          onPress={() => handleAddToCart(item.productId)}
+          onPress={(e) => {
+            e.stopPropagation();
+            handleAddToCart(item.productId);
+          }}
         >
           <Text style={styles.listAddToCartButtonText}>Add to Cart</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.listRemoveButton}
-          onPress={() => handleRemoveFromWishlist(item.productId)}
+          onPress={(e) => {
+            e.stopPropagation();
+            handleRemoveFromWishlist(item.productId);
+          }}
         >
           <Text style={styles.removeButtonText}>✕</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   const renderEmptyWishlist = () => (

@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: "#E9ECEF",
+    backgroundColor:'#fff'
   },
   accountLabel: {
     flex: 1,
