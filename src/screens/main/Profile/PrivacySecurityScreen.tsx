@@ -38,6 +38,7 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () =>
     const [user, setUser] = useState(null);
     const [showPasswordChange, setShowPasswordChange] = useState(true);
     const [locationEnabled, setLocationEnabled] = useState(true);
+    const [notifications, setNotifications] = useState(true);
     const [credentials, setCredentials] = useState<PasswordChange>({
             oldPassword: "",
             newPassword: "",
@@ -62,48 +63,64 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () =>
 
     const toggleLocationPermission = () => {
         //Location code changes would go here. 
-    }
+    };
+
+    const toggleNotifications = () => {
+        //code changes for showing notifications go here
+    };
 
     return(
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.scrollView}>
-                <TouchableOpacity style={styles.securityItem} onPress={() => {togglePasswordChange()}}>
+                {/* Header */}
+                <View style={styles.header}>
+                    <Text style={styles.headerTitle}>Profile</Text>
+                </View>
+
+                {/* {Privacy and Security settings} */}
+                <View>
+                    <TouchableOpacity style={styles.securityItem} onPress={() => {togglePasswordChange()}}>
                     <Text style={styles.pwChangeLabel}>
                         {showPasswordChange ? "Cancel Password Change" : "Change Password"}
                     </Text>
-                </TouchableOpacity>
+                    </TouchableOpacity>
 
-                {showPasswordChange && (
-                    <View style={styles.passwordSection}>
-                        <TextInput
-                        style={styles.input}
-                        placeholder="Old Password"
-                        value={credentials.oldPassword}
-                        onChangeText={(value) => updateCredentials("oldPassword", value)}
-                        secureTextEntry
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        />
-                        <TextInput
-                        style={styles.input}
-                        placeholder="New Password"
-                        value={credentials.newPassword}
-                        onChangeText={(value) => updateCredentials("newPassword", value)}
-                        secureTextEntry
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        />
-                        <TouchableOpacity style={styles.submitButton} onPress={handlePasswordSubmit}>
-                        <Text style={styles.submitButtonText}>Submit</Text>
-                        </TouchableOpacity>
-                    </View>
-                )}
+                    {showPasswordChange && (
+                        <View style={styles.passwordSection}>
+                            <TextInput
+                            style={styles.input}
+                            placeholder="Old Password"
+                            value={credentials.oldPassword}
+                            onChangeText={(value) => updateCredentials("oldPassword", value)}
+                            secureTextEntry
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            />
+                            <TextInput
+                            style={styles.input}
+                            placeholder="New Password"
+                            value={credentials.newPassword}
+                            onChangeText={(value) => updateCredentials("newPassword", value)}
+                            secureTextEntry
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            />
+                            <TouchableOpacity style={styles.submitButton} onPress={handlePasswordSubmit}>
+                            <Text style={styles.submitButtonText}>Submit</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
 
-                <Text style={styles.headerTitle}>App Permissions</Text>
-                <Switch 
-                    value={locationEnabled}
-                    onValueChange={toggleLocationPermission}
-                />
+                    <Text style={styles.headerTitle}>App Permissions</Text>
+                    <Switch 
+                        value={locationEnabled}
+                        onValueChange={toggleLocationPermission}
+                    />
+                    <Switch 
+                        value={notifications}
+                        onValueChange={toggleNotifications}
+                    />
+                </View>                
             </ScrollView>
         </SafeAreaView>
     )
