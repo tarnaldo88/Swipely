@@ -183,3 +183,9 @@ export type {
   SessionStorage,
 } from "../services/AuthenticationService";
 export { AuthError, AuthErrorType } from "../services/AuthenticationService";
+
+//Password Change TEMP
+export interface PasswordChange {
+  oldPassword?: string;
+  newPassword?: string;
+}

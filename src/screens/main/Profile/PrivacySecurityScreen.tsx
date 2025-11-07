@@ -10,7 +10,9 @@ import {
   PanResponder,
   Animated,
   ScrollView,
-  StatusBar
+  StatusBar, 
+  Switch,
+  TextInput,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -29,11 +31,48 @@ interface PrivacySecurityScreenProps {
   };
 }
 
+
+
 export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () => {
+    const navigation = useNavigation<ProfileScreenNavigationProp>();
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [credentials, updateCredentials] = useState<PasswordChange>({
+            oldPassword: "",
+            newPassword: "",
+        });
+
+    const togglePasswordChange = () => {
+    return(
+        <View>
+            <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={credentials.password}
+            onChangeText={(value) => updateCredentials("password", value)}
+            secureTextEntry
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={credentials.password}
+            onChangeText={(value) => updateCredentials("password", value)}
+            secureTextEntry
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+        </View>
+        
+    );
+};
     return(
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.scrollView}>
-                
+                <TouchableOpacity style={styles.securityItem} onPress={() => {togglePasswordChange()}}>
+                    <Text style={styles.accountLabel}>Change Password</Text>
+                </TouchableOpacity>
             </ScrollView>
         </SafeAreaView>
     )
@@ -47,7 +86,7 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  accountItem: {
+  securityItem: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 16,
@@ -75,5 +114,14 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 16,
     color: "#dc3545",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    padding: 16,
+    fontSize: 16,
+    marginBottom: 16,
+    backgroundColor: "#fff",
   },
 });
