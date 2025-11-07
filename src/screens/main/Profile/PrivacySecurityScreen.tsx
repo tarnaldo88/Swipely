@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -24,11 +24,12 @@ import Animated, {
   interpolate,
   Extrapolate,
 } from "react-native-reanimated";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { getAuthService } from "../../../services";
 import { User, CategoryPreferences, MainStackParamList, PasswordChange } from "../../../types";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { getSwipeActionService } from "../../../services/SwipeActionService";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -67,6 +68,12 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () =>
         }));
     };
 
+    useEffect(() => {
+        // Animate modal in
+        translateY.value = withSpring(0, { damping: 20, stiffness: 90 });
+        opacity.value = withTiming(1, { duration: 300 });    
+    }, []);
+
     const handlePasswordSubmit = () => {
         //Firebase password change would go here
         setShowPasswordChange(false);
@@ -95,6 +102,15 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () =>
         })();
         });
     }, [navigation]);
+
+    const modalAnimatedStyle = useAnimatedStyle(() => ({
+        transform: [{ translateY: translateY.value }],
+        opacity: opacity.value,
+    }));
+
+    if (!isVisible) {
+        return null;
+    }
 
     return(
         <Modal
