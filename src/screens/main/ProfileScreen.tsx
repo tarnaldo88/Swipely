@@ -214,12 +214,22 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
             <Text style={styles.chevron}>›</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.accountItem}>
+          <TouchableOpacity 
+            style={styles.accountItem}
+            onPress={() => {
+              navigation.navigate("PrivacySecurity", {});
+            }}
+          >
             <Text style={styles.accountLabel}>Privacy & Security</Text>
             <Text style={styles.chevron}>›</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.accountItem}>
+          <TouchableOpacity 
+          style={styles.accountItem}
+          onPress={() => {
+            navigation.navigate("HelpSupport", {});
+          }}
+          >
             <Text style={styles.accountLabel}>Help & Support</Text>
             <Text style={styles.chevron}>›</Text>
           </TouchableOpacity>
