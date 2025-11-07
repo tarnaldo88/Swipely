@@ -8,17 +8,29 @@ import {
   TouchableOpacity,
   Pressable,
   PanResponder,
-  Animated,
   ScrollView,
   StatusBar, 
   Switch,
   TextInput,
+  Modal
 } from "react-native";
+import Animated, {
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+  runOnJS,
+  interpolate,
+  Extrapolate,
+} from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { getAuthService } from "../../../services";
 import { User, CategoryPreferences, MainStackParamList, PasswordChange } from "../../../types";
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 type ProfileScreenNavigationProp = StackNavigationProp<MainStackParamList>;
 
@@ -31,18 +43,21 @@ interface PrivacySecurityScreenProps {
   };
 }
 
-
-
 export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () => {
     const navigation = useNavigation<ProfileScreenNavigationProp>();
     const [user, setUser] = useState(null);
     const [showPasswordChange, setShowPasswordChange] = useState(true);
     const [locationEnabled, setLocationEnabled] = useState(true);
     const [notifications, setNotifications] = useState(true);
+    const [isVisible, setIsVisible] = useState(true);
     const [credentials, setCredentials] = useState<PasswordChange>({
             oldPassword: "",
             newPassword: "",
     });    
+
+    // Animation values for modal presentation
+    const translateY = useSharedValue(screenHeight);
+    const opacity = useSharedValue(0);
 
     const updateCredentials = (field: keyof PasswordChange, value: string) => {
         setCredentials((prev) => ({
@@ -71,8 +86,24 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () =>
         setNotifications((prev) => !prev);
     };
 
+    const handleClose = useCallback(() => {
+        translateY.value = withTiming(screenHeight, { duration: 300 });
+        opacity.value = withTiming(0, { duration: 300 }, () => {
+        runOnJS(() => {
+            setIsVisible(false);
+            navigation.goBack();
+        })();
+        });
+    }, [navigation]);
+
     return(
-        <SafeAreaView style={styles.container}>
+        <Modal
+            visible={isVisible}
+            animationType="none"
+            transparent={true}
+            statusBarTranslucent={true}
+            onRequestClose={handleClose}
+        >
             <ScrollView style={styles.scrollView}>
                 {/* Header */}
                 <View style={styles.header}>
@@ -132,7 +163,7 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () =>
                     </View>
                 </View>                
             </ScrollView>
-        </SafeAreaView>
+        </Modal>
     )
 };
 
@@ -169,6 +200,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: "#212529",
+    paddingLeft:25,
   },
   header: {
     paddingHorizontal: 20,
