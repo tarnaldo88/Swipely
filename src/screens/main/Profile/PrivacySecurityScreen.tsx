@@ -37,6 +37,7 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () =>
     const navigation = useNavigation<ProfileScreenNavigationProp>();
     const [user, setUser] = useState(null);
     const [showPasswordChange, setShowPasswordChange] = useState(true);
+    const [locationEnabled, setLocationEnabled] = useState(true);
     const [credentials, setCredentials] = useState<PasswordChange>({
             oldPassword: "",
             newPassword: "",
@@ -58,6 +59,10 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () =>
     const togglePasswordChange = () => {
         setShowPasswordChange((prev) => !prev);
     };
+
+    const toggleLocationPermission = () => {
+        //Location code changes would go here. 
+    }
 
     return(
         <SafeAreaView style={styles.container}>
@@ -93,6 +98,12 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () =>
                         </TouchableOpacity>
                     </View>
                 )}
+
+                <Text>App Permissions</Text>
+                <Switch 
+                    value={locationEnabled}
+                    onValueChange={toggleLocationPermission}
+                />
             </ScrollView>
         </SafeAreaView>
     )
