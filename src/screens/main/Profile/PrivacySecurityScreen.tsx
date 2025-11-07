@@ -17,7 +17,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { getAuthService } from "../../../services";
-import { User, CategoryPreferences, MainStackParamList } from "../../../types";
+import { User, CategoryPreferences, MainStackParamList, PasswordChange } from "../../../types";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type ProfileScreenNavigationProp = StackNavigationProp<MainStackParamList>;
@@ -36,37 +36,49 @@ interface PrivacySecurityScreenProps {
 export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () => {
     const navigation = useNavigation<ProfileScreenNavigationProp>();
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [credentials, updateCredentials] = useState<PasswordChange>({
+    const [showPasswordChange, setShowPasswordChange] = useState(true);
+    const [credentials, setCredentials] = useState<PasswordChange>({
             oldPassword: "",
             newPassword: "",
-        });
+    });
 
     const togglePasswordChange = () => {
-    return(
-        <View>
-            <TextInput
-            style={styles.input}
-            placeholder="Password"
-            value={credentials.password}
-            onChangeText={(value) => updateCredentials("password", value)}
-            secureTextEntry
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            value={credentials.password}
-            onChangeText={(value) => updateCredentials("password", value)}
-            secureTextEntry
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-        </View>
-        
-    );
-};
+        return(
+            <View>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Old Password"
+                    value={credentials.oldPassword}
+                    onChangeText={(value) => updateCredentials("oldPassword", value)}
+                    secureTextEntry
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="New Password"
+                    value={credentials.newPassword}
+                    onChangeText={(value) => updateCredentials("newPassword", value)}
+                    secureTextEntry
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                />
+                <TouchableOpacity style={styles.submitButton}>
+                    <Text style={styles.submitButtonText}>Submit</Text>
+                </TouchableOpacity>
+            </View>
+            
+        );
+    };
+
+    const updateCredentials = (field: keyof PasswordChange, value: string) => {
+        setCredentials((prev) => ({
+            ...prev,
+            [field]: value,
+            // provider: loginMethod,
+        }));
+    };
+
     return(
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.scrollView}>
@@ -123,5 +135,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 16,
     backgroundColor: "#fff",
+  },
+  submitButton: {
+    backgroundColor: "#08f88c",
+    borderRadius: 8,
+    padding: 16,
+    alignItems: "center",
+    marginBottom: 24,
+  },
+  submitButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
