@@ -171,23 +171,53 @@ export const MainNavigator: React.FC = () => {
       <Stack.Screen 
         name="AccountSettings"
         component={AccountSettingsScreen}      
-        options={{
-          headerShown:true,
-        }}
+        options={
+          Platform.OS === "ios"
+            ? {
+                ...iosModalOptions,
+                headerShown: true,
+                title: "Account Settings",
+              }
+            : {
+                ...androidModalOptions,
+                headerShown: true,
+                title: "Account Settings",
+              }
+        }
       />
       <Stack.Screen 
         name="HelpSupport"
         component={HelpSupportScreen}      
-        options={{
-          headerShown:true,
-        }}
+        options={
+          Platform.OS === "ios"
+            ? {
+                ...iosModalOptions,
+                headerShown: true,
+                title: "Help & Support",
+              }
+            : {
+                ...androidModalOptions,
+                headerShown: true,
+                title: "Help & Support",
+              }
+        }
       />
       <Stack.Screen 
         name="PrivacySecurity"
         component={PrivacySecurityScreen}      
-        options={{
-          headerShown:true,
-        }}
+        options={
+          Platform.OS === "ios"
+            ? {
+                ...iosModalOptions,
+                headerShown: true,
+                title: "Privacy & Security",
+              }
+            : {
+                ...androidModalOptions,
+                headerShown: true,
+                title: "Privacy & Security",
+              }
+        }
       />
     </Stack.Navigator>
   );
