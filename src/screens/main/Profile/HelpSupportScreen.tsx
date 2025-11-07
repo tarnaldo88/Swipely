@@ -30,6 +30,9 @@ interface HelpSupportScreenProps {
 }
 
 export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = () => {
+  const navigation = useNavigation<ProfileScreenNavigationProp>();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
     return(
         <SafeAreaView>
