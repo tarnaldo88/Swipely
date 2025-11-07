@@ -23,7 +23,7 @@ import {
 } from "../utils/AndroidUtils";
 import { AndroidStyles, MaterialColors } from "../styles/AndroidStyles";
 import { StackScreen } from "react-native-screens";
-import { AccountSettingsScreen } from "@/screens/main/AccountSettingsScreen";
+import { AccountSettingsScreen } from "@/screens/main/Profile/AccountSettingsScreen";
 
 const Stack = createStackNavigator<MainStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
