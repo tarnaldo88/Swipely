@@ -53,7 +53,7 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = () =>
         <ScrollView style={styles.scrollView}>
             {/* Header */}
             <View style={styles.header}>
-              <Text>Account Settings</Text>
+              <Text style={styles.headerTitle}>Account Settings</Text>
             </View>
             {/* Account Settings options */}
             <View>
@@ -99,6 +99,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#47006e",
     borderBottomWidth: 1,
     borderBottomColor: "#3a8004",
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#eff7e9",
   },
   errorContainer: {
     flex: 1,

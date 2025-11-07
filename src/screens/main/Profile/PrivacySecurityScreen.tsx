@@ -99,7 +99,7 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () =>
                     </View>
                 )}
 
-                <Text>App Permissions</Text>
+                <Text style={styles.headerTitle}>App Permissions</Text>
                 <Switch 
                     value={locationEnabled}
                     onValueChange={toggleLocationPermission}
@@ -136,6 +136,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#47006e",
     borderBottomWidth: 1,
     borderBottomColor: "#3a8004",
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#eff7e9",
   },
   errorContainer: {
     flex: 1,
