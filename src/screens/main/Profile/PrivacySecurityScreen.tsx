@@ -63,10 +63,12 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () =>
 
     const toggleLocationPermission = () => {
         //Location code changes would go here. 
+        setLocationEnabled((prev) => !prev);
     };
 
     const toggleNotifications = () => {
         //code changes for showing notifications go here
+        setNotifications((prev) => !prev);
     };
 
     return(
@@ -74,7 +76,7 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () =>
             <ScrollView style={styles.scrollView}>
                 {/* Header */}
                 <View style={styles.header}>
-                    <Text style={styles.headerTitle}>Profile</Text>
+                    <Text style={styles.headerTitle}>Privacy & Security</Text>
                 </View>
 
                 {/* {Privacy and Security settings} */}
@@ -112,14 +114,22 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () =>
                     )}
 
                     <Text style={styles.headerTitle}>App Permissions</Text>
-                    <Switch 
+                    <View style={styles.switchRow}>
+                        <Text style={styles.switchLabel}>Enable Location</Text>
+                        <Switch
                         value={locationEnabled}
                         onValueChange={toggleLocationPermission}
-                    />
-                    <Switch 
+                        />
+                    </View>
+
+                    {/* Notifications Toggle */}
+                    <View style={styles.switchRow}>
+                        <Text style={styles.switchLabel}>Allow Notifications</Text>
+                        <Switch
                         value={notifications}
                         onValueChange={toggleNotifications}
-                    />
+                        />
+                    </View>
                 </View>                
             </ScrollView>
         </SafeAreaView>
@@ -131,9 +141,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#230234",
   },
-  scrollView: {
-    flex: 1,
-  },
+  switchRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 8,
+        borderBottomWidth: 0.5,
+        borderBottomColor: '#ccc',
+    },
+    switchLabel: {
+        fontSize: 16,
+        color: '#f1f6faff',
+        flexShrink: 1,
+        },
+        scrollView: {
+        flex: 1,
+    },
   securityItem: {
     flexDirection: "row",
     alignItems: "center",
