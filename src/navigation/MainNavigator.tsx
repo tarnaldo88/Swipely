@@ -24,6 +24,8 @@ import {
 import { AndroidStyles, MaterialColors } from "../styles/AndroidStyles";
 import { StackScreen } from "react-native-screens";
 import { AccountSettingsScreen } from "@/screens/main/Profile/AccountSettingsScreen";
+import { HelpSupportScreen } from "@/screens/main/Profile/HelpSupportScreen";
+import { PrivacySecurityScreen } from "@/screens/main/Profile/PrivacySecurityScreen";
 
 const Stack = createStackNavigator<MainStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -169,6 +171,20 @@ export const MainNavigator: React.FC = () => {
       <Stack.Screen 
         name="AccountSettings"
         component={AccountSettingsScreen}      
+        options={{
+          headerShown:true,
+        }}
+      />
+      <Stack.Screen 
+        name="HelpSupport"
+        component={HelpSupportScreen}      
+        options={{
+          headerShown:true,
+        }}
+      />
+      <Stack.Screen 
+        name="PrivacySecurity"
+        component={PrivacySecurityScreen}      
         options={{
           headerShown:true,
         }}

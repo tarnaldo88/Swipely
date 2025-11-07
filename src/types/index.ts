@@ -22,7 +22,9 @@ export type MainStackParamList = {
   ProductDetails: { productId: string; product?: ProductCard };
   CategorySelection: { isInitialSetup?: boolean };
   SkippedProducts: { category: string };
-  AccountSettings: { }
+  AccountSettings: { };
+  HelpSupport: {};
+  PrivacySecurity: {};
 };
 
 // User types
