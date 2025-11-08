@@ -10,36 +10,50 @@ import {
   PanResponder,
   Animated,
   ScrollView,
-  StatusBar
+  StatusBar,
+  Modal
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+  runOnJS,
+} from "react-native-reanimated";
 import { getAuthService } from "../../../services";
-import { User, CategoryPreferences, MainStackParamList } from "../../../types";
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-type ProfileScreenNavigationProp = StackNavigationProp<MainStackParamList>;
+const { height: screenHeight } = Dimensions.get("window");
 
 interface HelpSupportScreenProps {
-  navigation: any;
-  route?: {
-    params?: {
-      isInitialSetup?: boolean;
-    };
-  };
+  visible: boolean;
+  onClose: () => void;
 }
 
-export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = () => {
-  const navigation = useNavigation<ProfileScreenNavigationProp>();
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, onClose }) => {
+
+  // Animation values for modal presentation
+  const translateY = useSharedValue(screenHeight);
+  const opacity = useSharedValue(0);
+
+  const handleClose = useCallback(() => {
+        translateY.value = withTiming(screenHeight, { duration: 300 });
+        opacity.value = withTiming(0, { duration: 300 }, () => {
+            runOnJS(onClose)();
+        });
+    }, [onClose]);
 
     return(
-        <SafeAreaView style={styles.container}>
+        <Modal
+            visible={visible}
+            animationType="slide"
+            transparent={false}
+            statusBarTranslucent={false}
+            onRequestClose={handleClose}
+        >
           <ScrollView style={styles.scrollView}>
 
           </ScrollView>            
-        </SafeAreaView>
+        </Modal>
     );
 };
 
