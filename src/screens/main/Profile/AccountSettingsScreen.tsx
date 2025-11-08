@@ -1,56 +1,19 @@
-import React, { useCallback, useState, useRef, useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
-  Image,
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
-  Pressable,
-  PanResponder,
-  Animated,
   ScrollView,
-  StatusBar,
   Modal,
 } from "react-native";
-import {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-  runOnJS,
-} from "react-native-reanimated";
-
-const { height: screenHeight } = Dimensions.get("window");
 
 interface AccountSettingsScreenProps {
   visible: boolean;
   onClose: () => void;
 }
 
-interface AccountSettings {
-  selected: boolean;
-}
-
-export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ visible, onClose }) => {  
-  // Animation values for modal presentation
-  const translateY = useSharedValue(screenHeight);
-  const opacity = useSharedValue(0);
-
-  useEffect(() => {
-        if (visible) {
-            // Animate modal in
-            translateY.value = withSpring(0, { damping: 20, stiffness: 90 });
-            opacity.value = withTiming(1, { duration: 300 });
-        }
-  }, [visible]);  
-
-  const handleClose = useCallback(() => {
-        translateY.value = withTiming(screenHeight, { duration: 300 });
-        opacity.value = withTiming(0, { duration: 300 }, () => {
-            runOnJS(onClose)();
-        });
-    }, [onClose]);
+export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ visible, onClose }) => {
 
   return(
     <Modal
@@ -58,11 +21,15 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ vi
             animationType="slide"
             transparent={false}
             statusBarTranslucent={false}
-            onRequestClose={handleClose}
+            onRequestClose={onClose}
     >
+      <View style={styles.container}>
         <ScrollView style={styles.scrollView}>
             {/* Header */}
             <View style={styles.header}>
+              <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+                <Text style={styles.closeButtonText}>✕</Text>
+              </TouchableOpacity>
               <Text style={styles.headerTitle}>Account Settings</Text>
             </View>
             {/* Account Settings options */}
@@ -78,6 +45,7 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ vi
               </TouchableOpacity>                   
             </View>
         </ScrollView>
+      </View>
     </Modal>
   );
 };
@@ -106,14 +74,30 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 20,
     paddingVertical: 16,
+    paddingTop: 50,
     backgroundColor: "#47006e",
     borderBottomWidth: 1,
     borderBottomColor: "#3a8004",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  closeButton: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  closeButtonText: {
+    fontSize: 24,
+    color: "#eff7e9",
+    fontWeight: "bold",
   },
   headerTitle: {
     fontSize: 28,
     fontWeight: "bold",
     color: "#eff7e9",
+    flex: 1,
   },
   errorContainer: {
     flex: 1,

@@ -1,25 +1,15 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
   ScrollView,
   Switch,
   TextInput,
   Modal
 } from "react-native";
-import {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-  runOnJS,
-} from "react-native-reanimated";
 import { PasswordChange } from "../../../types";
-
-const { height: screenHeight } = Dimensions.get("window");
 
 interface PrivacySecurityScreenProps {
   visible: boolean;
@@ -35,25 +25,12 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = ({ vi
             newPassword: "",
     });    
 
-    // Animation values for modal presentation
-    const translateY = useSharedValue(screenHeight);
-    const opacity = useSharedValue(0);
-
     const updateCredentials = (field: keyof PasswordChange, value: string) => {
         setCredentials((prev) => ({
             ...prev,
             [field]: value,
-            // provider: loginMethod,
         }));
     };
-
-    useEffect(() => {
-        if (visible) {
-            // Animate modal in
-            translateY.value = withSpring(0, { damping: 20, stiffness: 90 });
-            opacity.value = withTiming(1, { duration: 300 });
-        }
-    }, [visible]);
 
     const handlePasswordSubmit = () => {
         //Firebase password change would go here
@@ -74,26 +51,19 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = ({ vi
         setNotifications((prev) => !prev);
     };
 
-    const handleClose = useCallback(() => {
-        translateY.value = withTiming(screenHeight, { duration: 300 });
-        opacity.value = withTiming(0, { duration: 300 }, () => {
-            runOnJS(onClose)();
-        });
-    }, [onClose]);
-
     return(
         <Modal
             visible={visible}
             animationType="slide"
             transparent={false}
             statusBarTranslucent={false}
-            onRequestClose={handleClose}
+            onRequestClose={onClose}
         >
             <View style={styles.container}>
                 <ScrollView style={styles.scrollView}>
                 {/* Header */}
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
+                    <TouchableOpacity onPress={onClose} style={styles.closeButton}>
                         <Text style={styles.closeButtonText}>✕</Text>
                     </TouchableOpacity>
                     <Text style={styles.headerTitle}>Privacy & Security</Text>

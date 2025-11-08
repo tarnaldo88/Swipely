@@ -1,28 +1,12 @@
-import React, { useCallback, useState, useRef } from "react";
+import React from "react";
 import {
   View,
   Text,
-  Image,
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
-  Pressable,
-  PanResponder,
-  Animated,
   ScrollView,
-  StatusBar,
   Modal
 } from "react-native";
-import {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-  runOnJS,
-} from "react-native-reanimated";
-import { getAuthService } from "../../../services";
-
-const { height: screenHeight } = Dimensions.get("window");
 
 interface HelpSupportScreenProps {
   visible: boolean;
@@ -31,28 +15,38 @@ interface HelpSupportScreenProps {
 
 export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, onClose }) => {
 
-  // Animation values for modal presentation
-  const translateY = useSharedValue(screenHeight);
-  const opacity = useSharedValue(0);
-
-  const handleClose = useCallback(() => {
-        translateY.value = withTiming(screenHeight, { duration: 300 });
-        opacity.value = withTiming(0, { duration: 300 }, () => {
-            runOnJS(onClose)();
-        });
-    }, [onClose]);
-
     return(
         <Modal
             visible={visible}
             animationType="slide"
             transparent={false}
             statusBarTranslucent={false}
-            onRequestClose={handleClose}
+            onRequestClose={onClose}
         >
-          <ScrollView style={styles.scrollView}>
+          <View style={styles.container}>
+            <ScrollView style={styles.scrollView}>
+              {/* Header */}
+              <View style={styles.header}>
+                <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+                  <Text style={styles.closeButtonText}>✕</Text>
+                </TouchableOpacity>
+                <Text style={styles.headerTitle}>Help & Support</Text>
+              </View>
 
-          </ScrollView>            
+              {/* Help & Support Content */}
+              <View>
+                <TouchableOpacity style={styles.accountItem}>
+                  <Text style={styles.accountLabel}>FAQ</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.accountItem}>
+                  <Text style={styles.accountLabel}>Contact Support</Text>
+                </TouchableOpacity> 
+                <TouchableOpacity style={styles.accountItem}>
+                  <Text style={styles.accountLabel}>Terms of Service</Text>
+                </TouchableOpacity>                   
+              </View>
+            </ScrollView>
+          </View>            
         </Modal>
     );
 };
@@ -81,9 +75,30 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 20,
     paddingVertical: 16,
+    paddingTop: 50,
     backgroundColor: "#47006e",
     borderBottomWidth: 1,
     borderBottomColor: "#3a8004",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  closeButton: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  closeButtonText: {
+    fontSize: 24,
+    color: "#eff7e9",
+    fontWeight: "bold",
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#eff7e9",
+    flex: 1,
   },
   errorContainer: {
     flex: 1,
