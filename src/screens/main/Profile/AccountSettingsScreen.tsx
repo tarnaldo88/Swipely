@@ -13,11 +13,6 @@ import {
   StatusBar,
   Modal,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { getAuthService } from "../../../services";
-import { User, CategoryPreferences, MainStackParamList } from "../../../types";
-import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -33,18 +28,11 @@ interface AccountSettingsScreenProps {
   onClose: () => void;
 }
 
-
-type ProfileScreenNavigationProp = StackNavigationProp<MainStackParamList>;
-
 interface AccountSettings {
   selected: boolean;
 }
 
-export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ visible, onClose }) => {
-  const navigation = useNavigation<ProfileScreenNavigationProp>();
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
+export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ visible, onClose }) => {  
   // Animation values for modal presentation
   const translateY = useSharedValue(screenHeight);
   const opacity = useSharedValue(0);
@@ -55,16 +43,7 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ vi
             translateY.value = withSpring(0, { damping: 20, stiffness: 90 });
             opacity.value = withTiming(1, { duration: 300 });
         }
-  }, [visible]);
-
-  if(!user) {
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-      <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>Unable to load profile</Text>
-      </View>
-    </SafeAreaView>
-  } 
+  }, [visible]);  
 
   const handleClose = useCallback(() => {
         translateY.value = withTiming(screenHeight, { duration: 300 });
