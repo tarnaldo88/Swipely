@@ -23,9 +23,7 @@ import {
 } from "../utils/AndroidUtils";
 import { AndroidStyles, MaterialColors } from "../styles/AndroidStyles";
 import { StackScreen } from "react-native-screens";
-import { AccountSettingsScreen } from "@/screens/main/Profile/AccountSettingsScreen";
-import { HelpSupportScreen } from "@/screens/main/Profile/HelpSupportScreen";
-import { PrivacySecurityScreen } from "@/screens/main/Profile/PrivacySecurityScreen";
+
 
 const Stack = createStackNavigator<MainStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -167,57 +165,6 @@ export const MainNavigator: React.FC = () => {
         options={{
           headerShown: false,
         }}
-      />
-      <Stack.Screen 
-        name="AccountSettings"
-        component={AccountSettingsScreen}      
-        options={
-          Platform.OS === "ios"
-            ? {
-                ...iosModalOptions,
-                headerShown: true,
-                title: "Account Settings",
-              }
-            : {
-                ...androidModalOptions,
-                headerShown: true,
-                title: "Account Settings",
-              }
-        }
-      />
-      <Stack.Screen 
-        name="HelpSupport"
-        component={HelpSupportScreen}      
-        options={
-          Platform.OS === "ios"
-            ? {
-                ...iosModalOptions,
-                headerShown: true,
-                title: "Help & Support",
-              }
-            : {
-                ...androidModalOptions,
-                headerShown: true,
-                title: "Help & Support",
-              }
-        }
-      />
-      <Stack.Screen 
-        name="PrivacySecurity"
-        component={PrivacySecurityScreen}      
-        options={
-          Platform.OS === "ios"
-            ? {
-                ...iosModalOptions,
-                headerShown: true,
-                title: "Privacy & Security",
-              }
-            : {
-                ...androidModalOptions,
-                headerShown: true,
-                title: "Privacy & Security",
-              }
-        }
       />
     </Stack.Navigator>
   );

@@ -34,8 +34,8 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
   );
   const [loading, setLoading] = useState(true);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
-  const [showAccountSettingsModal, setShowAccountSettingsModal] = useState(false);
-  const [showHelpSupportModal, setShowHelpSupportModal] = useState(false);
+  const [showAccountModal, setShowAccountModal] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
 
   useEffect(() => {
     loadUserData();
@@ -212,9 +212,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
 
           <TouchableOpacity
             style={styles.accountItem}
-            onPress={() => {
-              setShowAccountSettingsModal(true);
-            }}
+            onPress={() => setShowAccountModal(true)}
           >
             <Text style={styles.accountLabel}>Account Settings</Text>
             <Text style={styles.chevron}>›</Text>
@@ -230,9 +228,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
 
           <TouchableOpacity 
           style={styles.accountItem}
-          onPress={() => {
-            setShowHelpSupportModal(true)
-          }}
+          onPress={() => setShowHelpModal(true)}
           >
             <Text style={styles.accountLabel}>Help & Support</Text>
             <Text style={styles.chevron}>›</Text>
@@ -254,8 +250,8 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
 
       {/* Account Settings Modal */}
       <AccountSettingsScreen 
-        visible={showAccountSettingsModal}
-        onClose={() => {setShowAccountSettingsModal(false)}}
+        visible={showAccountModal}
+        onClose={() => setShowAccountModal(false)}
       />
 
       {/* Privacy & Security Modal */}
@@ -266,8 +262,8 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
 
       {/* Help & Support Modal */}
       <HelpSupportScreen 
-        visible={showHelpSupportModal}
-        onClose={() => {setShowAccountSettingsModal(false)}}
+        visible={showHelpModal}
+        onClose={() => setShowHelpModal(false)}
       />
     </SafeAreaView>
   );
