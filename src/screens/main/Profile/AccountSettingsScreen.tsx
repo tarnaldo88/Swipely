@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from "react";
+import React, { useCallback, useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,34 +10,52 @@ import {
   PanResponder,
   Animated,
   ScrollView,
-  StatusBar
+  StatusBar,
+  Modal,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { getAuthService } from "../../../services";
 import { User, CategoryPreferences, MainStackParamList } from "../../../types";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+  runOnJS,
+} from "react-native-reanimated";
+
+const { height: screenHeight } = Dimensions.get("window");
+
+interface AccountSettingsScreenProps {
+  visible: boolean;
+  onClose: () => void;
+}
 
 
 type ProfileScreenNavigationProp = StackNavigationProp<MainStackParamList>;
-
-interface AccountSettingsScreenProps {
-  navigation: any;
-  route?: {
-    params?: {
-      isInitialSetup?: boolean;
-    };
-  };
-}
 
 interface AccountSettings {
   selected: boolean;
 }
 
-export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = () => {
+export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ visible, onClose }) => {
   const navigation = useNavigation<ProfileScreenNavigationProp>();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Animation values for modal presentation
+  const translateY = useSharedValue(screenHeight);
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+        if (visible) {
+            // Animate modal in
+            translateY.value = withSpring(0, { damping: 20, stiffness: 90 });
+            opacity.value = withTiming(1, { duration: 300 });
+        }
+  }, [visible]);
 
   if(!user) {
     <SafeAreaView style={styles.container}>
@@ -48,8 +66,21 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = () =>
     </SafeAreaView>
   } 
 
+  const handleClose = useCallback(() => {
+        translateY.value = withTiming(screenHeight, { duration: 300 });
+        opacity.value = withTiming(0, { duration: 300 }, () => {
+            runOnJS(onClose)();
+        });
+    }, [onClose]);
+
   return(
-    <SafeAreaView style={styles.container}>
+    <Modal
+            visible={visible}
+            animationType="slide"
+            transparent={false}
+            statusBarTranslucent={false}
+            onRequestClose={handleClose}
+    >
         <ScrollView style={styles.scrollView}>
             {/* Header */}
             <View style={styles.header}>
@@ -68,7 +99,7 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = () =>
               </TouchableOpacity>                   
             </View>
         </ScrollView>
-    </SafeAreaView>
+    </Modal>
   );
 };
 

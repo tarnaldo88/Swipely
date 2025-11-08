@@ -16,6 +16,8 @@ import { getAuthService } from "../../services";
 import { CategoryPreferenceService } from "../../services/CategoryPreferenceService";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PrivacySecurityScreen } from "./Profile/PrivacySecurityScreen";
+import { AccountSettingsScreen } from "./Profile/AccountSettingsScreen";
+import { HelpSupportScreen } from "./Profile/HelpSupportScreen";
 
 
 type ProfileScreenNavigationProp = StackNavigationProp<MainStackParamList>;
@@ -32,6 +34,8 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
   );
   const [loading, setLoading] = useState(true);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [showAccountSettingsModal, setShowAccountSettingsModal] = useState(false);
+  const [showHelpSupportModal, setShowHelpSupportModal] = useState(false);
 
   useEffect(() => {
     loadUserData();
@@ -209,7 +213,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
           <TouchableOpacity
             style={styles.accountItem}
             onPress={() => {
-              navigation.navigate("AccountSettings", {});
+              setShowAccountSettingsModal(true);
             }}
           >
             <Text style={styles.accountLabel}>Account Settings</Text>
@@ -227,7 +231,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
           <TouchableOpacity 
           style={styles.accountItem}
           onPress={() => {
-            navigation.navigate("HelpSupport", {});
+            setShowHelpSupportModal(true)
           }}
           >
             <Text style={styles.accountLabel}>Help & Support</Text>
@@ -248,10 +252,22 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
         </View>
       </ScrollView>
 
+      {/* Account Settings Modal */}
+      <AccountSettingsScreen 
+        visible={showAccountSettingsModal}
+        onClose={() => {setShowAccountSettingsModal(false)}}
+      />
+
       {/* Privacy & Security Modal */}
       <PrivacySecurityScreen 
         visible={showPrivacyModal}
         onClose={() => setShowPrivacyModal(false)}
+      />
+
+      {/* Help & Support Modal */}
+      <HelpSupportScreen 
+        visible={showHelpSupportModal}
+        onClose={() => {setShowAccountSettingsModal(false)}}
       />
     </SafeAreaView>
   );
