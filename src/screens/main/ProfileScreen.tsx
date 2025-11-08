@@ -15,6 +15,7 @@ import { User, CategoryPreferences, MainStackParamList } from "../../types";
 import { getAuthService } from "../../services";
 import { CategoryPreferenceService } from "../../services/CategoryPreferenceService";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { PrivacySecurityScreen } from "./Profile/PrivacySecurityScreen";
 
 
 type ProfileScreenNavigationProp = StackNavigationProp<MainStackParamList>;
@@ -30,6 +31,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
     null
   );
   const [loading, setLoading] = useState(true);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 
   useEffect(() => {
     loadUserData();
@@ -216,9 +218,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
 
           <TouchableOpacity 
             style={styles.accountItem}
-            onPress={() => {
-              navigation.navigate("PrivacySecurity", {});
-            }}
+            onPress={() => setShowPrivacyModal(true)}
           >
             <Text style={styles.accountLabel}>Privacy & Security</Text>
             <Text style={styles.chevron}>›</Text>
@@ -247,6 +247,12 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
           <Text style={styles.appInfoText}>Swipely v1.0.0</Text>
         </View>
       </ScrollView>
+
+      {/* Privacy & Security Modal */}
+      <PrivacySecurityScreen 
+        visible={showPrivacyModal}
+        onClose={() => setShowPrivacyModal(false)}
+      />
     </SafeAreaView>
   );
 };

@@ -1,56 +1,35 @@
-import React, { useCallback, useState, useEffect, useRef } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  Pressable,
-  PanResponder,
   ScrollView,
-  StatusBar, 
   Switch,
   TextInput,
   Modal
 } from "react-native";
-import Animated, {
-  useAnimatedGestureHandler,
+import {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
   runOnJS,
-  interpolate,
-  Extrapolate,
 } from "react-native-reanimated";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { getAuthService } from "../../../services";
-import { User, CategoryPreferences, MainStackParamList, PasswordChange } from "../../../types";
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { getSwipeActionService } from "../../../services/SwipeActionService";
+import { PasswordChange } from "../../../types";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
-
-type ProfileScreenNavigationProp = StackNavigationProp<MainStackParamList>;
+const { height: screenHeight } = Dimensions.get("window");
 
 interface PrivacySecurityScreenProps {
-  navigation: any;
-  route?: {
-    params?: {
-      isInitialSetup?: boolean;
-    };
-  };
+  visible: boolean;
+  onClose: () => void;
 }
 
-export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () => {
-    const navigation = useNavigation<ProfileScreenNavigationProp>();
-    const [user, setUser] = useState(null);
-    const [showPasswordChange, setShowPasswordChange] = useState(true);
+export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = ({ visible, onClose }) => {
+    const [showPasswordChange, setShowPasswordChange] = useState(false);
     const [locationEnabled, setLocationEnabled] = useState(true);
     const [notifications, setNotifications] = useState(true);
-    const [isVisible, setIsVisible] = useState(true);
     const [credentials, setCredentials] = useState<PasswordChange>({
             oldPassword: "",
             newPassword: "",
@@ -69,10 +48,12 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () =>
     };
 
     useEffect(() => {
-        // Animate modal in
-        translateY.value = withSpring(0, { damping: 20, stiffness: 90 });
-        opacity.value = withTiming(1, { duration: 300 });    
-    }, []);
+        if (visible) {
+            // Animate modal in
+            translateY.value = withSpring(0, { damping: 20, stiffness: 90 });
+            opacity.value = withTiming(1, { duration: 300 });
+        }
+    }, [visible]);
 
     const handlePasswordSubmit = () => {
         //Firebase password change would go here
@@ -96,33 +77,25 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () =>
     const handleClose = useCallback(() => {
         translateY.value = withTiming(screenHeight, { duration: 300 });
         opacity.value = withTiming(0, { duration: 300 }, () => {
-        runOnJS(() => {
-            setIsVisible(false);
-            navigation.goBack();
-        })();
+            runOnJS(onClose)();
         });
-    }, [navigation]);
-
-    const modalAnimatedStyle = useAnimatedStyle(() => ({
-        transform: [{ translateY: translateY.value }],
-        opacity: opacity.value,
-    }));
-
-    if (!isVisible) {
-        return null;
-    }
+    }, [onClose]);
 
     return(
         <Modal
-            visible={isVisible}
-            animationType="none"
-            transparent={true}
-            statusBarTranslucent={true}
+            visible={visible}
+            animationType="slide"
+            transparent={false}
+            statusBarTranslucent={false}
             onRequestClose={handleClose}
         >
-            <ScrollView style={styles.scrollView}>
+            <View style={styles.container}>
+                <ScrollView style={styles.scrollView}>
                 {/* Header */}
                 <View style={styles.header}>
+                    <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
+                        <Text style={styles.closeButtonText}>✕</Text>
+                    </TouchableOpacity>
                     <Text style={styles.headerTitle}>Privacy & Security</Text>
                 </View>
 
@@ -178,7 +151,8 @@ export const PrivacySecurityScreen: React.FC<PrivacySecurityScreenProps> = () =>
                         />
                     </View>
                 </View>                
-            </ScrollView>
+                </ScrollView>
+            </View>
         </Modal>
     )
 };
@@ -221,14 +195,30 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 20,
     paddingVertical: 16,
+    paddingTop: 50,
     backgroundColor: "#47006e",
     borderBottomWidth: 1,
     borderBottomColor: "#3a8004",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  closeButton: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  closeButtonText: {
+    fontSize: 24,
+    color: "#eff7e9",
+    fontWeight: "bold",
   },
   headerTitle: {
     fontSize: 28,
     fontWeight: "bold",
     color: "#eff7e9",
+    flex: 1,
   },
   errorContainer: {
     flex: 1,
