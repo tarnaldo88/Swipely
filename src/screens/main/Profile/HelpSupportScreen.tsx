@@ -9,6 +9,7 @@ import {
   Linking,
   Alert
 } from "react-native";
+import { FaqScreen } from "./FaqScreen";
 
 interface HelpSupportScreenProps {
   visible: boolean;
@@ -63,6 +64,10 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
                   </Text>
                   <Text style={styles.chevron}>›</Text>
                 </TouchableOpacity>
+
+                {showFaq && (
+                  <FaqScreen/>
+                )}
                 <TouchableOpacity 
                   style={styles.accountItem}
                   onPress={handleContactSupport}
