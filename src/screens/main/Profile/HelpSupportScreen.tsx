@@ -19,19 +19,19 @@ interface HelpSupportScreenProps {
 export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, onClose }) => {
     const [showFaq, setShowFaq] = useState(false);
     const [showContactUs, setShowContactUs] = useState(false);
-    const [showTerms, setTerms] = useState(false);
+    const [showTerms, setShowTerms] = useState(false);
     
 
     const toggleShowFaq = () => {
       setShowFaq((prev) => !prev);
     };
 
-    const handleContactSupport = () => {
-      Alert.alert("Contact Support", "Email: support@swipely.com\nPhone: 1-800-SWIPELY");
+    const toggleContactSupport = () => {
+      setShowContactUs((prev) => (!prev));
     };
 
-    const handleTerms = () => {
-      Alert.alert("Terms of Service", "Terms of Service will be displayed here.");
+    const toggleTerms = () => {
+      setShowTerms((prev) => (!prev));
     };
     
     return(
@@ -85,14 +85,14 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
                 )}
                 <TouchableOpacity 
                   style={[styles.accountItem, showContactUs && styles.activeAccountItem]}
-                  onPress={handleContactSupport}
+                  onPress={toggleContactSupport}
                 >
                   <Text style={[styles.accountLabel, showContactUs && styles.activeChevron,]}>Contact Support</Text>
                   <Text style={[styles.chevron, showContactUs && styles.activeChevron,]}>›</Text>
                 </TouchableOpacity> 
                 <TouchableOpacity 
                   style={[styles.accountItem, showTerms && styles.activeAccountItem]}
-                  onPress={handleTerms}
+                  onPress={toggleTerms}
                 >
                   <Text style={[styles.accountLabel, showTerms && styles.activeChevron,]}>Terms of Service</Text>
                   <Text style={[styles.chevron, showTerms && styles.activeChevron,]}>›</Text>
