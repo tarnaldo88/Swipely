@@ -17,6 +17,14 @@ const SECTIONS = [
     title: "Second Question",
     content: "Suspendisse potenti. Integer euismod orci vel ex dignissim.",
   },
+  {
+    title: "Third Question",
+    content: "Suspendisse potenti. Integer euismod orci vel ex dignissim.",
+  },
+  {
+    title: "Fourth Question",
+    content: "Suspendisse potenti. Integer euismod orci vel ex dignissim.",
+  },
 ];
 
 export const FaqScreen: React.FC = () => {
