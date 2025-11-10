@@ -18,6 +18,9 @@ interface HelpSupportScreenProps {
 
 export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, onClose }) => {
     const [showFaq, setShowFaq] = useState(false);
+    const [showContactUs, setShowContactUs] = useState(false);
+    const [showTerms, setTerms] = useState(false);
+    
 
     const toggleShowFaq = () => {
       setShowFaq((prev) => !prev);
@@ -55,14 +58,14 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
                 <TouchableOpacity 
                   style={[
                     styles.accountItem, 
-                    showFaq && styles.activeAccountItem // 👈 add conditional style
+                    showFaq && styles.activeAccountItem
                   ]}
                   onPress={toggleShowFaq}
                 >
                   <Text
                     style={[
                       styles.accountLabel,
-                      showFaq && styles.activeAccountLabel, // 👈 optional text color change
+                      showFaq && styles.activeAccountLabel,
                     ]}
                   >
                     {showFaq ? "Close Frequently Asked Questions" : "Show Frequently Asked Questions"}
@@ -70,7 +73,7 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
                   <Text
                     style={[
                       styles.chevron,
-                      showFaq && styles.activeChevron, // 👈 optional chevron color change
+                      showFaq && styles.activeChevron,
                     ]}
                   >
                     ›
@@ -81,18 +84,18 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
                   <FaqScreen/>
                 )}
                 <TouchableOpacity 
-                  style={styles.accountItem}
+                  style={[styles.accountItem, showContactUs && styles.activeAccountItem]}
                   onPress={handleContactSupport}
                 >
-                  <Text style={styles.accountLabel}>Contact Support</Text>
-                  <Text style={styles.chevron}>›</Text>
+                  <Text style={[styles.accountLabel, showContactUs && styles.activeChevron,]}>Contact Support</Text>
+                  <Text style={[styles.chevron, showContactUs && styles.activeChevron,]}>›</Text>
                 </TouchableOpacity> 
                 <TouchableOpacity 
-                  style={styles.accountItem}
+                  style={[styles.accountItem, showTerms && styles.activeAccountItem]}
                   onPress={handleTerms}
                 >
-                  <Text style={styles.accountLabel}>Terms of Service</Text>
-                  <Text style={styles.chevron}>›</Text>
+                  <Text style={[styles.accountLabel, showTerms && styles.activeChevron,]}>Terms of Service</Text>
+                  <Text style={[styles.chevron, showTerms && styles.activeChevron,]}>›</Text>
                 </TouchableOpacity>                   
               </View>
             </ScrollView>
