@@ -23,6 +23,7 @@ import {
 } from "../utils/AndroidUtils";
 import { AndroidStyles, MaterialColors } from "../styles/AndroidStyles";
 import { StackScreen } from "react-native-screens";
+import { FaqScreen } from "@/screens/main/Profile/FaqScreen";
 
 
 const Stack = createStackNavigator<MainStackParamList>();
@@ -162,6 +163,13 @@ export const MainNavigator: React.FC = () => {
       <Stack.Screen
         name="SkippedProducts"
         component={SkippedProductsScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Faq"
+        component={FaqScreen}
         options={{
           headerShown: false,
         }}

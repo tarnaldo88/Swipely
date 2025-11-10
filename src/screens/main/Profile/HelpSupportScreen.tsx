@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Modal
+  Modal,
+  Linking,
+  Alert
 } from "react-native";
 
 interface HelpSupportScreenProps {
@@ -14,7 +16,24 @@ interface HelpSupportScreenProps {
 }
 
 export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, onClose }) => {
+    const [faq, setShowFaq] = useState(false);
 
+    const toggleShowFaq = () => {
+      setShowFaq(false);
+    };
+
+    const handleFAQ = () => {
+      Alert.alert("FAQ", "Frequently Asked Questions will be displayed here.");
+    };
+
+    const handleContactSupport = () => {
+      Alert.alert("Contact Support", "Email: support@swipely.com\nPhone: 1-800-SWIPELY");
+    };
+
+    const handleTerms = () => {
+      Alert.alert("Terms of Service", "Terms of Service will be displayed here.");
+    };
+    
     return(
         <Modal
             visible={visible}
@@ -35,14 +54,26 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
 
               {/* Help & Support Content */}
               <View>
-                <TouchableOpacity style={styles.accountItem}>
+                <TouchableOpacity 
+                  style={styles.accountItem} 
+                  onPress={handleFAQ}
+                >
                   <Text style={styles.accountLabel}>FAQ</Text>
+                  <Text style={styles.chevron}>›</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.accountItem}>
+                <TouchableOpacity 
+                  style={styles.accountItem}
+                  onPress={handleContactSupport}
+                >
                   <Text style={styles.accountLabel}>Contact Support</Text>
+                  <Text style={styles.chevron}>›</Text>
                 </TouchableOpacity> 
-                <TouchableOpacity style={styles.accountItem}>
+                <TouchableOpacity 
+                  style={styles.accountItem}
+                  onPress={handleTerms}
+                >
                   <Text style={styles.accountLabel}>Terms of Service</Text>
+                  <Text style={styles.chevron}>›</Text>
                 </TouchableOpacity>                   
               </View>
             </ScrollView>
@@ -63,6 +94,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 16,
+    paddingHorizontal: 20,
     borderBottomWidth: 1,
     borderBottomColor: "#E9ECEF",
     backgroundColor:'#fff'
@@ -71,6 +103,10 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: "#212529",
+  },
+  chevron: {
+    fontSize: 20,
+    color: "#6C757D",
   },
   header: {
     paddingHorizontal: 20,
