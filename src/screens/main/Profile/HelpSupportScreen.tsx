@@ -16,10 +16,10 @@ interface HelpSupportScreenProps {
 }
 
 export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, onClose }) => {
-    const [faq, setShowFaq] = useState(false);
+    const [showFaq, setShowFaq] = useState(false);
 
     const toggleShowFaq = () => {
-      setShowFaq(false);
+      setShowFaq((prev) => !prev);
     };
 
     const handleFAQ = () => {
@@ -56,9 +56,11 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
               <View>
                 <TouchableOpacity 
                   style={styles.accountItem} 
-                  onPress={handleFAQ}
+                  onPress={() => toggleShowFaq()}
                 >
-                  <Text style={styles.accountLabel}>FAQ</Text>
+                  <Text style={styles.accountLabel}>
+                    {showFaq ? "Close Show Frequently Asked Questions" : "Show Frequently Asked Questions"}
+                  </Text>
                   <Text style={styles.chevron}>›</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
