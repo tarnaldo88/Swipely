@@ -69,13 +69,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#f7f7f7",
   },
   header: {
-    backgroundColor: "#fff",
+    backgroundColor: "#b8fcccff",
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: "#ddd",
   },
   headerActive: {
-    backgroundColor: "#e9e9ff",
+    backgroundColor: "#3bfa8aff",
   },
   headerText: {
     fontSize: 16,
@@ -83,12 +83,12 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   content: {
-    backgroundColor: "#fff",
+    backgroundColor: "#3f3939ff",
     padding: 16,
   },
   contentText: {
     fontSize: 14,
-    color: "#555",
+    color: "#fff6f6ff",
     lineHeight: 20,
   },
   sectionTitle: {
