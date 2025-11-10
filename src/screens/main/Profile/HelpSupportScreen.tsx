@@ -7,6 +7,7 @@ import {
   ScrollView,
   Modal
 } from "react-native";
+import Accordion from 'react-native-collapsible/Accordion';
 
 interface HelpSupportScreenProps {
   visible: boolean;
