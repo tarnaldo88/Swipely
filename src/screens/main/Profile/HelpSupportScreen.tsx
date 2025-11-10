@@ -23,10 +23,6 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
       setShowFaq((prev) => !prev);
     };
 
-    const handleFAQ = () => {
-      Alert.alert("FAQ", "Frequently Asked Questions will be displayed here.");
-    };
-
     const handleContactSupport = () => {
       Alert.alert("Contact Support", "Email: support@swipely.com\nPhone: 1-800-SWIPELY");
     };
@@ -55,14 +51,30 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
 
               {/* Help & Support Content */}
               <View>
+
                 <TouchableOpacity 
-                  style={styles.accountItem} 
-                  onPress={() => toggleShowFaq()}
+                  style={[
+                    styles.accountItem, 
+                    showFaq && styles.activeAccountItem // 👈 add conditional style
+                  ]}
+                  onPress={toggleShowFaq}
                 >
-                  <Text style={styles.accountLabel}>
-                    {showFaq ? "Close Show Frequently Asked Questions" : "Show Frequently Asked Questions"}
+                  <Text
+                    style={[
+                      styles.accountLabel,
+                      showFaq && styles.activeAccountLabel, // 👈 optional text color change
+                    ]}
+                  >
+                    {showFaq ? "Close Frequently Asked Questions" : "Show Frequently Asked Questions"}
                   </Text>
-                  <Text style={styles.chevron}>›</Text>
+                  <Text
+                    style={[
+                      styles.chevron,
+                      showFaq && styles.activeChevron, // 👈 optional chevron color change
+                    ]}
+                  >
+                    ›
+                  </Text>
                 </TouchableOpacity>
 
                 {showFaq && (
@@ -151,5 +163,17 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 16,
     color: "#dc3545",
+  },
+  activeAccountItem: {
+    backgroundColor: "#E6D7F5", // light purple tint (visible feedback)
+  },
+
+  activeAccountLabel: {
+    color: "#47006e", // same purple as your header
+    fontWeight: "600",
+  },
+
+  activeChevron: {
+    color: "#47006e",
   },
 });
