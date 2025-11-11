@@ -52,9 +52,62 @@ const MOCKTOS = [
 ];
 
 export const TermsOfService: React.FC = () => {
+    const [activeSections, setActiveSections] = useState<number[]>([]);
+
+    const renderHeader = (section: any, _: number, isActive: boolean) => (
+        <View style={[styles.header, isActive && styles.activeHeader]}>
+        <Text style={styles.headerText}>{section.title}</Text>
+        </View>
+    );
+
+    const renderContent = (section: any) => (
+        <View style={styles.content}>
+        <Text style={styles.contentText}>{section.content}</Text>
+        </View>
+    );
+    
     return (
         <ScrollView>
-
+            <Accordion 
+                sections={MOCKTOS}
+                activeSections={activeSections}
+                renderHeader={renderHeader}
+                renderContent={renderContent}
+                onChange={(sections) => setActiveSections(sections)}
+                underlayColor="transparent"
+            />
         </ScrollView>
     );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 16
+  },
+  header: {
+    backgroundColor: "#f4f4f4",
+    padding: 12,
+    borderRadius: 8,
+    marginVertical: 4
+  },
+  activeHeader: {
+    backgroundColor: "#e0e0e0"
+  },
+  headerText: {
+    fontSize: 16,
+    fontWeight: "600"
+  },
+  content: {
+    padding: 10,
+    backgroundColor: "#fafafa",
+    borderRadius: 8,
+    marginBottom: 8
+  },
+  contentText: {
+    fontSize: 14,
+    color: "#444",
+    lineHeight: 20
+  }
+});
