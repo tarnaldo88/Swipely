@@ -10,16 +10,25 @@ import {
   Alert
 } from "react-native";
 import { FaqScreen } from "./FaqScreen";
+import Accordion from "react-native-collapsible/Accordion";
 
 interface HelpSupportScreenProps {
   visible: boolean;
   onClose: () => void;
 }
 
+const ContactSection = [
+  {
+    title: "Contact us at support@swipely.com",
+    content: "Phone Number: +1 555 555 5555"
+  }
+];
+
 export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, onClose }) => {
     const [showFaq, setShowFaq] = useState(false);
     const [showContactUs, setShowContactUs] = useState(false);
     const [showTerms, setShowTerms] = useState(false);
+    const [activeSections, setActiveSections] = useState<number[]>([]);
     
 
     const toggleShowFaq = () => {
