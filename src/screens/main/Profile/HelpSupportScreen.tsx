@@ -168,11 +168,11 @@ const styles = StyleSheet.create({
     color: "#dc3545",
   },
   activeAccountItem: {
-    backgroundColor: "#E6D7F5", // light purple tint (visible feedback)
+    backgroundColor: "#E6D7F5",
   },
 
   activeAccountLabel: {
-    color: "#47006e", // same purple as your header
+    color: "#47006e",
     fontWeight: "600",
   },
 
