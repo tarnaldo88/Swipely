@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { FaqScreen } from "./FaqScreen";
 import Accordion from "react-native-collapsible/Accordion";
+import { TermsOfService } from "./TermsOfService";
 
 interface HelpSupportScreenProps {
   visible: boolean;
@@ -105,7 +106,10 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
                 >
                   <Text style={[styles.accountLabel, showTerms && styles.activeChevron,]}>Terms of Service</Text>
                   <Text style={[styles.chevron, showTerms && styles.activeChevron,]}>›</Text>
-                </TouchableOpacity>                   
+                </TouchableOpacity> 
+                {showTerms && (
+                  <TermsOfService/>
+                )}                  
               </View>
             </ScrollView>
           </View>            
