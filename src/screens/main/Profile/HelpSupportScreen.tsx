@@ -18,12 +18,12 @@ interface HelpSupportScreenProps {
   onClose: () => void;
 }
 
-const ContactSection = [
-  {
-    title: "Contact us at support@swipely.com",
-    content: "Phone Number: +1 555 555 5555"
-  }
-];
+// const ContactSection = [
+//   {
+//     title: "Contact us at support@swipely.com",
+//     content: "Phone Number: +1 555 555 5555"
+//   }
+// ];
 
 export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, onClose }) => {
     const [showFaq, setShowFaq] = useState(false);
@@ -42,6 +42,15 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
 
     const toggleTerms = () => {
       setShowTerms((prev) => (!prev));
+    };
+
+    const contactUs = () => {
+      return(
+        <View style={styles.accountItem}>
+          <Text>Contact us at support@swipely.com</Text>
+          <Text>Phone Number: +1 555 555 5555</Text>    
+        </View>
+      );
     };
     
     return(
