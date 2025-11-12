@@ -109,6 +109,9 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
                   <Text style={[styles.accountLabel, showContactUs && styles.activeChevron,]}>Contact Support</Text>
                   <Text style={[styles.chevron, showContactUs && styles.activeChevron,]}>›</Text>
                 </TouchableOpacity> 
+
+                {showContactUs && contactUs()}
+
                 <TouchableOpacity 
                   style={[styles.accountItem, showTerms && styles.activeAccountItem]}
                   onPress={toggleTerms}
