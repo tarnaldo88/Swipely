@@ -317,6 +317,582 @@ const MOCK_PRODUCTS: ProductCard[] = [
     },
     availability: true,
   },
+  // Additional Electronics
+  {
+    id: 'prod-16',
+    title: '4K Webcam',
+    price: 129.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'electronics', name: 'Electronics' },
+    description: 'Professional 4K webcam with auto-focus and built-in microphone for streaming and video calls.',
+    specifications: { 
+      'Resolution': '4K 30fps', 
+      'Field of View': '90 degrees', 
+      'Microphone': 'Dual Built-in',
+      'Mount': 'Universal Clip',
+      'Compatibility': 'Windows, Mac, Linux'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-17',
+    title: 'USB-C Hub',
+    price: 69.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1625948515291-69613efd103f?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'electronics', name: 'Electronics' },
+    description: '7-in-1 USB-C hub with HDMI, USB 3.0, SD card reader, and power delivery.',
+    specifications: { 
+      'Ports': '7 ports', 
+      'HDMI': '4K@60Hz', 
+      'USB': '3x USB 3.0',
+      'Power Delivery': '100W',
+      'Material': 'Aluminum'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-18',
+    title: 'Noise Cancelling Earbuds',
+    price: 149.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'electronics', name: 'Electronics' },
+    description: 'True wireless earbuds with active noise cancellation and 24-hour battery life.',
+    specifications: { 
+      'Battery Life': '8h + 16h case', 
+      'Noise Cancellation': 'Active ANC', 
+      'Water Resistance': 'IPX4',
+      'Bluetooth': '5.2',
+      'Charging': 'USB-C + Wireless'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-19',
+    title: 'Portable SSD 1TB',
+    price: 119.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'electronics', name: 'Electronics' },
+    description: 'Ultra-fast portable SSD with 1TB storage and USB-C connectivity.',
+    specifications: { 
+      'Capacity': '1TB', 
+      'Speed': 'Up to 1050MB/s', 
+      'Interface': 'USB 3.2 Gen 2',
+      'Durability': 'Shock resistant',
+      'Warranty': '5 years'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-20',
+    title: 'Smart LED Light Bulbs (4-Pack)',
+    price: 44.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1550985616-10810253b84d?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'electronics', name: 'Electronics' },
+    description: 'WiFi-enabled smart LED bulbs with 16 million colors and voice control.',
+    specifications: { 
+      'Brightness': '800 lumens', 
+      'Colors': '16 million', 
+      'Connectivity': 'WiFi 2.4GHz',
+      'Voice Control': 'Alexa, Google',
+      'Lifespan': '25,000 hours'
+    },
+    availability: true,
+  },
+  // Additional Fashion
+  {
+    id: 'prod-21',
+    title: 'Classic Denim Jacket',
+    price: 79.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'fashion', name: 'Fashion' },
+    description: 'Timeless denim jacket with a modern fit, perfect for layering.',
+    specifications: { 
+      'Material': '100% Cotton Denim', 
+      'Fit': 'Regular', 
+      'Sizes': 'XS-XXL',
+      'Wash': 'Medium Blue',
+      'Pockets': '4'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-22',
+    title: 'Cashmere Sweater',
+    price: 159.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'fashion', name: 'Fashion' },
+    description: 'Luxurious 100% cashmere sweater with ribbed trim and relaxed fit.',
+    specifications: { 
+      'Material': '100% Cashmere', 
+      'Weight': 'Lightweight', 
+      'Sizes': 'XS-XL',
+      'Care': 'Hand wash or dry clean',
+      'Origin': 'Scotland'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-23',
+    title: 'Athletic Running Shoes',
+    price: 119.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'fashion', name: 'Fashion' },
+    description: 'Lightweight running shoes with responsive cushioning and breathable mesh.',
+    specifications: { 
+      'Upper': 'Breathable Mesh', 
+      'Sole': 'Rubber', 
+      'Cushioning': 'EVA Foam',
+      'Weight': '8.5 oz',
+      'Sizes': '6-13'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-24',
+    title: 'Wool Blend Coat',
+    price: 249.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'fashion', name: 'Fashion' },
+    description: 'Elegant wool blend coat with classic silhouette and button closure.',
+    specifications: { 
+      'Material': '80% Wool, 20% Polyester', 
+      'Lining': 'Satin', 
+      'Length': 'Knee-length',
+      'Closure': 'Button',
+      'Sizes': 'XS-XL'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-25',
+    title: 'Linen Shirt',
+    price: 64.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'fashion', name: 'Fashion' },
+    description: 'Breathable linen shirt perfect for warm weather, relaxed fit.',
+    specifications: { 
+      'Material': '100% Linen', 
+      'Fit': 'Relaxed', 
+      'Collar': 'Button-down',
+      'Sizes': 'S-XXL',
+      'Colors': 'Multiple'
+    },
+    availability: true,
+  },
+  // Additional Sports & Outdoors
+  {
+    id: 'prod-26',
+    title: 'Camping Tent (4-Person)',
+    price: 189.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'sports', name: 'Sports & Outdoors' },
+    description: 'Spacious 4-person tent with waterproof design and easy setup.',
+    specifications: { 
+      'Capacity': '4 persons', 
+      'Waterproof': 'Yes', 
+      'Setup Time': '10 minutes',
+      'Weight': '12 lbs',
+      'Season': '3-season'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-27',
+    title: 'Adjustable Dumbbells Set',
+    price: 299.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'sports', name: 'Sports & Outdoors' },
+    description: 'Space-saving adjustable dumbbells from 5 to 52.5 lbs per hand.',
+    specifications: { 
+      'Weight Range': '5-52.5 lbs', 
+      'Increments': '2.5 lbs', 
+      'Material': 'Steel',
+      'Compact': 'Yes',
+      'Warranty': '2 years'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-28',
+    title: 'Hiking Backpack 40L',
+    price: 129.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1622260614927-9d2e60c3f8e4?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'sports', name: 'Sports & Outdoors' },
+    description: 'Durable 40L hiking backpack with hydration system and rain cover.',
+    specifications: { 
+      'Capacity': '40 liters', 
+      'Hydration': 'Compatible', 
+      'Rain Cover': 'Included',
+      'Frame': 'Internal',
+      'Pockets': 'Multiple'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-29',
+    title: 'Resistance Bands Set',
+    price: 29.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1598289431512-b97b0917affc?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'sports', name: 'Sports & Outdoors' },
+    description: 'Complete resistance bands set with 5 levels and door anchor.',
+    specifications: { 
+      'Bands': '5 resistance levels', 
+      'Material': 'Natural Latex', 
+      'Accessories': 'Handles, Anchor, Bag',
+      'Max Resistance': '150 lbs',
+      'Portable': 'Yes'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-30',
+    title: 'Mountain Bike',
+    price: 599.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'sports', name: 'Sports & Outdoors' },
+    description: 'All-terrain mountain bike with 21-speed gears and front suspension.',
+    specifications: { 
+      'Gears': '21-speed', 
+      'Frame': 'Aluminum Alloy', 
+      'Suspension': 'Front',
+      'Wheel Size': '27.5"',
+      'Brakes': 'Disc'
+    },
+    availability: true,
+  },
+  // Additional Food & Beverages
+  {
+    id: 'prod-31',
+    title: 'Gourmet Chocolate Box',
+    price: 39.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'food', name: 'Food & Beverages' },
+    description: 'Assorted gourmet chocolates handcrafted with premium ingredients.',
+    specifications: { 
+      'Pieces': '24 chocolates', 
+      'Flavors': 'Assorted', 
+      'Cocoa': '70% Dark',
+      'Packaging': 'Gift Box',
+      'Shelf Life': '6 months'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-32',
+    title: 'Organic Honey (16oz)',
+    price: 18.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1587049352846-4a222e784acc?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'food', name: 'Food & Beverages' },
+    description: 'Raw organic honey from local beekeepers, unfiltered and unpasteurized.',
+    specifications: { 
+      'Weight': '16 oz', 
+      'Type': 'Wildflower', 
+      'Organic': 'Certified',
+      'Processing': 'Raw',
+      'Origin': 'USA'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-33',
+    title: 'Protein Powder (2lbs)',
+    price: 44.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'food', name: 'Food & Beverages' },
+    description: 'Whey protein isolate with 25g protein per serving, chocolate flavor.',
+    specifications: { 
+      'Weight': '2 lbs', 
+      'Protein': '25g per serving', 
+      'Flavor': 'Chocolate',
+      'Servings': '30',
+      'Gluten Free': 'Yes'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-34',
+    title: 'Olive Oil Extra Virgin',
+    price: 29.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'food', name: 'Food & Beverages' },
+    description: 'Premium extra virgin olive oil cold-pressed from Italian olives.',
+    specifications: { 
+      'Volume': '500ml', 
+      'Type': 'Extra Virgin', 
+      'Origin': 'Italy',
+      'Processing': 'Cold-pressed',
+      'Acidity': '<0.5%'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-35',
+    title: 'Herbal Tea Collection',
+    price: 27.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1597318181274-c68c6e05d26e?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'food', name: 'Food & Beverages' },
+    description: 'Assorted herbal tea collection with 8 different caffeine-free blends.',
+    specifications: { 
+      'Varieties': '8 types', 
+      'Bags': '80 total', 
+      'Caffeine': 'Free',
+      'Organic': 'Yes',
+      'Packaging': 'Individual Sachets'
+    },
+    availability: true,
+  },
+  // Additional Beauty & Personal Care
+  {
+    id: 'prod-36',
+    title: 'Anti-Aging Serum',
+    price: 89.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'beauty', name: 'Beauty & Personal Care' },
+    description: 'Advanced anti-aging serum with retinol and hyaluronic acid.',
+    specifications: { 
+      'Volume': '30ml', 
+      'Key Ingredients': 'Retinol, Hyaluronic Acid', 
+      'Skin Type': 'All',
+      'Cruelty Free': 'Yes',
+      'Vegan': 'Yes'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-37',
+    title: 'Electric Toothbrush',
+    price: 79.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'beauty', name: 'Beauty & Personal Care' },
+    description: 'Sonic electric toothbrush with 5 modes and 2-week battery life.',
+    specifications: { 
+      'Modes': '5 cleaning modes', 
+      'Battery': '2 weeks', 
+      'Timer': '2-minute',
+      'Heads': '2 included',
+      'Waterproof': 'IPX7'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-38',
+    title: 'Hair Dryer Professional',
+    price: 129.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'beauty', name: 'Beauty & Personal Care' },
+    description: 'Professional ionic hair dryer with multiple heat settings and cool shot.',
+    specifications: { 
+      'Power': '1875W', 
+      'Technology': 'Ionic', 
+      'Heat Settings': '3',
+      'Speed Settings': '2',
+      'Attachments': 'Concentrator, Diffuser'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-39',
+    title: 'Face Mask Set (10-Pack)',
+    price: 34.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'beauty', name: 'Beauty & Personal Care' },
+    description: 'Variety pack of sheet masks for different skin concerns.',
+    specifications: { 
+      'Quantity': '10 masks', 
+      'Types': '5 varieties', 
+      'Ingredients': 'Natural',
+      'Cruelty Free': 'Yes',
+      'Suitable For': 'All skin types'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-40',
+    title: 'Perfume Eau de Parfum',
+    price: 119.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'beauty', name: 'Beauty & Personal Care' },
+    description: 'Elegant floral perfume with notes of jasmine, rose, and vanilla.',
+    specifications: { 
+      'Volume': '50ml', 
+      'Type': 'Eau de Parfum', 
+      'Notes': 'Floral, Vanilla',
+      'Longevity': '6-8 hours',
+      'Bottle': 'Designer Glass'
+    },
+    availability: true,
+  },
+  // Additional Accessories
+  {
+    id: 'prod-41',
+    title: 'Sunglasses Polarized',
+    price: 89.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'accessories', name: 'Accessories' },
+    description: 'Polarized sunglasses with UV400 protection and stylish frame.',
+    specifications: { 
+      'Lens': 'Polarized', 
+      'UV Protection': 'UV400', 
+      'Frame': 'Acetate',
+      'Case': 'Included',
+      'Warranty': '1 year'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-42',
+    title: 'Leather Wallet',
+    price: 59.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1627123424574-724758594e93?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'accessories', name: 'Accessories' },
+    description: 'Slim leather wallet with RFID blocking and multiple card slots.',
+    specifications: { 
+      'Material': 'Genuine Leather', 
+      'RFID Blocking': 'Yes', 
+      'Card Slots': '8',
+      'Bill Compartment': '2',
+      'Dimensions': '4.5" x 3.5"'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-43',
+    title: 'Baseball Cap',
+    price: 29.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'accessories', name: 'Accessories' },
+    description: 'Classic baseball cap with adjustable strap and breathable fabric.',
+    specifications: { 
+      'Material': 'Cotton Twill', 
+      'Closure': 'Adjustable Strap', 
+      'Brim': 'Curved',
+      'Breathable': 'Yes',
+      'One Size': 'Fits Most'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-44',
+    title: 'Phone Case Premium',
+    price: 39.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'accessories', name: 'Accessories' },
+    description: 'Premium leather phone case with card slots and magnetic closure.',
+    specifications: { 
+      'Material': 'Genuine Leather', 
+      'Card Slots': '3', 
+      'Protection': 'Drop-proof',
+      'Wireless Charging': 'Compatible',
+      'Models': 'Multiple'
+    },
+    availability: true,
+  },
+  {
+    id: 'prod-45',
+    title: 'Belt Leather',
+    price: 49.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1624222247344-550fb60583bb?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'accessories', name: 'Accessories' },
+    description: 'Classic leather belt with reversible design and silver buckle.',
+    specifications: { 
+      'Material': 'Full Grain Leather', 
+      'Width': '1.5"', 
+      'Reversible': 'Yes',
+      'Buckle': 'Silver Tone',
+      'Sizes': '32-44'
+    },
+    availability: true,
+  },
 ];
 
 export class ProductFeedService {
