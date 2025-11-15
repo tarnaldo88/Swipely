@@ -217,9 +217,10 @@ export const WishlistScreen: React.FC = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-      <View style={styles.header}>
+    <View style={styles.backgroundContainer}>
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+        <View style={styles.header}>
         <Text style={styles.headerTitle}>Wishlist</Text>
         <View style={styles.headerActions}>
           {wishlistItems.length > 0 && (
@@ -250,14 +251,22 @@ export const WishlistScreen: React.FC = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
-    </SafeAreaView>
+      </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundContainer: {
+    flex: 1,
+    backgroundColor: '#221e27',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: '#221e27',
+    maxWidth: 600,
+    width: '100%',
   },
   loadingContainer: {
     flex: 1,

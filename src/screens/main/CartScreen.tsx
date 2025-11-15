@@ -166,18 +166,21 @@ export const CartScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <View style={styles.backgroundContainer}>
+        <SafeAreaView style={styles.container}>
+          <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>Loading cart...</Text>
         </View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+    <View style={styles.backgroundContainer}>
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Shopping Cart</Text>
         {cartItems.length > 0 && (
@@ -197,14 +200,22 @@ export const CartScreen: React.FC = () => {
       />
       
       {renderCheckoutSection()}
-    </SafeAreaView>
+      </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundContainer: {
+    flex: 1,
+    backgroundColor: '#221e27',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: '#221e27',
+    maxWidth: 600,
+    width: '100%',
   },
   loadingContainer: {
     flex: 1,
