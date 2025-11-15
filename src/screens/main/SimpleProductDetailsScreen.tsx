@@ -136,8 +136,9 @@ export const SimpleProductDetailsScreen: React.FC<SimpleProductDetailsScreenProp
       statusBarTranslucent={true}
       onRequestClose={handleClose}
     >
-      <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
-      <SafeAreaView style={styles.safeArea}>
+      <View style={styles.modalBackground}>
+        <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
+        <SafeAreaView style={styles.safeArea}>
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity
@@ -244,18 +245,23 @@ export const SimpleProductDetailsScreen: React.FC<SimpleProductDetailsScreenProp
             </TouchableOpacity>
           </View>
         )}
-      </SafeAreaView>
+        </SafeAreaView>
+      </View>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
+  modalBackground: {
+    flex: 1,
+    backgroundColor: '#221e27',
+    alignItems: 'center',
+  },
   safeArea: {
     flex: 1,
     backgroundColor: '#221e27',
     maxWidth: 500,
     width: '100%',
-    alignSelf: 'center',
   },
   header: {
     flexDirection: 'row',

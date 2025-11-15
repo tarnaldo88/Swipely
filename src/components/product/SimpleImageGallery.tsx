@@ -25,7 +25,14 @@ export const SimpleImageGallery: React.FC<SimpleImageGalleryProps> = ({
   height = IMAGE_HEIGHT,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [loadingStates, setLoadingStates] = useState<{ [key: number]: boolean }>({});
+  const [loadingStates, setLoadingStates] = useState<{ [key: number]: boolean }>(() => {
+    // Initialize all images as loading
+    const initial: { [key: number]: boolean } = {};
+    images.forEach((_, index) => {
+      initial[index] = true;
+    });
+    return initial;
+  });
 
   const handleScroll = useCallback((event: any) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
@@ -68,21 +75,24 @@ export const SimpleImageGallery: React.FC<SimpleImageGalleryProps> = ({
         onMomentumScrollEnd={handleScroll}
         scrollEventThrottle={16}
         contentContainerStyle={styles.scrollContent}
+        snapToInterval={IMAGE_WIDTH}
+        decelerationRate="fast"
       >
         {images.map((imageUrl, index) => (
-          <View key={index} style={[styles.imageContainer, { width: IMAGE_WIDTH }]}>
+          <View key={index} style={[styles.imageContainer, { width: IMAGE_WIDTH, height }]}>
+            {loadingStates[index] && (
+              <View style={[styles.loadingOverlay, { height, width: IMAGE_WIDTH }]}>
+                <ActivityIndicator size="large" color="#666666" />
+              </View>
+            )}
             <Image
               source={{ uri: imageUrl }}
               style={[styles.image, { height, width: IMAGE_WIDTH }]}
-              resizeMode="cover"
+              resizeMode="contain"
               onLoadStart={() => handleImageLoadStart(index)}
-              onLoadEnd={() => handleImageLoadEnd(index)}
+              onLoad={() => handleImageLoadEnd(index)}
+              onError={() => handleImageLoadEnd(index)}
             />
-            {loadingStates[index] && (
-              <View style={[styles.loadingOverlay, { height, width: IMAGE_WIDTH }]}>
-                <ActivityIndicator size="small" color="#999999" />
-              </View>
-            )}
           </View>
         ))}
       </ScrollView>
@@ -118,7 +128,7 @@ export const SimpleImageGallery: React.FC<SimpleImageGalleryProps> = ({
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#221e27',
     maxWidth: 500,
     width: '100%',
     alignSelf: 'center',
@@ -129,10 +139,11 @@ const styles = StyleSheet.create({
   imageContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#221e27',
+    position: 'relative',
   },
   image: {
-    backgroundColor: '#F0F0F0',
+    backgroundColor: 'transparent',
   },
   placeholderContainer: {
     flex: 1,
@@ -186,8 +197,9 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(240, 240, 240, 0.8)',
+    backgroundColor: '#221e27',
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 1,
   },
 });
