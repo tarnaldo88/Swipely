@@ -118,11 +118,13 @@ export const SimpleProductDetailsScreen: React.FC<SimpleProductDetailsScreenProp
     try {
       await swipeActionService.onAddToCart(product.id);
       Alert.alert('Added to Cart', 'Product has been added to your cart!');
+      // Close modal and go back to feed
+      handleClose();
     } catch (error) {
       console.error('Error adding to cart:', error);
       Alert.alert('Error', 'Failed to add product to cart');
     }
-  }, [product, swipeActionService]);
+  }, [product, swipeActionService, handleClose]);
 
   if (!isVisible) {
     return null;
