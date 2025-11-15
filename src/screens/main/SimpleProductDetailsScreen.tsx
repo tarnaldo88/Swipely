@@ -253,6 +253,9 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#221e27',
+    maxWidth: 500,
+    width: '100%',
+    alignSelf: 'center',
   },
   header: {
     flexDirection: 'row',

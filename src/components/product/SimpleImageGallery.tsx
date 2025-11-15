@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 
 const { width: screenWidth } = Dimensions.get('window');
+// Limit image width for large screens
+const IMAGE_WIDTH = Math.min(screenWidth, 500);
 const IMAGE_HEIGHT = 300;
 
 interface SimpleImageGalleryProps {
@@ -27,7 +29,7 @@ export const SimpleImageGallery: React.FC<SimpleImageGalleryProps> = ({
 
   const handleScroll = useCallback((event: any) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
-    const newIndex = Math.round(contentOffsetX / screenWidth);
+    const newIndex = Math.round(contentOffsetX / IMAGE_WIDTH);
     if (newIndex !== currentIndex && newIndex >= 0 && newIndex < images.length) {
       setCurrentIndex(newIndex);
     }
@@ -65,18 +67,19 @@ export const SimpleImageGallery: React.FC<SimpleImageGalleryProps> = ({
         showsHorizontalScrollIndicator={false}
         onMomentumScrollEnd={handleScroll}
         scrollEventThrottle={16}
+        contentContainerStyle={styles.scrollContent}
       >
         {images.map((imageUrl, index) => (
-          <View key={index} style={[styles.imageContainer, { width: screenWidth }]}>
+          <View key={index} style={[styles.imageContainer, { width: IMAGE_WIDTH }]}>
             <Image
               source={{ uri: imageUrl }}
-              style={[styles.image, { height }]}
+              style={[styles.image, { height, width: IMAGE_WIDTH }]}
               resizeMode="cover"
               onLoadStart={() => handleImageLoadStart(index)}
               onLoadEnd={() => handleImageLoadEnd(index)}
             />
             {loadingStates[index] && (
-              <View style={[styles.loadingOverlay, { height }]}>
+              <View style={[styles.loadingOverlay, { height, width: IMAGE_WIDTH }]}>
                 <ActivityIndicator size="small" color="#999999" />
               </View>
             )}
@@ -116,13 +119,19 @@ const styles = StyleSheet.create({
   container: {
     position: 'relative',
     backgroundColor: '#F5F5F5',
+    maxWidth: 500,
+    width: '100%',
+    alignSelf: 'center',
+  },
+  scrollContent: {
+    alignItems: 'center',
   },
   imageContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#F0F0F0',
   },
   image: {
-    width: '100%',
     backgroundColor: '#F0F0F0',
   },
   placeholderContainer: {
