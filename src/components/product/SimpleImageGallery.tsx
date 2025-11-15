@@ -283,8 +283,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   zoomImageContainer: {
-    width: screenWidth,
-    height: screenHeight,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
     justifyContent: 'center',
     alignItems: 'center',
   },
