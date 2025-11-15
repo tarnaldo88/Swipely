@@ -7,7 +7,8 @@ import {
   ScrollView,
   Modal,
   Linking,
-  Alert
+  Alert,
+  TextInput,
 } from "react-native";
 import { FaqScreen } from "./FaqScreen";
 import Accordion from "react-native-collapsible/Accordion";
@@ -30,6 +31,7 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
     const [showContactUs, setShowContactUs] = useState(false);
     const [showTerms, setShowTerms] = useState(false);
     const [activeSections, setActiveSections] = useState<number[]>([]);
+    const [email, setEmail] = useState("");
     
 
     const toggleShowFaq = () => {
@@ -48,6 +50,10 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
       return(
         <View style={styles.accountItem}>
           <Text>Contact us at support@swipely.com</Text>
+          <TextInput
+            placeholder="Enter Email"
+            onChangeText={setEmail}
+          />
           <Text>Phone Number: +1 555 555 5555</Text>    
         </View>
       );
