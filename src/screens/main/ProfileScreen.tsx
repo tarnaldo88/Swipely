@@ -111,24 +111,28 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>Loading profile...</Text>
         </View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </View>
     );
   }
 
   if (!user) {
     return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <View style={styles.backgroundContainer}>
+        <SafeAreaView style={styles.container}>
+          <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Unable to load profile</Text>
         </View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+    <View style={styles.backgroundContainer}>
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -266,14 +270,22 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
         visible={showHelpModal}
         onClose={() => setShowHelpModal(false)}
       />
-    </SafeAreaView>
+      </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundContainer: {
+    flex: 1,
+    backgroundColor: "#230234",
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: "#230234",
+    maxWidth: 600,
+    width: '100%',
   },
   loadingContainer: {
     flex: 1,
