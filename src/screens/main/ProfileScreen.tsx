@@ -9,7 +9,7 @@ import {
   Alert,
   Image,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { User, CategoryPreferences, MainStackParamList } from "../../types";
 import { getAuthService } from "../../services";
@@ -40,6 +40,23 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
   useEffect(() => {
     loadUserData();
   }, []);
+
+  // Reload preferences when screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      loadUserPreferences();
+    }, [])
+  );
+
+  const loadUserPreferences = async () => {
+    try {
+      const userPreferences = await CategoryPreferenceService.getUserPreferences();
+      setPreferences(userPreferences);
+    } catch (error) {
+      console.log("No preferences found, using defaults");
+      setPreferences({ selectedCategories: [], lastUpdated: new Date() });
+    }
+  };
 
   const loadUserData = async () => {
     try {
