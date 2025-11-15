@@ -471,6 +471,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 20,
+    maxWidth: 600,
+    width: '100%',
+    alignSelf: 'center',
   },
   cardWrapper: {
     position: 'absolute',

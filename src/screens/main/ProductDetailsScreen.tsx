@@ -356,6 +356,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "flex-end",
+    maxWidth: 500,
   },
   modalContainer: {
     backgroundColor: "#FFFFFF",
@@ -363,6 +364,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     maxHeight: screenHeight * 0.9,
     minHeight: screenHeight * 0.6,
+    
   },
   safeArea: {
     flex: 1,

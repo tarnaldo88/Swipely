@@ -18,7 +18,8 @@ import { AddToCartButton } from "./AddToCartButton";
 import { ViewDetailsButton } from "./ViewDetailsButton";
 
 const { width: screenWidth } = Dimensions.get("window");
-const CARD_WIDTH = screenWidth * 0.9;
+// Limit card width for large screens (max 500px)
+const CARD_WIDTH = Math.min(screenWidth * 0.9, 500);
 const SWIPE_THRESHOLD = 100;
 
 type MouseSwipeableCardNavigationProp = StackNavigationProp<MainStackParamList>;
@@ -309,6 +310,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: CARD_WIDTH,
+    maxWidth: 500,
     backgroundColor: "#221e27",
     borderRadius: 16,
     shadowColor: "#000",
@@ -320,6 +322,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8,
     borderColor: "#221e27",
+    alignSelf: "center",
   },
   cardContent: {
     borderRadius: 16,
@@ -328,11 +331,14 @@ const styles = StyleSheet.create({
   imageContainer: {
     position: "relative",
     height: 400,
+    width: "100%",
+    backgroundColor: "#f0f0f0",
   },
   productImage: {
     width: "100%",
     height: "100%",
     resizeMode: "cover",
+    backgroundColor: "#f0f0f0",
   },
   overlay: {
     position: "absolute",
