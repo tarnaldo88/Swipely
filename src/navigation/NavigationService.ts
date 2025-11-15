@@ -18,9 +18,13 @@ class NavigationService {
   /**
    * Navigate to a specific route
    */
-  navigate(routeName: keyof RootStackParamList, params?: any) {
+  navigate<RouteName extends keyof RootStackParamList>(
+    routeName: RouteName,
+    params?: RootStackParamList[RouteName]
+  ) {
     if (this.navigationRef?.current) {
-      this.navigationRef.current.navigate(routeName as never, params as never);
+      // @ts-ignore - React Navigation typing issue
+      this.navigationRef.current.navigate(routeName, params);
     }
   }
 
@@ -36,12 +40,15 @@ class NavigationService {
   /**
    * Reset navigation stack to a specific route
    */
-  reset(routeName: keyof RootStackParamList, params?: any) {
+  reset<RouteName extends keyof RootStackParamList>(
+    routeName: RouteName,
+    params?: RootStackParamList[RouteName]
+  ) {
     if (this.navigationRef?.current) {
       this.navigationRef.current.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{ name: routeName as never, params: params as never }],
+          routes: [{ name: routeName, params }],
         })
       );
     }
