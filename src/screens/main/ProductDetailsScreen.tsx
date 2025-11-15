@@ -342,15 +342,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "flex-end",
-    maxWidth: 500,
+    // maxWidth: 500,
   },
   modalContainer: {
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    // maxHeight: screenHeight * 0.9,
-    // minHeight: screenHeight * 0.6,
-    
+    maxHeight: screenHeight * 0.9,
+    minHeight: screenHeight * 0.6,
+    // maxWidth: 500,
   },
   safeArea: {
     flex: 1,
