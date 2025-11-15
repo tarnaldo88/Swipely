@@ -7,7 +7,6 @@ import {
   ScrollView,
   TouchableOpacity,
   Text,
-  ActivityIndicator,
 } from 'react-native';
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -25,14 +24,6 @@ export const SimpleImageGallery: React.FC<SimpleImageGalleryProps> = ({
   height = IMAGE_HEIGHT,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [loadingStates, setLoadingStates] = useState<{ [key: number]: boolean }>(() => {
-    // Initialize all images as loading
-    const initial: { [key: number]: boolean } = {};
-    images.forEach((_, index) => {
-      initial[index] = true;
-    });
-    return initial;
-  });
 
   const handleScroll = useCallback((event: any) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
@@ -47,14 +38,6 @@ export const SimpleImageGallery: React.FC<SimpleImageGalleryProps> = ({
       setCurrentIndex(newIndex);
     }
   }, [images.length]);
-
-  const handleImageLoadStart = useCallback((index: number) => {
-    setLoadingStates(prev => ({ ...prev, [index]: true }));
-  }, []);
-
-  const handleImageLoadEnd = useCallback((index: number) => {
-    setLoadingStates(prev => ({ ...prev, [index]: false }));
-  }, []);
 
   if (!images || images.length === 0) {
     return (
@@ -74,24 +57,16 @@ export const SimpleImageGallery: React.FC<SimpleImageGalleryProps> = ({
         showsHorizontalScrollIndicator={false}
         onMomentumScrollEnd={handleScroll}
         scrollEventThrottle={16}
-        contentContainerStyle={styles.scrollContent}
         snapToInterval={IMAGE_WIDTH}
         decelerationRate="fast"
       >
         {images.map((imageUrl, index) => (
-          <View key={index} style={[styles.imageContainer, { width: IMAGE_WIDTH, height }]}>
-            {loadingStates[index] && (
-              <View style={[styles.loadingOverlay, { height, width: IMAGE_WIDTH }]}>
-                <ActivityIndicator size="large" color="#666666" />
-              </View>
-            )}
+          <View key={`image-${index}`} style={[styles.imageContainer, { width: IMAGE_WIDTH, height }]}>
             <Image
               source={{ uri: imageUrl }}
               style={[styles.image, { height, width: IMAGE_WIDTH }]}
               resizeMode="contain"
-              onLoadStart={() => handleImageLoadStart(index)}
-              onLoad={() => handleImageLoadEnd(index)}
-              onError={() => handleImageLoadEnd(index)}
+              defaultSource={require('../../../assets/icon.png')}
             />
           </View>
         ))}
@@ -141,6 +116,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#221e27',
     position: 'relative',
+    maxWidth: 500,
   },
   image: {
     backgroundColor: 'transparent',
@@ -192,14 +168,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
   },
-  loadingOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#221e27',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1,
-  },
+
 });

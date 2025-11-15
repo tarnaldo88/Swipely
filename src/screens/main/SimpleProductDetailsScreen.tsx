@@ -184,6 +184,11 @@ export const SimpleProductDetailsScreen: React.FC<SimpleProductDetailsScreenProp
             {/* Image Gallery */}
             <SimpleImageGallery images={product.imageUrls} />
 
+            {/* Paragraph text explaining product */}
+            {/* <View>
+
+            </View> */}
+
             {/* Product Information */}
             <View style={styles.productInfo}>
               <Text style={styles.productTitle}>{product.title}</Text>
