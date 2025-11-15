@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: CARD_WIDTH,
-    maxWidth: 500,
+    maxWidth: 700,
     backgroundColor: "#221e27",
     borderRadius: 16,
     shadowColor: "#000",

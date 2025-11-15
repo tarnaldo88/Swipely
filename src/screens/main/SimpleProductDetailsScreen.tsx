@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#221e27',
-    maxWidth: 500,
+    maxWidth: 600,
     width: '100%',
   },
   header: {
