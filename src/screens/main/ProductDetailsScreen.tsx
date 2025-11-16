@@ -11,20 +11,13 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-  State,
-} from "react-native-gesture-handler";
+import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import Animated, {
-  useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
   runOnJS,
-  interpolate,
-  Extrapolate,
 } from "react-native-reanimated";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -130,26 +123,19 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
     });
   }, [navigation]);
 
-  const handleSwipeDown = useAnimatedGestureHandler<
-    PanGestureHandlerGestureEvent,
-    { startY: number }
-  >({
-    onStart: (_, context) => {
-      context.startY = translateY.value;
-    },
-    onActive: (event, context) => {
+  const panGesture = Gesture.Pan()
+    .onUpdate((event) => {
       if (event.translationY > 0) {
-        translateY.value = context.startY + event.translationY;
+        translateY.value = event.translationY;
       }
-    },
-    onEnd: (event) => {
+    })
+    .onEnd((event) => {
       if (event.translationY > 150 || event.velocityY > 500) {
         runOnJS(handleClose)();
       } else {
         translateY.value = withSpring(0);
       }
-    },
-  });
+    });
 
   const handleLike = useCallback(async () => {
     if (!product) return;
@@ -209,7 +195,7 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
     >
       <StatusBar barStyle="light-content" backgroundColor="rgba(0,0,0,0.5)" />
       <View style={styles.modalOverlay}>
-        <PanGestureHandler onGestureEvent={handleSwipeDown}>
+        <GestureDetector gesture={panGesture}>
           <Animated.View style={[styles.modalContainer, modalAnimatedStyle]}>
             <SafeAreaView style={styles.safeArea}>
               {/* Header */}
@@ -345,7 +331,7 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
               )}
             </SafeAreaView>
           </Animated.View>
-        </PanGestureHandler>
+        </GestureDetector>
       </View>
     </Modal>
   );
@@ -356,6 +342,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "flex-end",
+    // maxWidth: 500,
   },
   modalContainer: {
     backgroundColor: "#FFFFFF",
@@ -363,6 +350,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     maxHeight: screenHeight * 0.9,
     minHeight: screenHeight * 0.6,
+    // maxWidth: 500,
   },
   safeArea: {
     flex: 1,

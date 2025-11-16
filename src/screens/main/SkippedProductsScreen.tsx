@@ -94,9 +94,13 @@ export const SkippedProductsScreen: React.FC = () => {
       ]);
       
       Alert.alert('Added to Cart!', 'Product has been removed from skipped items and added to your cart.');
+      // Automatically advance to next product
+      setCurrentCardIndex(prev => prev + 1);
     } catch (error) {
       console.error('Error adding to cart:', error);
       Alert.alert('Error', 'Failed to add product to cart. Please try again.');
+      // Still advance to next product even on error
+      setCurrentCardIndex(prev => prev + 1);
     }
   }, [skippedProductsService, cartService]);
 

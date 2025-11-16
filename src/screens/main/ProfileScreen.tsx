@@ -9,7 +9,7 @@ import {
   Alert,
   Image,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { User, CategoryPreferences, MainStackParamList } from "../../types";
 import { getAuthService } from "../../services";
@@ -40,6 +40,23 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
   useEffect(() => {
     loadUserData();
   }, []);
+
+  // Reload preferences when screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      loadUserPreferences();
+    }, [])
+  );
+
+  const loadUserPreferences = async () => {
+    try {
+      const userPreferences = await CategoryPreferenceService.getUserPreferences();
+      setPreferences(userPreferences);
+    } catch (error) {
+      console.log("No preferences found, using defaults");
+      setPreferences({ selectedCategories: [], lastUpdated: new Date() });
+    }
+  };
 
   const loadUserData = async () => {
     try {
@@ -105,29 +122,34 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <View style={styles.backgroundContainer}>
+        <SafeAreaView style={styles.container}>
+          <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>Loading profile...</Text>
         </View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </View>
     );
   }
 
   if (!user) {
     return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <View style={styles.backgroundContainer}>
+        <SafeAreaView style={styles.container}>
+          <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Unable to load profile</Text>
         </View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+    <View style={styles.backgroundContainer}>
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -265,14 +287,22 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
         visible={showHelpModal}
         onClose={() => setShowHelpModal(false)}
       />
-    </SafeAreaView>
+      </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundContainer: {
+    flex: 1,
+    backgroundColor: "#230234",
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: "#230234",
+    maxWidth: 600,
+    width: '100%',
   },
   loadingContainer: {
     flex: 1,

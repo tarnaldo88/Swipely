@@ -118,11 +118,13 @@ export const SimpleProductDetailsScreen: React.FC<SimpleProductDetailsScreenProp
     try {
       await swipeActionService.onAddToCart(product.id);
       Alert.alert('Added to Cart', 'Product has been added to your cart!');
+      // Close modal and go back to feed
+      handleClose();
     } catch (error) {
       console.error('Error adding to cart:', error);
       Alert.alert('Error', 'Failed to add product to cart');
     }
-  }, [product, swipeActionService]);
+  }, [product, swipeActionService, handleClose]);
 
   if (!isVisible) {
     return null;
@@ -136,8 +138,9 @@ export const SimpleProductDetailsScreen: React.FC<SimpleProductDetailsScreenProp
       statusBarTranslucent={true}
       onRequestClose={handleClose}
     >
-      <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
-      <SafeAreaView style={styles.safeArea}>
+      <View style={styles.modalBackground}>
+        <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
+        <SafeAreaView style={styles.safeArea}>
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity
@@ -182,6 +185,11 @@ export const SimpleProductDetailsScreen: React.FC<SimpleProductDetailsScreenProp
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
             {/* Image Gallery */}
             <SimpleImageGallery images={product.imageUrls} />
+
+            {/* Paragraph text explaining product */}
+            {/* <View>
+
+            </View> */}
 
             {/* Product Information */}
             <View style={styles.productInfo}>
@@ -244,15 +252,23 @@ export const SimpleProductDetailsScreen: React.FC<SimpleProductDetailsScreenProp
             </TouchableOpacity>
           </View>
         )}
-      </SafeAreaView>
+        </SafeAreaView>
+      </View>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
+  modalBackground: {
+    flex: 1,
+    backgroundColor: '#221e27',
+    alignItems: 'center',
+  },
   safeArea: {
     flex: 1,
     backgroundColor: '#221e27',
+    maxWidth: 600,
+    width: '100%',
   },
   header: {
     flexDirection: 'row',
