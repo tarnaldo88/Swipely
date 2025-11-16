@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   FlatList,
   TouchableOpacity,
   Alert,
@@ -10,6 +9,7 @@ import {
 import { ProductCategory, CategoryPreferences } from '../../types';
 import { CategoryPreferenceService } from '../../services/CategoryPreferenceService';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { CategorySelectStyles } from '../Styles/ProfileStyles';
 
 
 interface CategorySelectionScreenProps {
@@ -103,42 +103,42 @@ const CategorySelectionScreen: React.FC<CategorySelectionScreenProps> = ({
   const renderCategoryItem = ({ item }: { item: CategoryItem }) => (
     <TouchableOpacity
       style={[
-        styles.categoryItem,
-        item.selected && styles.categoryItemSelected,
+        CategorySelectStyles.categoryItem,
+        item.selected && CategorySelectStyles.categoryItemSelected,
       ]}
       onPress={() => toggleCategory(item.id)}
     >
       <Text
         style={[
-          styles.categoryText,
-          item.selected && styles.categoryTextSelected,
+          CategorySelectStyles.categoryText,
+          item.selected && CategorySelectStyles.categoryTextSelected,
         ]}
       >
         {item.name}
       </Text>
       {item.selected && (
-        <Text style={styles.checkmark}>✓</Text>
+        <Text style={CategorySelectStyles.checkmark}>✓</Text>
       )}
     </TouchableOpacity>
   );
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Loading categories...</Text>
+      <SafeAreaView style={CategorySelectStyles.container}>
+        <View style={CategorySelectStyles.loadingContainer}>
+          <Text style={CategorySelectStyles.loadingText}>Loading categories...</Text>
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>
+    <SafeAreaView style={CategorySelectStyles.container}>
+      <View style={CategorySelectStyles.header}>
+        <Text style={CategorySelectStyles.title}>
           {isInitialSetup ? 'Choose Your Interests' : 'Update Categories'}
         </Text>
-        <Text style={styles.subtitle}>
+        <Text style={CategorySelectStyles.subtitle}>
           Select categories you're interested in to personalize your product feed
         </Text>
       </View>
@@ -147,22 +147,22 @@ const CategorySelectionScreen: React.FC<CategorySelectionScreenProps> = ({
         data={categories}
         renderItem={renderCategoryItem}
         keyExtractor={item => item.id}
-        style={styles.categoryList}
+        style={CategorySelectStyles.categoryList}
         showsVerticalScrollIndicator={false}
         numColumns={2}
-        columnWrapperStyle={styles.row}
+        columnWrapperStyle={CategorySelectStyles.row}
       />
 
-      <View style={styles.footer}>
+      <View style={CategorySelectStyles.footer}>
         <TouchableOpacity
           style={[
-            styles.saveButton,
-            saving && styles.saveButtonDisabled,
+            CategorySelectStyles.saveButton,
+            saving && CategorySelectStyles.saveButtonDisabled,
           ]}
           onPress={savePreferences}
           disabled={saving}
         >
-          <Text style={styles.saveButtonText}>
+          <Text style={CategorySelectStyles.saveButtonText}>
             {saving ? 'Saving...' : isInitialSetup ? 'Get Started' : 'Save Changes'}
           </Text>
         </TouchableOpacity>
@@ -170,91 +170,5 @@ const CategorySelectionScreen: React.FC<CategorySelectionScreenProps> = ({
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#230234',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 16,
-    color: '#666',
-  },
-  header: {
-    padding: 20,
-    paddingBottom: 10,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#dddcdcff',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#b1b0b0ff',
-    lineHeight: 22,
-  },
-  categoryList: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  row: {
-    justifyContent: 'space-between',
-  },
-  categoryItem: {
-    flex: 0.48,
-    backgroundColor: '#05cb72',
-    borderRadius: 12,
-    padding: 16,
-    marginVertical: 6,
-    borderWidth: 2,
-    borderColor: 'transparent',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  categoryItemSelected: {
-    backgroundColor: '#e3f2fd',
-    borderColor: '#2196f3',
-  },
-  categoryText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#fff',
-    flex: 1,
-  },
-  categoryTextSelected: {
-    color: '#2196f3',
-  },
-  checkmark: {
-    fontSize: 16,
-    color: '#2196f3',
-    fontWeight: 'bold',
-  },
-  footer: {
-    padding: 20,
-    paddingTop: 10,
-  },
-  saveButton: {
-    backgroundColor: '#05cb72',
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-  },
-  saveButtonDisabled: {
-    backgroundColor: '#ccc',
-  },
-  saveButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
 
 export default CategorySelectionScreen;

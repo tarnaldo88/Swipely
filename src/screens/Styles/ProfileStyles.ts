@@ -484,3 +484,89 @@ export const TermStyles = StyleSheet.create({
     lineHeight: 20
   }
 });
+
+export const CategorySelectStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#230234',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    color: '#666',
+  },
+  header: {
+    padding: 20,
+    paddingBottom: 10,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#dddcdcff',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#b1b0b0ff',
+    lineHeight: 22,
+  },
+  categoryList: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  row: {
+    justifyContent: 'space-between',
+  },
+  categoryItem: {
+    flex: 0.48,
+    backgroundColor: '#05cb72',
+    borderRadius: 12,
+    padding: 16,
+    marginVertical: 6,
+    borderWidth: 2,
+    borderColor: 'transparent',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  categoryItemSelected: {
+    backgroundColor: '#e3f2fd',
+    borderColor: '#2196f3',
+  },
+  categoryText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#fff',
+    flex: 1,
+  },
+  categoryTextSelected: {
+    color: '#2196f3',
+  },
+  checkmark: {
+    fontSize: 16,
+    color: '#2196f3',
+    fontWeight: 'bold',
+  },
+  footer: {
+    padding: 20,
+    paddingTop: 10,
+  },
+  saveButton: {
+    backgroundColor: '#05cb72',
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+  },
+  saveButtonDisabled: {
+    backgroundColor: '#ccc',
+  },
+  saveButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+});
