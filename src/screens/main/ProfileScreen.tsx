@@ -17,7 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PrivacySecurityScreen } from "./Profile/PrivacySecurityScreen";
 import { AccountSettingsScreen } from "./Profile/AccountSettingsScreen";
 import { HelpSupportScreen } from "./Profile/HelpSupportScreen";
-import { ProfileStyles } from "../Styles/ProfileScreenStyles";
+import { ProfileStyles } from "../Styles/ProfileStyles";
 
 
 type ProfileScreenNavigationProp = StackNavigationProp<MainStackParamList>;
