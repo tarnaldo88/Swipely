@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   ScrollView,
   Modal,
@@ -13,6 +12,7 @@ import {
 import { FaqScreen } from "./FaqScreen";
 import Accordion from "react-native-collapsible/Accordion";
 import { TermsOfService } from "./TermsOfService";
+import { HelpSupportStyles } from "@/screens/Styles/ProfileStyles";
 
 interface HelpSupportScreenProps {
   visible: boolean;
@@ -48,7 +48,7 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
 
     const contactUs = () => {
       return(
-        <View style={styles.accountItem}>
+        <View style={HelpSupportStyles.accountItem}>
           <Text>Contact us at support@swipely.com</Text>
           <TextInput
             placeholder="Enter Email"
@@ -67,14 +67,14 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
             statusBarTranslucent={false}
             onRequestClose={onClose}
         >
-          <View style={styles.container}>
-            <ScrollView style={styles.scrollView}>
+          <View style={HelpSupportStyles.container}>
+            <ScrollView style={HelpSupportStyles.scrollView}>
               {/* Header */}
-              <View style={styles.header}>
-                <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                  <Text style={styles.closeButtonText}>✕</Text>
+              <View style={HelpSupportStyles.header}>
+                <TouchableOpacity onPress={onClose} style={HelpSupportStyles.closeButton}>
+                  <Text style={HelpSupportStyles.closeButtonText}>✕</Text>
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Help & Support</Text>
+                <Text style={HelpSupportStyles.headerTitle}>Help & Support</Text>
               </View>
 
               {/* Help & Support Content */}
@@ -82,23 +82,23 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
 
                 <TouchableOpacity 
                   style={[
-                    styles.accountItem, 
-                    showFaq && styles.activeAccountItem
+                    HelpSupportStyles.accountItem, 
+                    showFaq && HelpSupportStyles.activeAccountItem
                   ]}
                   onPress={toggleShowFaq}
                 >
                   <Text
                     style={[
-                      styles.accountLabel,
-                      showFaq && styles.activeAccountLabel,
+                      HelpSupportStyles.accountLabel,
+                      showFaq && HelpSupportStyles.activeAccountLabel,
                     ]}
                   >
                     {showFaq ? "Close Frequently Asked Questions" : "Show Frequently Asked Questions"}
                   </Text>
                   <Text
                     style={[
-                      styles.chevron,
-                      showFaq && styles.activeChevron,
+                      HelpSupportStyles.chevron,
+                      showFaq && HelpSupportStyles.activeChevron,
                     ]}
                   >
                     ›
@@ -109,21 +109,21 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
                   <FaqScreen/>
                 )}
                 <TouchableOpacity 
-                  style={[styles.accountItem, showContactUs && styles.activeAccountItem]}
+                  style={[HelpSupportStyles.accountItem, showContactUs && HelpSupportStyles.activeAccountItem]}
                   onPress={toggleContactSupport}
                 >
-                  <Text style={[styles.accountLabel, showContactUs && styles.activeChevron,]}>Contact Support</Text>
-                  <Text style={[styles.chevron, showContactUs && styles.activeChevron,]}>›</Text>
+                  <Text style={[HelpSupportStyles.accountLabel, showContactUs && HelpSupportStyles.activeChevron,]}>Contact Support</Text>
+                  <Text style={[HelpSupportStyles.chevron, showContactUs && HelpSupportStyles.activeChevron,]}>›</Text>
                 </TouchableOpacity> 
 
                 {showContactUs && contactUs()}
 
                 <TouchableOpacity 
-                  style={[styles.accountItem, showTerms && styles.activeAccountItem]}
+                  style={[HelpSupportStyles.accountItem, showTerms && HelpSupportStyles.activeAccountItem]}
                   onPress={toggleTerms}
                 >
-                  <Text style={[styles.accountLabel, showTerms && styles.activeChevron,]}>Terms of Service</Text>
-                  <Text style={[styles.chevron, showTerms && styles.activeChevron,]}>›</Text>
+                  <Text style={[HelpSupportStyles.accountLabel, showTerms && HelpSupportStyles.activeChevron,]}>Terms of Service</Text>
+                  <Text style={[HelpSupportStyles.chevron, showTerms && HelpSupportStyles.activeChevron,]}>›</Text>
                 </TouchableOpacity> 
                 {showTerms && (
                   <TermsOfService/>
@@ -134,80 +134,3 @@ export const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({ visible, o
         </Modal>
     );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#230234",
-  },
-  scrollView: {
-    flex: 1,
-  },
-  accountItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#E9ECEF",
-    backgroundColor:'#fff'
-  },
-  accountLabel: {
-    flex: 1,
-    fontSize: 16,
-    color: "#212529",
-  },
-  chevron: {
-    fontSize: 20,
-    color: "#6C757D",
-  },
-  header: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    paddingTop: 50,
-    backgroundColor: "#47006e",
-    borderBottomWidth: 1,
-    borderBottomColor: "#3a8004",
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  closeButton: {
-    width: 40,
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 12,
-  },
-  closeButtonText: {
-    fontSize: 24,
-    color: "#eff7e9",
-    fontWeight: "bold",
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#eff7e9",
-    flex: 1,
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  errorText: {
-    fontSize: 16,
-    color: "#dc3545",
-  },
-  activeAccountItem: {
-    backgroundColor: "#E6D7F5",
-  },
-
-  activeAccountLabel: {
-    color: "#47006e",
-    fontWeight: "600",
-  },
-
-  activeChevron: {
-    color: "#47006e",
-  },
-});

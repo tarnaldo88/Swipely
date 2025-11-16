@@ -273,3 +273,81 @@ export const FaqStyles = StyleSheet.create({
     display: "none", // optional, can be removed
   },
 });
+
+
+export const HelpSupportStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#230234",
+  },
+  scrollView: {
+    flex: 1,
+  },
+  accountItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E9ECEF",
+    backgroundColor:'#fff'
+  },
+  accountLabel: {
+    flex: 1,
+    fontSize: 16,
+    color: "#212529",
+  },
+  chevron: {
+    fontSize: 20,
+    color: "#6C757D",
+  },
+  header: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    paddingTop: 50,
+    backgroundColor: "#47006e",
+    borderBottomWidth: 1,
+    borderBottomColor: "#3a8004",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  closeButton: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  closeButtonText: {
+    fontSize: 24,
+    color: "#eff7e9",
+    fontWeight: "bold",
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#eff7e9",
+    flex: 1,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorText: {
+    fontSize: 16,
+    color: "#dc3545",
+  },
+  activeAccountItem: {
+    backgroundColor: "#E6D7F5",
+  },
+
+  activeAccountLabel: {
+    color: "#47006e",
+    fontWeight: "600",
+  },
+
+  activeChevron: {
+    color: "#47006e",
+  },
+});
