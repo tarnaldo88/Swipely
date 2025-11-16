@@ -7,6 +7,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import Accordion from "react-native-collapsible/Accordion";
+import { FaqStyles } from "@/screens/Styles/ProfileStyles";
 
 const SECTIONS = [
   {
@@ -33,20 +34,20 @@ export const FaqScreen: React.FC = () => {
 
   // ✅ Section title (optional — not always needed)
   const renderSectionTitle = (section: any) => (
-    <View style={styles.sectionTitle}>
+    <View style={FaqStyles.sectionTitle}>
       <Text>{section.title}</Text>
     </View>
   );
 
   const renderHeader = (section: any, _: number, isActive: boolean) => (
-    <View style={[styles.header, isActive ? styles.headerActive : null]}>
-      <Text style={styles.headerText}>{section.title}</Text>
+    <View style={[FaqStyles.header, isActive ? FaqStyles.headerActive : null]}>
+      <Text style={FaqStyles.headerText}>{section.title}</Text>
     </View>
   );
 
   const renderContent = (section: any) => (
-    <View style={styles.content}>
-      <Text style={styles.contentText}>{section.content}</Text>
+    <View style={FaqStyles.content}>
+      <Text style={FaqStyles.contentText}>{section.content}</Text>
     </View>
   );
 
@@ -55,7 +56,7 @@ export const FaqScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={FaqStyles.container}>
       <Accordion
         sections={SECTIONS}
         activeSections={activeSections}
@@ -70,36 +71,3 @@ export const FaqScreen: React.FC = () => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f7f7f7",
-  },
-  header: {
-    backgroundColor: "#b8fcccff",
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-  },
-  headerActive: {
-    backgroundColor: "#3bfa8aff",
-  },
-  headerText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#333",
-  },
-  content: {
-    backgroundColor: "#3f3939ff",
-    padding: 16,
-  },
-  contentText: {
-    fontSize: 14,
-    color: "#fff6f6ff",
-    lineHeight: 20,
-  },
-  sectionTitle: {
-    display: "none", // optional, can be removed
-  },
-});

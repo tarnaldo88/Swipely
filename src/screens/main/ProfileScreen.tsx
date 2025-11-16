@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  StyleSheet,
   StatusBar,
   TouchableOpacity,
   ScrollView,
@@ -18,6 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PrivacySecurityScreen } from "./Profile/PrivacySecurityScreen";
 import { AccountSettingsScreen } from "./Profile/AccountSettingsScreen";
 import { HelpSupportScreen } from "./Profile/HelpSupportScreen";
+import { ProfileStyles } from "../Styles/ProfileStyles";
 
 
 type ProfileScreenNavigationProp = StackNavigationProp<MainStackParamList>;
@@ -122,11 +122,11 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
 
   if (loading) {
     return (
-      <View style={styles.backgroundContainer}>
-        <SafeAreaView style={styles.container}>
+      <View style={ProfileStyles.backgroundContainer}>
+        <SafeAreaView style={ProfileStyles.container}>
           <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-        <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Loading profile...</Text>
+        <View style={ProfileStyles.loadingContainer}>
+          <Text style={ProfileStyles.loadingText}>Loading profile...</Text>
         </View>
         </SafeAreaView>
       </View>
@@ -135,11 +135,11 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
 
   if (!user) {
     return (
-      <View style={styles.backgroundContainer}>
-        <SafeAreaView style={styles.container}>
+      <View style={ProfileStyles.backgroundContainer}>
+        <SafeAreaView style={ProfileStyles.container}>
           <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Unable to load profile</Text>
+        <View style={ProfileStyles.errorContainer}>
+          <Text style={ProfileStyles.errorText}>Unable to load profile</Text>
         </View>
         </SafeAreaView>
       </View>
@@ -147,36 +147,36 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
   }
 
   return (
-    <View style={styles.backgroundContainer}>
-      <SafeAreaView style={styles.container}>
+    <View style={ProfileStyles.backgroundContainer}>
+      <SafeAreaView style={ProfileStyles.container}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       <ScrollView
-        style={styles.scrollView}
+        style={ProfileStyles.scrollView}
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Profile</Text>
+        <View style={ProfileStyles.header}>
+          <Text style={ProfileStyles.headerTitle}>Profile</Text>
         </View>
 
         {/* User Info Section */}
-        <View style={styles.section}>
-          <View style={styles.userInfo}>
-            <View style={styles.avatarContainer}>
+        <View style={ProfileStyles.section}>
+          <View style={ProfileStyles.userInfo}>
+            <View style={ProfileStyles.avatarContainer}>
               {user.avatar ? (
-                <Image source={{ uri: user.avatar }} style={styles.avatar} />
+                <Image source={{ uri: user.avatar }} style={ProfileStyles.avatar} />
               ) : (
-                <View style={styles.avatarPlaceholder}>
-                  <Text style={styles.avatarText}>
+                <View style={ProfileStyles.avatarPlaceholder}>
+                  <Text style={ProfileStyles.avatarText}>
                     {user.displayName.charAt(0).toUpperCase()}
                   </Text>
                 </View>
               )}
             </View>
-            <View style={styles.userDetails}>
-              <Text style={styles.userName}>{user.displayName}</Text>
-              <Text style={styles.userEmail}>{user.email}</Text>
-              <Text style={styles.memberSince}>
+            <View style={ProfileStyles.userDetails}>
+              <Text style={ProfileStyles.userName}>{user.displayName}</Text>
+              <Text style={ProfileStyles.userEmail}>{user.email}</Text>
+              <Text style={ProfileStyles.memberSince}>
                 Member since {formatDate(user.createdAt)}
               </Text>
             </View>
@@ -184,36 +184,36 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
         </View>
 
         {/* Preferences Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Preferences</Text>
+        <View style={ProfileStyles.section}>
+          <Text style={ProfileStyles.sectionTitle}>Preferences</Text>
 
           <TouchableOpacity
-            style={styles.preferenceItem}
+            style={ProfileStyles.preferenceItem}
             onPress={handleEditCategories}
           >
-            <View style={styles.preferenceContent}>
-              <Text style={styles.preferenceLabel}>Categories</Text>
-              <Text style={styles.preferenceValue}>
+            <View style={ProfileStyles.preferenceContent}>
+              <Text style={ProfileStyles.preferenceLabel}>Categories</Text>
+              <Text style={ProfileStyles.preferenceValue}>
                 {preferences?.selectedCategories.length || 0} selected
               </Text>
             </View>
-            <Text style={styles.chevron}>›</Text>
+            <Text style={ProfileStyles.chevron}>›</Text>
           </TouchableOpacity>
 
           {preferences && preferences.selectedCategories.length > 0 && (
-            <View style={styles.categoryTags}>
+            <View style={ProfileStyles.categoryTags}>
               {preferences.selectedCategories
                 .slice(0, 3)
                 .map((categoryId, index) => (
-                  <View key={categoryId} style={styles.categoryTag}>
-                    <Text style={styles.categoryTagText}>
+                  <View key={categoryId} style={ProfileStyles.categoryTag}>
+                    <Text style={ProfileStyles.categoryTagText}>
                       {categoryId.charAt(0).toUpperCase() + categoryId.slice(1)}
                     </Text>
                   </View>
                 ))}
               {preferences.selectedCategories.length > 3 && (
-                <View style={styles.categoryTag}>
-                  <Text style={styles.categoryTagText}>
+                <View style={ProfileStyles.categoryTag}>
+                  <Text style={ProfileStyles.categoryTagText}>
                     +{preferences.selectedCategories.length - 3} more
                   </Text>
                 </View>
@@ -222,51 +222,51 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
           )}
 
           {preferences?.lastUpdated && (
-            <Text style={styles.lastUpdated}>
+            <Text style={ProfileStyles.lastUpdated}>
               Last updated: {formatDate(preferences.lastUpdated)}
             </Text>
           )}
         </View>
 
         {/* Account Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Account</Text>
+        <View style={ProfileStyles.section}>
+          <Text style={ProfileStyles.sectionTitle}>Account</Text>
 
           <TouchableOpacity
-            style={styles.accountItem}
+            style={ProfileStyles.accountItem}
             onPress={() => setShowAccountModal(true)}
           >
-            <Text style={styles.accountLabel}>Account Settings</Text>
-            <Text style={styles.chevron}>›</Text>
+            <Text style={ProfileStyles.accountLabel}>Account Settings</Text>
+            <Text style={ProfileStyles.chevron}>›</Text>
           </TouchableOpacity>
 
           <TouchableOpacity 
-            style={styles.accountItem}
+            style={ProfileStyles.accountItem}
             onPress={() => setShowPrivacyModal(true)}
           >
-            <Text style={styles.accountLabel}>Privacy & Security</Text>
-            <Text style={styles.chevron}>›</Text>
+            <Text style={ProfileStyles.accountLabel}>Privacy & Security</Text>
+            <Text style={ProfileStyles.chevron}>›</Text>
           </TouchableOpacity>
 
           <TouchableOpacity 
-          style={styles.accountItem}
+          style={ProfileStyles.accountItem}
           onPress={() => setShowHelpModal(true)}
           >
-            <Text style={styles.accountLabel}>Help & Support</Text>
-            <Text style={styles.chevron}>›</Text>
+            <Text style={ProfileStyles.accountLabel}>Help & Support</Text>
+            <Text style={ProfileStyles.chevron}>›</Text>
           </TouchableOpacity>
         </View>
 
         {/* Logout Section */}
-        <View style={styles.section}>
-          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-            <Text style={styles.logoutText}>Sign Out</Text>
+        <View style={ProfileStyles.section}>
+          <TouchableOpacity style={ProfileStyles.logoutButton} onPress={handleLogout}>
+            <Text style={ProfileStyles.logoutText}>Sign Out</Text>
           </TouchableOpacity>
         </View>
 
         {/* App Info */}
-        <View style={styles.appInfo}>
-          <Text style={styles.appInfoText}>Swipely v1.0.0</Text>
+        <View style={ProfileStyles.appInfo}>
+          <Text style={ProfileStyles.appInfoText}>Swipely v1.0.0</Text>
         </View>
       </ScrollView>
 
@@ -291,184 +291,3 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  backgroundContainer: {
-    flex: 1,
-    backgroundColor: "#230234",
-    alignItems: 'center',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#230234",
-    maxWidth: 600,
-    width: '100%',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  loadingText: {
-    fontSize: 16,
-    color: "#666",
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  errorText: {
-    fontSize: 16,
-    color: "#dc3545",
-  },
-  scrollView: {
-    flex: 1,
-  },
-  header: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: "#47006e",
-    borderBottomWidth: 1,
-    borderBottomColor: "#3a8004",
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#eff7e9",
-  },
-  section: {
-    backgroundColor: "#FFFFFF",
-    marginTop: 12,
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#212529",
-    marginBottom: 16,
-  },
-  userInfo: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  avatarContainer: {
-    marginRight: 16,
-  },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-  },
-  avatarPlaceholder: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "#08f88c",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  avatarText: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#FFFFFF",
-  },
-  userDetails: {
-    flex: 1,
-  },
-  userName: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#212529",
-    marginBottom: 4,
-  },
-  userEmail: {
-    fontSize: 16,
-    color: "#6C757D",
-    marginBottom: 4,
-  },
-  memberSince: {
-    fontSize: 14,
-    color: "#6C757D",
-  },
-  preferenceItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#E9ECEF",
-  },
-  preferenceContent: {
-    flex: 1,
-  },
-  preferenceLabel: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#212529",
-    marginBottom: 2,
-  },
-  preferenceValue: {
-    fontSize: 14,
-    color: "#6C757D",
-  },
-  chevron: {
-    fontSize: 20,
-    color: "#6C757D",
-  },
-  categoryTags: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: 8,
-    marginBottom: 8,
-  },
-  categoryTag: {
-    backgroundColor: "#E3F2FD",
-    borderRadius: 16,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    marginRight: 8,
-    marginBottom: 8,
-  },
-  categoryTagText: {
-    fontSize: 12,
-    color: "#2196F3",
-    fontWeight: "500",
-  },
-  lastUpdated: {
-    fontSize: 12,
-    color: "#6C757D",
-    marginTop: 8,
-  },
-  accountItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#E9ECEF",
-  },
-  accountLabel: {
-    flex: 1,
-    fontSize: 16,
-    color: "#212529",
-  },
-  logoutButton: {
-    backgroundColor: "#DC3545",
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: "center",
-  },
-  logoutText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#FFFFFF",
-  },
-  appInfo: {
-    alignItems: "center",
-    paddingVertical: 20,
-  },
-  appInfoText: {
-    fontSize: 12,
-    color: "#6C757D",
-  },
-});
