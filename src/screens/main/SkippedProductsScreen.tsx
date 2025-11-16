@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   StatusBar,
   Alert,
   Dimensions,
@@ -16,6 +15,7 @@ import { ProductCard, MainStackParamList } from '../../types';
 import { getSkippedProductsService } from '../../services/SkippedProductsService';
 import { getWishlistService } from '../../services/WishlistService';
 import { getCartService } from '../../services/CartService';
+import { SkippedProductStyles } from '../Styles/ProductStyles';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -150,7 +150,7 @@ export const SkippedProductsScreen: React.FC = () => {
       <View
         key={product.id}
         style={[
-          styles.cardWrapper,
+          SkippedProductStyles.cardWrapper,
           {
             zIndex,
             transform: [
@@ -175,10 +175,10 @@ export const SkippedProductsScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={SkippedProductStyles.container}>
         <StatusBar barStyle="light-content" backgroundColor="#221e27" />
-        <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Loading skipped products...</Text>
+        <View style={SkippedProductStyles.loadingContainer}>
+          <Text style={SkippedProductStyles.loadingText}>Loading skipped products...</Text>
         </View>
       </SafeAreaView>
     );
@@ -186,21 +186,21 @@ export const SkippedProductsScreen: React.FC = () => {
 
   if (products.length === 0) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={SkippedProductStyles.container}>
         <StatusBar barStyle="light-content" backgroundColor="#221e27" />
         
         {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-            <Text style={styles.backButtonText}>←</Text>
+        <View style={SkippedProductStyles.header}>
+          <TouchableOpacity style={SkippedProductStyles.backButton} onPress={() => navigation.goBack()}>
+            <Text style={SkippedProductStyles.backButtonText}>←</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Skipped: {category}</Text>
-          <View style={styles.headerSpacer} />
+          <Text style={SkippedProductStyles.headerTitle}>Skipped: {category}</Text>
+          <View style={SkippedProductStyles.headerSpacer} />
         </View>
 
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyTitle}>No Skipped Products</Text>
-          <Text style={styles.emptySubtitle}>
+        <View style={SkippedProductStyles.emptyContainer}>
+          <Text style={SkippedProductStyles.emptyTitle}>No Skipped Products</Text>
+          <Text style={SkippedProductStyles.emptySubtitle}>
             You haven't skipped any products in the {category} category yet.
           </Text>
         </View>
@@ -211,50 +211,50 @@ export const SkippedProductsScreen: React.FC = () => {
   const hasMoreCards = currentCardIndex < products.length;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={SkippedProductStyles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#221e27" />
       
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.backButtonText}>←</Text>
+      <View style={SkippedProductStyles.header}>
+        <TouchableOpacity style={SkippedProductStyles.backButton} onPress={() => navigation.goBack()}>
+          <Text style={SkippedProductStyles.backButtonText}>←</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Skipped: {category}</Text>
-        <TouchableOpacity style={styles.clearButton} onPress={handleClearAllSkipped}>
-          <Text style={styles.clearButtonText}>Clear All</Text>
+        <Text style={SkippedProductStyles.headerTitle}>Skipped: {category}</Text>
+        <TouchableOpacity style={SkippedProductStyles.clearButton} onPress={handleClearAllSkipped}>
+          <Text style={SkippedProductStyles.clearButtonText}>Clear All</Text>
         </TouchableOpacity>
       </View>
 
       {/* Subtitle */}
-      <View style={styles.subtitle}>
-        <Text style={styles.subtitleText}>
+      <View style={SkippedProductStyles.subtitle}>
+        <Text style={SkippedProductStyles.subtitleText}>
           {hasMoreCards 
             ? `${products.length - currentCardIndex} skipped products to review`
             : 'All skipped products reviewed!'
           }
         </Text>
-        <Text style={styles.instructionText}>
+        <Text style={SkippedProductStyles.instructionText}>
           Swipe right to add to wishlist • Swipe left to skip again
         </Text>
       </View>
 
       {/* Cards Container */}
-      <View style={styles.cardsContainer}>
+      <View style={SkippedProductStyles.cardsContainer}>
         {hasMoreCards ? (
           <>
             {products.map((product, index) => renderCard(product, index))}
           </>
         ) : (
-          <View style={styles.allDoneContainer}>
-            <Text style={styles.allDoneTitle}>🎉 All Done!</Text>
-            <Text style={styles.allDoneSubtitle}>
+          <View style={SkippedProductStyles.allDoneContainer}>
+            <Text style={SkippedProductStyles.allDoneTitle}>🎉 All Done!</Text>
+            <Text style={SkippedProductStyles.allDoneSubtitle}>
               You've reviewed all skipped products in this category.
             </Text>
             <TouchableOpacity 
-              style={styles.backToFeedButton} 
+              style={SkippedProductStyles.backToFeedButton} 
               onPress={() => navigation.goBack()}
             >
-              <Text style={styles.backToFeedButtonText}>Back to Discover</Text>
+              <Text style={SkippedProductStyles.backToFeedButtonText}>Back to Discover</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -262,134 +262,3 @@ export const SkippedProductsScreen: React.FC = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#221e27',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#221e27',
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#333',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  backButtonText: {
-    fontSize: 20,
-    color: '#08f88c',
-    fontWeight: 'bold',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#e1ecf8ff',
-    textAlign: 'center',
-    flex: 1,
-  },
-  clearButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    backgroundColor: '#dc3545',
-    borderRadius: 8,
-  },
-  clearButtonText: {
-    fontSize: 14,
-    color: '#FFFFFF',
-    fontWeight: '600',
-  },
-  headerSpacer: {
-    width: 40,
-  },
-  subtitle: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    backgroundColor: '#221e27',
-    alignItems: 'center',
-  },
-  subtitleText: {
-    fontSize: 16,
-    color: '#d7dce0ff',
-    marginBottom: 4,
-  },
-  instructionText: {
-    fontSize: 14,
-    color: '#a9b1b8ff',
-    textAlign: 'center',
-  },
-  cardsContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 20,
-  },
-  cardWrapper: {
-    position: 'absolute',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 18,
-    color: '#d6e4d8ff',
-    textAlign: 'center',
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 40,
-  },
-  emptyTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#d8dfe7ff',
-    marginBottom: 12,
-    textAlign: 'center',
-  },
-  emptySubtitle: {
-    fontSize: 16,
-    color: '#a9b1b8ff',
-    textAlign: 'center',
-    lineHeight: 24,
-  },
-  allDoneContainer: {
-    alignItems: 'center',
-    paddingHorizontal: 40,
-  },
-  allDoneTitle: {
-    fontSize: 32,
-    marginBottom: 16,
-  },
-  allDoneSubtitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#d5dee7ff',
-    marginBottom: 24,
-    textAlign: 'center',
-  },
-  backToFeedButton: {
-    backgroundColor: '#08f88c',
-    borderRadius: 12,
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-  },
-  backToFeedButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#221e27',
-  },
-});

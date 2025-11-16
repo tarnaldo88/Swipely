@@ -1,4 +1,4 @@
-import { StyleSheet} from "react-native";
+import { StyleSheet, Dimensions} from "react-native";
 
 export const CartScreenStyles = StyleSheet.create({
   backgroundContainer: {
@@ -622,5 +622,361 @@ export const SimpleProductDetailStyles = StyleSheet.create({
     color: '#f1fcf1ff',
     fontWeight: '600',
     fontSize: 16,
+  },
+});
+
+export const SkippedProductStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#221e27',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    backgroundColor: '#221e27',
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#333',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backButtonText: {
+    fontSize: 20,
+    color: '#08f88c',
+    fontWeight: 'bold',
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#e1ecf8ff',
+    textAlign: 'center',
+    flex: 1,
+  },
+  clearButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    backgroundColor: '#dc3545',
+    borderRadius: 8,
+  },
+  clearButtonText: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    fontWeight: '600',
+  },
+  headerSpacer: {
+    width: 40,
+  },
+  subtitle: {
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    backgroundColor: '#221e27',
+    alignItems: 'center',
+  },
+  subtitleText: {
+    fontSize: 16,
+    color: '#d7dce0ff',
+    marginBottom: 4,
+  },
+  instructionText: {
+    fontSize: 14,
+    color: '#a9b1b8ff',
+    textAlign: 'center',
+  },
+  cardsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+  cardWrapper: {
+    position: 'absolute',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 18,
+    color: '#d6e4d8ff',
+    textAlign: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  emptyTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#d8dfe7ff',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  emptySubtitle: {
+    fontSize: 16,
+    color: '#a9b1b8ff',
+    textAlign: 'center',
+    lineHeight: 24,
+  },
+  allDoneContainer: {
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  allDoneTitle: {
+    fontSize: 32,
+    marginBottom: 16,
+  },
+  allDoneSubtitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#d5dee7ff',
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  backToFeedButton: {
+    backgroundColor: '#08f88c',
+    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+  },
+  backToFeedButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#221e27',
+  },
+});
+
+const { width } = Dimensions.get('window');
+const ITEM_WIDTH = (width - 48) / 2; // 2 columns with margins
+
+export const WishListStyles = StyleSheet.create({
+  backgroundContainer: {
+    flex: 1,
+    backgroundColor: '#221e27',
+    alignItems: 'center',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#221e27',
+    maxWidth: 600,
+    width: '100%',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    color: '#6C757D',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    backgroundColor: '#221e27',
+    borderBottomWidth: 1,
+    borderBottomColor: '#221e27',
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#f6f9fdff',
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  itemCount: {
+    fontSize: 14,
+    color: '#eaf0f5ff',
+    marginRight: 12,
+  },
+  viewModeButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#E9ECEF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  viewModeButtonText: {
+    fontSize: 16,
+    color: '#d3d9dfff',
+  },
+  listContainer: {
+    paddingVertical: 8,
+  },
+  emptyListContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+  },
+  emptyTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#f4faffff',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  emptyDescription: {
+    fontSize: 16,
+    color: '#d9e0e6ff',
+    textAlign: 'center',
+    lineHeight: 24,
+  },
+  // Grid view styles
+  gridItem: {
+    width: ITEM_WIDTH,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    margin: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  gridImage: {
+    width: '100%',
+    height: ITEM_WIDTH * 0.8,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    backgroundColor: '#F8F9FA',
+  },
+  gridItemInfo: {
+    padding: 12,
+  },
+  gridItemTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#212529',
+    marginBottom: 4,
+    height: 36,
+  },
+  gridItemPrice: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#007BFF',
+    marginBottom: 8,
+  },
+  gridItemActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  addToCartButton: {
+    flex: 1,
+    backgroundColor: '#08f88c',
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginRight: 8,
+  },
+  addToCartButtonText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    textAlign: 'center',
+  },
+  removeButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#DC3545',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  removeButtonText: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    fontWeight: '600',
+  },
+  // List view styles
+  listItem: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: 16,
+    marginVertical: 4,
+    borderRadius: 12,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  listImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+    backgroundColor: '#F8F9FA',
+  },
+  listItemInfo: {
+    flex: 1,
+    marginLeft: 12,
+    justifyContent: 'space-between',
+  },
+  listItemTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#212529',
+    marginBottom: 4,
+  },
+  listItemPrice: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#00ff15ff',
+    marginBottom: 4,
+  },
+  addedDate: {
+    fontSize: 12,
+    color: '#6C757D',
+  },
+  listItemActions: {
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+  },
+  listAddToCartButton: {
+    backgroundColor: '#007BFF',
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    marginBottom: 8,
+  },
+  listAddToCartButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  listRemoveButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#DC3545',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

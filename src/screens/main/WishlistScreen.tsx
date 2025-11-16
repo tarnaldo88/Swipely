@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   StatusBar,
   FlatList,
   TouchableOpacity,
@@ -17,6 +16,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { getWishlistService, WishlistService, WishlistItem } from '../../services/WishlistService';
 import { getCartService, CartService } from '../../services/CartService';
 import { ProductCard, MainStackParamList } from '../../types';
+import { WishListStyles } from '../Styles/ProductStyles';
 
 interface WishlistItemWithProduct extends WishlistItem {
   product: ProductCard;
@@ -111,40 +111,40 @@ export const WishlistScreen: React.FC = () => {
 
   const renderGridItem = ({ item }: { item: WishlistItemWithProduct }) => (
     <TouchableOpacity 
-      style={styles.gridItem}
+      style={WishListStyles.gridItem}
       onPress={() => handleViewDetails(item)}
       activeOpacity={0.7}
     >
       <Image
         source={{ uri: item.product.imageUrls[0] }}
-        style={styles.gridImage}
+        style={WishListStyles.gridImage}
         resizeMode="cover"
       />
-      <View style={styles.gridItemInfo}>
-        <Text style={styles.gridItemTitle} numberOfLines={2}>
+      <View style={WishListStyles.gridItemInfo}>
+        <Text style={WishListStyles.gridItemTitle} numberOfLines={2}>
           {item.product.title}
         </Text>
-        <Text style={styles.gridItemPrice}>
+        <Text style={WishListStyles.gridItemPrice}>
           {item.product.currency} {item.product.price.toFixed(2)}
         </Text>
-        <View style={styles.gridItemActions}>
+        <View style={WishListStyles.gridItemActions}>
           <TouchableOpacity
-            style={styles.addToCartButton}
+            style={WishListStyles.addToCartButton}
             onPress={(e) => {
               e.stopPropagation();
               handleAddToCart(item.productId);
             }}
           >
-            <Text style={styles.addToCartButtonText}>Add to Cart</Text>
+            <Text style={WishListStyles.addToCartButtonText}>Add to Cart</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.removeButton}
+            style={WishListStyles.removeButton}
             onPress={(e) => {
               e.stopPropagation();
               handleRemoveFromWishlist(item.productId);
             }}
           >
-            <Text style={styles.removeButtonText}>✕</Text>
+            <Text style={WishListStyles.removeButtonText}>✕</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -153,53 +153,53 @@ export const WishlistScreen: React.FC = () => {
 
   const renderListItem = ({ item }: { item: WishlistItemWithProduct }) => (
     <TouchableOpacity 
-      style={styles.listItem}
+      style={WishListStyles.listItem}
       onPress={() => handleViewDetails(item)}
       activeOpacity={0.7}
     >
       <Image
         source={{ uri: item.product.imageUrls[0] }}
-        style={styles.listImage}
+        style={WishListStyles.listImage}
         resizeMode="cover"
       />
-      <View style={styles.listItemInfo}>
-        <Text style={styles.listItemTitle} numberOfLines={2}>
+      <View style={WishListStyles.listItemInfo}>
+        <Text style={WishListStyles.listItemTitle} numberOfLines={2}>
           {item.product.title}
         </Text>
-        <Text style={styles.listItemPrice}>
+        <Text style={WishListStyles.listItemPrice}>
           {item.product.currency} {item.product.price.toFixed(2)}
         </Text>
-        <Text style={styles.addedDate}>
+        <Text style={WishListStyles.addedDate}>
           Added {item.addedAt.toLocaleDateString()}
         </Text>
       </View>
-      <View style={styles.listItemActions}>
+      <View style={WishListStyles.listItemActions}>
         <TouchableOpacity
-          style={styles.listAddToCartButton}
+          style={WishListStyles.listAddToCartButton}
           onPress={(e) => {
             e.stopPropagation();
             handleAddToCart(item.productId);
           }}
         >
-          <Text style={styles.listAddToCartButtonText}>Add to Cart</Text>
+          <Text style={WishListStyles.listAddToCartButtonText}>Add to Cart</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.listRemoveButton}
+          style={WishListStyles.listRemoveButton}
           onPress={(e) => {
             e.stopPropagation();
             handleRemoveFromWishlist(item.productId);
           }}
         >
-          <Text style={styles.removeButtonText}>✕</Text>
+          <Text style={WishListStyles.removeButtonText}>✕</Text>
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );
 
   const renderEmptyWishlist = () => (
-    <View style={styles.emptyContainer}>
-      <Text style={styles.emptyTitle}>💖 Your wishlist is empty</Text>
-      <Text style={styles.emptyDescription}>
+    <View style={WishListStyles.emptyContainer}>
+      <Text style={WishListStyles.emptyTitle}>💖 Your wishlist is empty</Text>
+      <Text style={WishListStyles.emptyDescription}>
         Swipe right on products in the feed to add them to your wishlist!
       </Text>
     </View>
@@ -207,30 +207,30 @@ export const WishlistScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={WishListStyles.container}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-        <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Loading wishlist...</Text>
+        <View style={WishListStyles.loadingContainer}>
+          <Text style={WishListStyles.loadingText}>Loading wishlist...</Text>
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <View style={styles.backgroundContainer}>
-      <SafeAreaView style={styles.container}>
+    <View style={WishListStyles.backgroundContainer}>
+      <SafeAreaView style={WishListStyles.container}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-        <View style={styles.header}>
-        <Text style={styles.headerTitle}>Wishlist</Text>
-        <View style={styles.headerActions}>
+        <View style={WishListStyles.header}>
+        <Text style={WishListStyles.headerTitle}>Wishlist</Text>
+        <View style={WishListStyles.headerActions}>
           {wishlistItems.length > 0 && (
             <>
-              <Text style={styles.itemCount}>{wishlistItems.length} items</Text>
+              <Text style={WishListStyles.itemCount}>{wishlistItems.length} items</Text>
               <TouchableOpacity
-                style={styles.viewModeButton}
+                style={WishListStyles.viewModeButton}
                 onPress={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
               >
-                <Text style={styles.viewModeButtonText}>
+                <Text style={WishListStyles.viewModeButtonText}>
                   {viewMode === 'grid' ? '☰' : '⊞'}
                 </Text>
               </TouchableOpacity>
@@ -245,7 +245,7 @@ export const WishlistScreen: React.FC = () => {
         keyExtractor={(item) => item.productId}
         numColumns={viewMode === 'grid' ? 2 : 1}
         key={viewMode} // Force re-render when view mode changes
-        contentContainerStyle={wishlistItems.length === 0 ? styles.emptyListContainer : styles.listContainer}
+        contentContainerStyle={wishlistItems.length === 0 ? WishListStyles.emptyListContainer : WishListStyles.listContainer}
         ListEmptyComponent={renderEmptyWishlist}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -255,225 +255,3 @@ export const WishlistScreen: React.FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  backgroundContainer: {
-    flex: 1,
-    backgroundColor: '#221e27',
-    alignItems: 'center',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#221e27',
-    maxWidth: 600,
-    width: '100%',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 16,
-    color: '#6C757D',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#221e27',
-    borderBottomWidth: 1,
-    borderBottomColor: '#221e27',
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#f6f9fdff',
-  },
-  headerActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  itemCount: {
-    fontSize: 14,
-    color: '#eaf0f5ff',
-    marginRight: 12,
-  },
-  viewModeButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#E9ECEF',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  viewModeButtonText: {
-    fontSize: 16,
-    color: '#d3d9dfff',
-  },
-  listContainer: {
-    paddingVertical: 8,
-  },
-  emptyListContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 40,
-  },
-  emptyContainer: {
-    alignItems: 'center',
-  },
-  emptyTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: '#f4faffff',
-    marginBottom: 12,
-    textAlign: 'center',
-  },
-  emptyDescription: {
-    fontSize: 16,
-    color: '#d9e0e6ff',
-    textAlign: 'center',
-    lineHeight: 24,
-  },
-  // Grid view styles
-  gridItem: {
-    width: ITEM_WIDTH,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    margin: 8,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  gridImage: {
-    width: '100%',
-    height: ITEM_WIDTH * 0.8,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-    backgroundColor: '#F8F9FA',
-  },
-  gridItemInfo: {
-    padding: 12,
-  },
-  gridItemTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#212529',
-    marginBottom: 4,
-    height: 36,
-  },
-  gridItemPrice: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#007BFF',
-    marginBottom: 8,
-  },
-  gridItemActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  addToCartButton: {
-    flex: 1,
-    backgroundColor: '#08f88c',
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginRight: 8,
-  },
-  addToCartButtonText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#FFFFFF',
-    textAlign: 'center',
-  },
-  removeButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#DC3545',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  removeButtonText: {
-    fontSize: 14,
-    color: '#FFFFFF',
-    fontWeight: '600',
-  },
-  // List view styles
-  listItem: {
-    flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
-    marginHorizontal: 16,
-    marginVertical: 4,
-    borderRadius: 12,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  listImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 8,
-    backgroundColor: '#F8F9FA',
-  },
-  listItemInfo: {
-    flex: 1,
-    marginLeft: 12,
-    justifyContent: 'space-between',
-  },
-  listItemTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#212529',
-    marginBottom: 4,
-  },
-  listItemPrice: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#00ff15ff',
-    marginBottom: 4,
-  },
-  addedDate: {
-    fontSize: 12,
-    color: '#6C757D',
-  },
-  listItemActions: {
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-  },
-  listAddToCartButton: {
-    backgroundColor: '#007BFF',
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    marginBottom: 8,
-  },
-  listAddToCartButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
-  listRemoveButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#DC3545',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
