@@ -180,3 +180,96 @@ export const ProfileStyles = StyleSheet.create({
     color: "#6C757D",
   },
 });
+
+export const AccountStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#230234",
+  },
+  scrollView: {
+    flex: 1,
+  },
+  accountItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E9ECEF",
+    backgroundColor:'#fff'
+  },
+  accountLabel: {
+    flex: 1,
+    fontSize: 16,
+    color: "#212529",
+  },
+  header: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    paddingTop: 50,
+    backgroundColor: "#47006e",
+    borderBottomWidth: 1,
+    borderBottomColor: "#3a8004",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  closeButton: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  closeButtonText: {
+    fontSize: 24,
+    color: "#eff7e9",
+    fontWeight: "bold",
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#eff7e9",
+    flex: 1,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorText: {
+    fontSize: 16,
+    color: "#dc3545",
+  },
+});
+
+export const FaqStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#f7f7f7",
+  },
+  header: {
+    backgroundColor: "#b8fcccff",
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  headerActive: {
+    backgroundColor: "#3bfa8aff",
+  },
+  headerText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+  },
+  content: {
+    backgroundColor: "#3f3939ff",
+    padding: 16,
+  },
+  contentText: {
+    fontSize: 14,
+    color: "#fff6f6ff",
+    lineHeight: 20,
+  },
+  sectionTitle: {
+    display: "none", // optional, can be removed
+  },
+});
