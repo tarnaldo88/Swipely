@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, memo } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   StatusBar,
   RefreshControl,
   ScrollView,
@@ -22,6 +21,7 @@ import { getSkippedProductsService } from '../../services/SkippedProductsService
 import { OptimizedFlatList } from '../../components/common/OptimizedFlatList';
 import { PerformanceMonitor, MemoryManager } from '../../utils/PerformanceUtils';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
+import { FeedScreenStyles } from '../Styles/ProductStyles';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -221,7 +221,7 @@ export const FeedScreen: React.FC = memo(() => {
       <View
         key={product.id}
         style={[
-          styles.cardWrapper,
+          FeedScreenStyles.cardWrapper,
           {
             zIndex,
             transform: [
@@ -246,10 +246,10 @@ export const FeedScreen: React.FC = memo(() => {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={FeedScreenStyles.container}>
         <StatusBar barStyle="light-content" backgroundColor="#221e27" />
-        <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Loading your personalized feed...</Text>
+        <View style={FeedScreenStyles.loadingContainer}>
+          <Text style={FeedScreenStyles.loadingText}>Loading your personalized feed...</Text>
         </View>
       </SafeAreaView>
     );
@@ -257,16 +257,16 @@ export const FeedScreen: React.FC = memo(() => {
 
   if (products.length === 0) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={FeedScreenStyles.container}>
         <StatusBar barStyle="light-content" backgroundColor="#221e27" />
         <ScrollView
-          contentContainerStyle={styles.emptyContainer}
+          contentContainerStyle={FeedScreenStyles.emptyContainer}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
           }
         >
-          <Text style={styles.emptyTitle}>No Products Available</Text>
-          <Text style={styles.emptySubtitle}>
+          <Text style={FeedScreenStyles.emptyTitle}>No Products Available</Text>
+          <Text style={FeedScreenStyles.emptySubtitle}>
             Pull down to refresh and discover new products!
           </Text>
         </ScrollView>
@@ -277,15 +277,15 @@ export const FeedScreen: React.FC = memo(() => {
   const hasMoreCards = currentCardIndex < products.length;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={FeedScreenStyles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#221e27" />
       
       {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <View style={styles.headerLeft}>
-            <Text style={styles.headerTitle}>Discover</Text>
-            <Text style={styles.headerSubtitle}>
+      <View style={FeedScreenStyles.header}>
+        <View style={FeedScreenStyles.headerContent}>
+          <View style={FeedScreenStyles.headerLeft}>
+            <Text style={FeedScreenStyles.headerTitle}>Discover</Text>
+            <Text style={FeedScreenStyles.headerSubtitle}>
               {hasMoreCards 
                 ? `${products.length - currentCardIndex} products to explore`
                 : 'All caught up!'
@@ -293,29 +293,29 @@ export const FeedScreen: React.FC = memo(() => {
             </Text>
           </View>
           <TouchableOpacity 
-            style={styles.skippedButton} 
+            style={FeedScreenStyles.skippedButton} 
             onPress={handleShowSkippedProducts}
             activeOpacity={0.7}
           >
-            <Text style={styles.skippedButtonIcon}>↻</Text>
-            <Text style={styles.skippedButtonText}>View Skipped</Text>
+            <Text style={FeedScreenStyles.skippedButtonIcon}>↻</Text>
+            <Text style={FeedScreenStyles.skippedButtonText}>View Skipped</Text>
           </TouchableOpacity>
         </View>
       </View>
 
       {/* Cards Container */}
-      <View style={styles.cardsContainer}>
+      <View style={FeedScreenStyles.cardsContainer}>
         {hasMoreCards ? (
           <>
             {products.map((product, index) => renderCard(product, index))}
           </>
         ) : (
-          <View style={styles.allDoneContainer}>
-            <Text style={styles.allDoneTitle}>🎉 All Done!</Text>
-            <Text style={styles.allDoneSubtitle}>
+          <View style={FeedScreenStyles.allDoneContainer}>
+            <Text style={FeedScreenStyles.allDoneTitle}>🎉 All Done!</Text>
+            <Text style={FeedScreenStyles.allDoneSubtitle}>
               You've seen all available products.
             </Text>
-            <Text style={styles.allDoneAction}>
+            <Text style={FeedScreenStyles.allDoneAction}>
               Pull down to refresh for new products!
             </Text>
           </View>
@@ -324,8 +324,8 @@ export const FeedScreen: React.FC = memo(() => {
 
       {/* Pull to refresh hint */}
       <ScrollView
-        style={styles.refreshScrollView}
-        contentContainerStyle={styles.refreshContainer}
+        style={FeedScreenStyles.refreshScrollView}
+        contentContainerStyle={FeedScreenStyles.refreshContainer}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -337,8 +337,8 @@ export const FeedScreen: React.FC = memo(() => {
         showsVerticalScrollIndicator={false}
         pointerEvents="none"
       >
-        <View style={[styles.refreshHint, { pointerEvents: 'auto' }]}>
-          <Text style={styles.refreshHintText}>Pull down to refresh</Text>
+        <View style={[FeedScreenStyles.refreshHint, { pointerEvents: 'auto' }]}>
+          <Text style={FeedScreenStyles.refreshHintText}>Pull down to refresh</Text>
         </View>
       </ScrollView>
 
@@ -353,22 +353,22 @@ export const FeedScreen: React.FC = memo(() => {
         }}
         onShow={() => console.log('Modal is now visible')}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Review Skipped Products</Text>
+        <View style={FeedScreenStyles.modalOverlay}>
+          <View style={FeedScreenStyles.modalContent}>
+            <View style={FeedScreenStyles.modalHeader}>
+              <Text style={FeedScreenStyles.modalTitle}>Review Skipped Products</Text>
               <TouchableOpacity 
-                style={styles.modalCloseButton}
+                style={FeedScreenStyles.modalCloseButton}
                 onPress={() => setShowSkippedModal(false)}
               >
-                <Text style={styles.modalCloseButtonText}>✕</Text>
+                <Text style={FeedScreenStyles.modalCloseButtonText}>✕</Text>
               </TouchableOpacity>
             </View>
             
             {skippedCategories.length === 0 ? (
-              <View style={styles.modalEmptyContainer}>
-                <Text style={styles.modalEmptyText}>No skipped products yet</Text>
-                <Text style={styles.modalEmptySubtext}>
+              <View style={FeedScreenStyles.modalEmptyContainer}>
+                <Text style={FeedScreenStyles.modalEmptyText}>No skipped products yet</Text>
+                <Text style={FeedScreenStyles.modalEmptySubtext}>
                   Products you skip will appear here organized by category
                 </Text>
               </View>
@@ -378,21 +378,21 @@ export const FeedScreen: React.FC = memo(() => {
                 keyExtractor={(item) => item.category}
                 renderItem={({ item }) => (
                   <TouchableOpacity
-                    style={styles.categoryItem}
+                    style={FeedScreenStyles.categoryItem}
                     onPress={() => handleNavigateToSkippedCategory(item.category)}
                   >
-                    <View style={styles.categoryInfo}>
-                      <Text style={styles.categoryName}>
+                    <View style={FeedScreenStyles.categoryInfo}>
+                      <Text style={FeedScreenStyles.categoryName}>
                         {item.category.charAt(0).toUpperCase() + item.category.slice(1)}
                       </Text>
-                      <Text style={styles.categoryCount}>
+                      <Text style={FeedScreenStyles.categoryCount}>
                         {item.count} skipped product{item.count !== 1 ? 's' : ''}
                       </Text>
                     </View>
-                    <Text style={styles.categoryChevron}>›</Text>
+                    <Text style={FeedScreenStyles.categoryChevron}>›</Text>
                   </TouchableOpacity>
                 )}
-                style={styles.categoriesList}
+                style={FeedScreenStyles.categoriesList}
               />
             )}
           </View>
@@ -404,240 +404,3 @@ export const FeedScreen: React.FC = memo(() => {
 
 FeedScreen.displayName = 'FeedScreen';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#221e27',
-  },
-  header: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: '#221e27',
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
-    zIndex: 1000,
-    elevation: 10,
-    position: 'relative',
-  },
-  headerContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  headerLeft: {
-    flex: 1,
-  },
-
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#e1ecf8ff',
-    marginBottom: 4,
-  },
-  headerSubtitle: {
-    fontSize: 16,
-    color: '#d7dce0ff',
-  },
-
-  skippedButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#08f88c',
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  skippedButtonIcon: {
-    fontSize: 16,
-    color: '#221e27',
-    fontWeight: 'bold',
-    marginRight: 6,
-  },
-  skippedButtonText: {
-    fontSize: 12,
-    color: '#221e27',
-    fontWeight: '600',
-  },
-  cardsContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 20,
-    maxWidth: 600,
-    width: '100%',
-    alignSelf: 'center',
-  },
-  cardWrapper: {
-    position: 'absolute',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 18,
-    color: '#d6e4d8ff',
-    textAlign: 'center',
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 40,
-  },
-  emptyTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#d8dfe7ff',
-    marginBottom: 12,
-    textAlign: 'center',
-  },
-  emptySubtitle: {
-    fontSize: 16,
-    color: '#a9b1b8ff',
-    textAlign: 'center',
-    lineHeight: 24,
-  },
-  allDoneContainer: {
-    alignItems: 'center',
-    paddingHorizontal: 40,
-  },
-  allDoneTitle: {
-    fontSize: 32,
-    marginBottom: 16,
-  },
-  allDoneSubtitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#d5dee7ff',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  allDoneAction: {
-    fontSize: 16,
-    color: '#a1b1c0ff',
-    textAlign: 'center',
-  },
-  refreshScrollView: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: -1,
-  },
-  refreshContainer: {
-    flex: 1,
-  },
-  refreshHint: {
-    position: 'absolute',
-    bottom: 40,
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-  },
-  refreshHintText: {
-    fontSize: 14,
-    color: '#ADB5BD',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  // Modal styles
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
-  },
-  modalContent: {
-    backgroundColor: '#FFFFFF',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    maxHeight: '70%',
-    minHeight: 300,
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E9ECEF',
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#212529',
-  },
-  modalCloseButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#F8F9FA',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalCloseButtonText: {
-    fontSize: 16,
-    color: '#6C757D',
-    fontWeight: 'bold',
-  },
-  modalEmptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 40,
-  },
-  modalEmptyText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#212529',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  modalEmptySubtext: {
-    fontSize: 14,
-    color: '#6C757D',
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  categoriesList: {
-    flex: 1,
-  },
-  categoryItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F8F9FA',
-  },
-  categoryInfo: {
-    flex: 1,
-  },
-  categoryName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#212529',
-    marginBottom: 4,
-  },
-  categoryCount: {
-    fontSize: 14,
-    color: '#6C757D',
-  },
-  categoryChevron: {
-    fontSize: 20,
-    color: '#6C757D',
-  },
-});
