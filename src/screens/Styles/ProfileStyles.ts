@@ -351,3 +351,104 @@ export const HelpSupportStyles = StyleSheet.create({
     color: "#47006e",
   },
 });
+
+export const PrivacySecurityStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#230234",
+  },
+  switchRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 8,
+        borderBottomWidth: 0.5,
+        borderBottomColor: '#ccc',
+    },
+    switchLabel: {
+        fontSize: 16,
+        color: '#f1f6faff',
+        flexShrink: 1,
+        },
+        scrollView: {
+        flex: 1,
+    },
+  securityItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E9ECEF",
+    backgroundColor:'#fff'
+  },
+  pwChangeLabel: {
+    flex: 1,
+    fontSize: 16,
+    color: "#212529",
+    paddingLeft:25,
+  },
+  header: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    paddingTop: 50,
+    backgroundColor: "#47006e",
+    borderBottomWidth: 1,
+    borderBottomColor: "#3a8004",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  closeButton: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  closeButtonText: {
+    fontSize: 24,
+    color: "#eff7e9",
+    fontWeight: "bold",
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#eff7e9",
+    flex: 1,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorText: {
+    fontSize: 16,
+    color: "#dc3545",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    padding: 16,
+    fontSize: 16,
+    marginBottom: 16,
+    backgroundColor: "#fff",
+  },
+  submitButton: {
+    backgroundColor: "#08f88c",
+    borderRadius: 8,
+    padding: 16,
+    alignItems: "center",
+    marginBottom: 24,
+  },
+  submitButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  passwordSection: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 16,
+    marginTop: 12,
+  },
+});
