@@ -131,13 +131,13 @@ export const FeedScreen: React.FC = memo(() => {
       console.log('Product is in wishlist:', isInWishlist);
       
       const wishlistCount = await wishlistService.getWishlistCount();
-      console.log('Total wishlist items:', wishlistCount);
+      console.log('Total wishlist items:', wishlistCount);      
       
-      Alert.alert('Added to Wishlist!', `Product has been added to your wishlist. Total items: ${wishlistCount}`);
+      showToastNotification('Product has been added to your wishlist. Total items: ${wishlistCount}');
       setCurrentCardIndex(prev => prev + 1);
     } catch (error) {
-      console.error('Error adding to wishlist:', error);
-      Alert.alert('Error', 'Failed to add product to wishlist. Please try again.');
+      console.error('Error adding to wishlist:', error);      
+      showToastNotification('Failed to add product to wishlist. Please try again.');
       setCurrentCardIndex(prev => prev + 1);
     }
   }, []);
