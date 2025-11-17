@@ -418,6 +418,35 @@ export const FeedScreenStyles = StyleSheet.create({
     fontSize: 20,
     color: '#6C757D',
   },
+  // Toast notification styles
+  toastContainer: {
+    position: 'absolute',
+    bottom: 100,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    zIndex: 9999,
+  },
+  toast: {
+    backgroundColor: '#08f88c',
+    borderRadius: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  toastText: {
+    color: '#221e27',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
 });
 
 export const SimpleProductDetailStyles = StyleSheet.create({

@@ -38,6 +38,8 @@ export const FeedScreen: React.FC = memo(() => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [showSkippedModal, setShowSkippedModal] = useState(false);
   const [skippedCategories, setSkippedCategories] = useState<{ category: string; count: number }[]>([]);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
   
   const skippedProductsService = getSkippedProductsService();
   const { handleError, executeWithRetry } = useErrorHandler();
@@ -140,6 +142,14 @@ export const FeedScreen: React.FC = memo(() => {
     }
   }, []);
 
+  const showToastNotification = useCallback((message: string) => {
+    setToastMessage(message);
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 1000);
+  }, []);
+
   const handleAddToCart = useCallback(async (productId: string) => {
     console.log('Added to cart:', productId);
     try {
@@ -155,17 +165,18 @@ export const FeedScreen: React.FC = memo(() => {
       const cartCount = await cartService.getCartCount();
       console.log('Total cart items:', cartCount);
       
-      Alert.alert('Added to Cart!', `Product has been added to your cart. Total items: ${cartCount}`);
+      // Show toast notification instead of alert
+      showToastNotification(`Added to cart! (${cartCount} items)`);
       
       // Automatically advance to next card
       setCurrentCardIndex(prev => prev + 1);
     } catch (error) {
       console.error('Error adding to cart:', error);
-      Alert.alert('Error', 'Failed to add product to cart. Please try again.');
+      showToastNotification('Failed to add to cart');
       // Still advance to next card even if there was an error
       setCurrentCardIndex(prev => prev + 1);
     }
-  }, []);
+  }, [showToastNotification]);
 
   const handleViewDetails = useCallback((productId: string) => {
     console.log('Viewing details for product:', productId);
@@ -398,6 +409,15 @@ export const FeedScreen: React.FC = memo(() => {
           </View>
         </View>
       </Modal>
+
+      {/* Toast Notification */}
+      {showToast && (
+        <View style={FeedScreenStyles.toastContainer}>
+          <View style={FeedScreenStyles.toast}>
+            <Text style={FeedScreenStyles.toastText}>{toastMessage}</Text>
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 });
