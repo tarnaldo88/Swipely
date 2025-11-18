@@ -245,19 +245,6 @@ npm run test:ios      # iOS-specific tests
 npm run test:web      # Web-specific tests
 ```
 
-## Configuration
-
-### **Environment Variables**
-```bash
-# Firebase Configuration
-FIREBASE_API_KEY=your_api_key
-FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-FIREBASE_PROJECT_ID=your_project_id
-
-# API Configuration
-API_BASE_URL=https://api.swipely.com
-API_VERSION=v1
-
 # Analytics
 ANALYTICS_ENABLED=true
 CRASH_REPORTING_ENABLED=true
