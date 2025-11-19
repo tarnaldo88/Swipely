@@ -22,9 +22,6 @@ interface WishlistItemWithProduct extends WishlistItem {
   product: ProductCard;
 }
 
-const { width } = Dimensions.get('window');
-const ITEM_WIDTH = (width - 48) / 2; // 2 columns with margins
-
 type WishlistScreenNavigationProp = StackNavigationProp<MainStackParamList>;
 
 export const WishlistScreen: React.FC = () => {

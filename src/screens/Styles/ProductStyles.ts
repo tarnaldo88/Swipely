@@ -786,7 +786,9 @@ export const SkippedProductStyles = StyleSheet.create({
 });
 
 const { width } = Dimensions.get('window');
-const ITEM_WIDTH = (width - 48) / 2; // 2 columns with margins
+// Limit item width for web - use container max width (600px) instead of full screen
+const CONTAINER_WIDTH = Math.min(width, 600);
+const ITEM_WIDTH = (CONTAINER_WIDTH - 48) / 2; // 2 columns with margins
 
 export const WishListStyles = StyleSheet.create({
   backgroundContainer: {
