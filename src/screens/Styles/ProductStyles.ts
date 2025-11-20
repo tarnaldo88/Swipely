@@ -1011,3 +1011,41 @@ export const WishListStyles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+export const ViewDetailStyles = StyleSheet.create({
+  button: {
+    backgroundColor: 'transparent',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#1976D2',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 44,
+  },
+  buttonDisabled: {
+    borderColor: '#BDBDBD',
+    opacity: 0.6,
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    color: '#1976D2',
+    fontWeight: '600',
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  buttonTextDisabled: {
+    color: '#757575',
+  },
+  loadingText: {
+    marginLeft: 8,
+  },
+  loadingIndicator: {
+    marginRight: 4,
+  },
+});
