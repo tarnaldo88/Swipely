@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import {
   TouchableOpacity,
   Text,
-  StyleSheet,
   ActivityIndicator,
   View,
 } from 'react-native';
+import { ViewDetailStyles } from '@/screens/Styles/ProductStyles';
 
 interface ViewDetailsButtonProps {
   onPress: () => Promise<void> | void;
@@ -47,28 +47,28 @@ export const ViewDetailsButton: React.FC<ViewDetailsButtonProps> = ({
   return (
     <TouchableOpacity
       style={[
-        styles.button,
-        isDisabled && styles.buttonDisabled,
+        ViewDetailStyles.button,
+        isDisabled && ViewDetailStyles.buttonDisabled,
         style,
       ]}
       onPress={handlePress}
       activeOpacity={isDisabled ? 1 : 0.7}
       disabled={isDisabled}
     >
-      <View style={styles.content}>
+      <View style={ViewDetailStyles.content}>
         {isLoading ? (
           <>
             <ActivityIndicator 
               size="small" 
               color={loadingColor} 
-              style={styles.loadingIndicator}
+              style={ViewDetailStyles.loadingIndicator}
             />
-            <Text style={[styles.buttonText, styles.loadingText, textStyle]}>
+            <Text style={[ViewDetailStyles.buttonText, ViewDetailStyles.loadingText, textStyle]}>
               Loading...
             </Text>
           </>
         ) : (
-          <Text style={[styles.buttonText, isDisabled && styles.buttonTextDisabled, textStyle]}>
+          <Text style={[ViewDetailStyles.buttonText, isDisabled && ViewDetailStyles.buttonTextDisabled, textStyle]}>
             {title}
           </Text>
         )}
@@ -76,41 +76,3 @@ export const ViewDetailsButton: React.FC<ViewDetailsButtonProps> = ({
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: 'transparent',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#1976D2',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 44,
-  },
-  buttonDisabled: {
-    borderColor: '#BDBDBD',
-    opacity: 0.6,
-  },
-  content: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: '#1976D2',
-    fontWeight: '600',
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  buttonTextDisabled: {
-    color: '#757575',
-  },
-  loadingText: {
-    marginLeft: 8,
-  },
-  loadingIndicator: {
-    marginRight: 4,
-  },
-});
