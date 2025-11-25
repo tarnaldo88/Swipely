@@ -26,6 +26,7 @@ import { ProductCard, MainStackParamList } from '../../types';
 import { getSwipeActionService } from '../../services/SwipeActionService';
 import { AndroidToast } from '../../utils/AndroidUtils';
 import { AndroidStyles, MaterialColors, MaterialAnimations, AndroidGestures } from '../../styles/AndroidStyles';
+import { AndroidSwipeCardStyles } from '@/screens/Styles/CardStyles';
 
 const { width: screenWidth } = Dimensions.get('window');
 const CARD_WIDTH = screenWidth * 0.9;
@@ -254,52 +255,52 @@ export const AndroidSwipeableCard: React.FC<AndroidSwipeableCardProps> = ({
 
   return (
     <GestureDetector gesture={panGesture}>
-      <Animated.View style={[styles.cardContainer, cardAnimatedStyle]}>
+      <Animated.View style={[AndroidSwipeCardStyles.cardContainer, cardAnimatedStyle]}>
         <TouchableComponent
           onPress={handleViewDetails}
           background={TouchableNativeFeedback.Ripple(MaterialColors.primary, false)}
           useForeground={true}
         >
-          <View style={[styles.card, AndroidStyles.card]}>
+          <View style={[AndroidSwipeCardStyles.card, AndroidStyles.card]}>
             {/* Product Image */}
-            <View style={styles.imageContainer}>
-              <Image source={{ uri: primaryImage }} style={styles.productImage} />
+            <View style={AndroidSwipeCardStyles.imageContainer}>
+              <Image source={{ uri: primaryImage }} style={AndroidSwipeCardStyles.productImage} />
               
               {/* Swipe Overlays */}
-              <Animated.View style={[styles.overlay, styles.likeOverlay, likeOverlayStyle]}>
+              <Animated.View style={[AndroidSwipeCardStyles.overlay, AndroidSwipeCardStyles.likeOverlay, likeOverlayStyle]}>
                 <Image
                   source={require('../../../assets/SwipelyBag.png')}
-                  style={styles.logo}
+                  style={AndroidSwipeCardStyles.logo}
                 />
-                <Text style={styles.overlayText}>LIKE</Text>
+                <Text style={AndroidSwipeCardStyles.overlayText}>LIKE</Text>
               </Animated.View>
               
-              <Animated.View style={[styles.overlay, styles.skipOverlay, skipOverlayStyle]}>
-                <Text style={styles.overlayText}>SKIP</Text>
+              <Animated.View style={[AndroidSwipeCardStyles.overlay, AndroidSwipeCardStyles.skipOverlay, skipOverlayStyle]}>
+                <Text style={AndroidSwipeCardStyles.overlayText}>SKIP</Text>
               </Animated.View>
             </View>
 
             {/* Product Info with Material Design typography */}
-            <View style={[styles.productInfo, AndroidStyles.cardContent]}>
-              <Text style={[styles.productTitle, { fontSize: 16, fontWeight: '500', color: MaterialColors.textPrimary }]} numberOfLines={2}>
+            <View style={[AndroidSwipeCardStyles.productInfo, AndroidStyles.cardContent]}>
+              <Text style={[AndroidSwipeCardStyles.productTitle, { fontSize: 16, fontWeight: '500', color: MaterialColors.textPrimary }]} numberOfLines={2}>
                 {product.title}
               </Text>
-              <Text style={[styles.productPrice, { fontSize: 18, fontWeight: '700', color: MaterialColors.primary }]}>{formattedPrice}</Text>
-              <Text style={[styles.productCategory, { fontSize: 14, color: MaterialColors.textSecondary }]}>{product.category.name}</Text>
+              <Text style={[AndroidSwipeCardStyles.productPrice, { fontSize: 18, fontWeight: '700', color: MaterialColors.primary }]}>{formattedPrice}</Text>
+              <Text style={[AndroidSwipeCardStyles.productCategory, { fontSize: 14, color: MaterialColors.textSecondary }]}>{product.category.name}</Text>
               
               {!product.availability && (
-                <Text style={[styles.outOfStock, { fontSize: 12, color: MaterialColors.error }]}>Out of Stock</Text>
+                <Text style={[AndroidSwipeCardStyles.outOfStock, { fontSize: 12, color: MaterialColors.error }]}>Out of Stock</Text>
               )}
             </View>
 
             {/* Material Design Action Buttons */}
-            <View style={[styles.actionButtons, AndroidStyles.cardActions]}>
+            <View style={[AndroidSwipeCardStyles.actionButtons, AndroidStyles.cardActions]}>
               <TouchableNativeFeedback
                 onPress={() => animateSwipe('left')}
                 background={TouchableNativeFeedback.Ripple('#b91decff', true)}
               >
-                <View style={[styles.actionButton, styles.skipButton]}>
-                  <Text style={styles.skipButtonText}>Skip</Text>
+                <View style={[AndroidSwipeCardStyles.actionButton, AndroidSwipeCardStyles.skipButton]}>
+                  <Text style={AndroidSwipeCardStyles.skipButtonText}>Skip</Text>
                 </View>
               </TouchableNativeFeedback>
 
@@ -308,8 +309,8 @@ export const AndroidSwipeableCard: React.FC<AndroidSwipeableCardProps> = ({
                 disabled={!product.availability}
                 background={TouchableNativeFeedback.Ripple('#FFFFFF', true)}
               >
-                <View style={[styles.actionButton, styles.cartButton, !product.availability && styles.disabledButton]}>
-                  <Text style={[styles.cartButtonText, !product.availability && styles.disabledButtonText]}>
+                <View style={[AndroidSwipeCardStyles.actionButton, AndroidSwipeCardStyles.cartButton, !product.availability && AndroidSwipeCardStyles.disabledButton]}>
+                  <Text style={[AndroidSwipeCardStyles.cartButtonText, !product.availability && AndroidSwipeCardStyles.disabledButtonText]}>
                     {product.availability ? 'Add to Cart' : 'Out of Stock'}
                   </Text>
                 </View>
@@ -319,20 +320,20 @@ export const AndroidSwipeableCard: React.FC<AndroidSwipeableCardProps> = ({
                 onPress={() => animateSwipe('right')}
                 background={TouchableNativeFeedback.Ripple('#f1fcf1ff', true)}
               >
-                <View style={[styles.actionButton, styles.likeButton]}>
-                  <Text style={styles.likeButtonText}>Like</Text>
+                <View style={[AndroidSwipeCardStyles.actionButton, AndroidSwipeCardStyles.likeButton]}>
+                  <Text style={AndroidSwipeCardStyles.likeButtonText}>Like</Text>
                 </View>
               </TouchableNativeFeedback>
             </View>
 
             {/* Material Design View Details Button */}
-            <View style={styles.detailsButtonContainer}>
+            <View style={AndroidSwipeCardStyles.detailsButtonContainer}>
               <TouchableNativeFeedback
                 onPress={handleViewDetails}
                 background={TouchableNativeFeedback.Ripple(MaterialColors.textSecondary, true)}
               >
-                <View style={styles.detailsButton}>
-                  <Text style={styles.detailsButtonText}>VIEW DETAILS</Text>
+                <View style={AndroidSwipeCardStyles.detailsButton}>
+                  <Text style={AndroidSwipeCardStyles.detailsButtonText}>VIEW DETAILS</Text>
                 </View>
               </TouchableNativeFeedback>
             </View>
@@ -342,157 +343,3 @@ export const AndroidSwipeableCard: React.FC<AndroidSwipeableCardProps> = ({
     </GestureDetector>
   );
 };
-
-const styles = StyleSheet.create({
-  logo: {
-    width: 408,
-    height: 204,
-    marginBottom: 20,
-    resizeMode: 'contain',
-  },
-  cardContainer: {
-    position: 'absolute',
-    alignSelf: 'center',
-  },
-  card: {
-    width: CARD_WIDTH,
-    backgroundColor: '#221e27',
-    borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 8,
-    overflow: 'hidden',
-  },
-  imageContainer: {
-    position: 'relative',
-    height: 400,
-  },
-  productImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 16,
-  },
-
-  likeOverlay: {
-    backgroundColor: 'rgba(76, 175, 80, 0.85)',
-  },
-  skipOverlay: {
-    backgroundColor: 'rgba(244, 67, 54, 0.85)',
-  },
-  overlayText: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
-  },
-  productInfo: {
-    padding: 16,
-  },
-  productTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#e7e7e7ff',
-    marginBottom: 8,
-    lineHeight: 24,
-  },
-  productPrice: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#2E7D32',
-    marginBottom: 4,
-  },
-  productCategory: {
-    fontSize: 14,
-    color: '#cececeff',
-    marginBottom: 8,
-  },
-  outOfStock: {
-    fontSize: 12,
-    color: '#F44336',
-    fontWeight: '500',
-    textTransform: 'uppercase',
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-    gap: 8,
-  },
-  actionButton: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  skipButton: {
-    backgroundColor: '#fff',
-    borderColor: '#c725f8ff',
-    borderWidth: 1,
-  },
-  skipButtonText: {
-    color: '#b91decff',
-    fontWeight: '600',
-    fontSize: 14,
-  },
-  cartButton: {
-    backgroundColor: '#08f88c',
-  },
-  cartButtonText: {
-    color: '#FFFFFF',
-    fontWeight: '600',
-    fontSize: 14,
-  },
-  likeButton: {
-    backgroundColor: '#c725f8ff',
-    borderWidth: 1,
-    borderColor: '#2bee31ff',
-  },
-  likeButtonText: {
-    color: '#f1fcf1ff',
-    fontWeight: '600',
-    fontSize: 14,
-  },
-  disabledButton: {
-    backgroundColor: '#E0E0E0',
-    elevation: 0,
-  },
-  disabledButtonText: {
-    color: '#999',
-  },
-  detailsButtonContainer: {
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-  detailsButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: '#21fa501c',
-    borderRadius: 8,
-    paddingVertical: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  detailsButtonText: {
-    color: '#bbb8b8ff',
-    fontSize: 13,
-  },
-});
