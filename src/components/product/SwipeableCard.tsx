@@ -31,6 +31,7 @@ import { ViewDetailsButton } from './ViewDetailsButton';
 import { OptimizedImage } from '../common/OptimizedImage';
 import { GesturePerformanceManager } from '../../utils/PerformanceUtils';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
+import { SwipeableCardStyles } from '@/screens/Styles/CardStyles';
 
 const { width: screenWidth } = Dimensions.get('window');
 const CARD_WIDTH = screenWidth * 0.9;
@@ -198,13 +199,13 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
 
   return (
     <PanGestureHandler onGestureEvent={gestureHandler}>
-      <Animated.View style={[styles.cardContainer, cardAnimatedStyle]}>
-        <Pressable style={styles.card} onPress={handleViewDetails}>
+      <Animated.View style={[SwipeableCardStyles.cardContainer, cardAnimatedStyle]}>
+        <Pressable style={SwipeableCardStyles.card} onPress={handleViewDetails}>
           {/* Product Image */}
-          <View style={styles.imageContainer}>
+          <View style={SwipeableCardStyles.imageContainer}>
             <OptimizedImage 
               uri={primaryImage} 
-              style={styles.productImage}
+              style={SwipeableCardStyles.productImage}
               width={CARD_WIDTH}
               height={400}
               quality="high"
@@ -212,69 +213,69 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
             />
             
             {/* Swipe Overlays */}
-            <Animated.View style={[styles.overlay, styles.likeOverlay, likeOverlayStyle]}>
+            <Animated.View style={[SwipeableCardStyles.overlay, SwipeableCardStyles.likeOverlay, likeOverlayStyle]}>
               <OptimizedImage 
                 uri={require('../../../assets/SwipelyBag.png')} 
-                style={styles.logo}
+                style={SwipeableCardStyles.logo}
                 width={408}
                 height={204}
                 quality="medium"
                 resizeMode="contain"
               />
-              <Text style={styles.overlayText}>LIKE</Text>
+              <Text style={SwipeableCardStyles.overlayText}>LIKE</Text>
             </Animated.View>
             
-            <Animated.View style={[styles.overlay, styles.skipOverlay, skipOverlayStyle]}>
-              <Text style={styles.overlayText}>SKIP</Text>
+            <Animated.View style={[SwipeableCardStyles.overlay, SwipeableCardStyles.skipOverlay, skipOverlayStyle]}>
+              <Text style={SwipeableCardStyles.overlayText}>SKIP</Text>
             </Animated.View>
           </View>
 
           {/* Product Info */}
-          <View style={styles.productInfo}>
-            <Text style={styles.productTitle} numberOfLines={2}>
+          <View style={SwipeableCardStyles.productInfo}>
+            <Text style={SwipeableCardStyles.productTitle} numberOfLines={2}>
               {product.title}
             </Text>
-            <Text style={styles.productPrice}>{formattedPrice}</Text>
-            <Text style={styles.productCategory}>{product.category.name}</Text>
+            <Text style={SwipeableCardStyles.productPrice}>{formattedPrice}</Text>
+            <Text style={SwipeableCardStyles.productCategory}>{product.category.name}</Text>
             
             {!product.availability && (
-              <Text style={styles.outOfStock}>Out of Stock</Text>
+              <Text style={SwipeableCardStyles.outOfStock}>Out of Stock</Text>
             )}
           </View>
 
           {/* Action Buttons */}
-          <View style={styles.actionButtons}>
+          <View style={SwipeableCardStyles.actionButtons}>
             <TouchableOpacity
-              style={[styles.actionButton, styles.skipButton]}
+              style={[SwipeableCardStyles.actionButton, SwipeableCardStyles.skipButton]}
               onPress={() => handleSwipeComplete('left')}
               activeOpacity={0.7}
             >
-              <Text style={styles.skipButtonText}>Skip</Text>
+              <Text style={SwipeableCardStyles.skipButtonText}>Skip</Text>
             </TouchableOpacity>
 
             <AddToCartButton
               onPress={handleAddToCart}
               disabled={!product.availability}
-              style={[styles.actionButton, styles.cartButton]}
-              textStyle={styles.cartButtonText}
+              style={[SwipeableCardStyles.actionButton, SwipeableCardStyles.cartButton]}
+              textStyle={SwipeableCardStyles.cartButtonText}
               title={product.availability ? 'Add to Cart' : 'Out of Stock'}
             />
 
             <TouchableOpacity
-              style={[styles.actionButton, styles.likeButton]}
+              style={[SwipeableCardStyles.actionButton, SwipeableCardStyles.likeButton]}
               onPress={() => handleSwipeComplete('right')}
               activeOpacity={0.7}
             >
-              <Text style={styles.likeButtonText}>Like</Text>
+              <Text style={SwipeableCardStyles.likeButtonText}>Like</Text>
             </TouchableOpacity>
           </View>
 
           {/* View Details Button */}
-          <View style={styles.detailsButtonContainer}>
+          <View style={SwipeableCardStyles.detailsButtonContainer}>
             <ViewDetailsButton
               onPress={handleViewDetails}
-              style={styles.detailsButton}
-              textStyle={styles.detailsButtonText}
+              style={SwipeableCardStyles.detailsButton}
+              textStyle={SwipeableCardStyles.detailsButtonText}
               title="View Details"
             />
           </View>
@@ -285,146 +286,3 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
 });
 
 SwipeableCard.displayName = 'SwipeableCard';
-
-const styles = StyleSheet.create({
-  logo: {
-    width: 408,
-    height: 204,
-    marginBottom: 20,
-    resizeMode: 'contain',
-  },
-  cardContainer: {
-    position: 'absolute',
-    alignSelf: 'center',
-  },
-  card: {
-    width: CARD_WIDTH,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 8,
-    overflow: 'hidden',
-  },
-  imageContainer: {
-    position: 'relative',
-    height: 400,
-  },
-  productImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 16,
-  },
-  likeOverlay: {
-    backgroundColor: 'rgba(76, 175, 80, 0.8)',
-  },
-  skipOverlay: {
-    backgroundColor: 'rgba(244, 67, 54, 0.8)',
-  },
-  overlayText: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
-  },
-  productInfo: {
-    padding: 16,
-  },
-  productTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333333',
-    marginBottom: 8,
-    lineHeight: 24,
-  },
-  productPrice: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#2E7D32',
-    marginBottom: 4,
-  },
-  productCategory: {
-    fontSize: 14,
-    color: '#666666',
-    marginBottom: 8,
-  },
-  outOfStock: {
-    fontSize: 12,
-    color: '#F44336',
-    fontWeight: '500',
-    textTransform: 'uppercase',
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-    gap: 8,
-  },
-  actionButton: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  skipButton: {
-    backgroundColor: '#FFEBEE',
-    borderWidth: 1,
-    borderColor: '#F44336',
-  },
-  skipButtonText: {
-    color: '#F44336',
-    fontWeight: '600',
-    fontSize: 14,
-  },
-  cartButton: {
-    backgroundColor: '#1976D2',
-  },
-  cartButtonText: {
-    color: '#FFFFFF',
-    fontWeight: '600',
-    fontSize: 14,
-  },
-  likeButton: {
-    backgroundColor: '#E8F5E8',
-    borderWidth: 1,
-    borderColor: '#4CAF50',
-  },
-  likeButtonText: {
-    color: '#4CAF50',
-    fontWeight: '600',
-    fontSize: 14,
-  },
-  detailsButtonContainer: {
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-  detailsButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    paddingVertical: 10,
-  },
-  detailsButtonText: {
-    color: '#666666',
-    fontSize: 13,
-  },
-});
