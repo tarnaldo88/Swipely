@@ -44,3 +44,4 @@ src/config/firebase.example.ts
 /ios
 /android
 
+.kiro/
