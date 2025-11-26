@@ -16,6 +16,7 @@ import { ProductCard, MainStackParamList } from "../../types";
 import { getSwipeActionService } from "../../services/SwipeActionService";
 import { AddToCartButton } from "./AddToCartButton";
 import { ViewDetailsButton } from "./ViewDetailsButton";
+import { MouseSwipeStyles } from "@/screens/Styles/CardStyles";
 
 const { width: screenWidth } = Dimensions.get("window");
 // Limit card width for large screens (max 500px)
@@ -196,88 +197,88 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
   };
 
   return (
-    <View style={styles.cardContainer}>
+    <View style={MouseSwipeStyles.cardContainer}>
       <Animated.View
-        style={[styles.card, cardStyle]}
+        style={[MouseSwipeStyles.card, cardStyle]}
         {...panResponder.panHandlers}
       >
-        <Pressable style={styles.cardContent} onPress={handleViewDetails}>
+        <Pressable style={MouseSwipeStyles.cardContent} onPress={handleViewDetails}>
           {/* Product Image */}
-          <View style={styles.imageContainer}>
-            <Image source={{ uri: primaryImage }} style={styles.productImage} />
+          <View style={MouseSwipeStyles.imageContainer}>
+            <Image source={{ uri: primaryImage }} style={MouseSwipeStyles.productImage} />
 
             {/* Swipe Overlays */}
             <Animated.View
               style={[
-                styles.overlay,
-                styles.likeOverlay,
+                MouseSwipeStyles.overlay,
+                MouseSwipeStyles.likeOverlay,
                 { opacity: likeOpacity },
               ]}
             >
               <Image
                 source={require("../../../assets/SwipelyBag.png")}
-                style={styles.logo}
+                style={MouseSwipeStyles.logo}
               />
-              <Text style={styles.overlayText}>LIKE</Text>
+              <Text style={MouseSwipeStyles.overlayText}>LIKE</Text>
             </Animated.View>
 
             <Animated.View
               style={[
-                styles.overlay,
-                styles.skipOverlay,
+                MouseSwipeStyles.overlay,
+                MouseSwipeStyles.skipOverlay,
                 { opacity: skipOpacity },
               ]}
             >
-              <Text style={styles.overlayText}>SKIP</Text>
+              <Text style={MouseSwipeStyles.overlayText}>SKIP</Text>
             </Animated.View>
           </View>
 
           {/* Product Info */}
-          <View style={styles.productInfo}>
-            <Text style={styles.productTitle} numberOfLines={2}>
+          <View style={MouseSwipeStyles.productInfo}>
+            <Text style={MouseSwipeStyles.productTitle} numberOfLines={2}>
               {product.title}
             </Text>
-            <Text style={styles.productPrice}> {formattedPrice}</Text>
-            <Text style={styles.productCategory}>{product.category.name}</Text>
+            <Text style={MouseSwipeStyles.productPrice}> {formattedPrice}</Text>
+            <Text style={MouseSwipeStyles.productCategory}>{product.category.name}</Text>
 
             {!product.availability && (
-              <Text style={styles.outOfStock}>Out of Stock</Text>
+              <Text style={MouseSwipeStyles.outOfStock}>Out of Stock</Text>
             )}
           </View>
 
           {/* Action Buttons */}
-          <View style={styles.actionButtons}>
+          <View style={MouseSwipeStyles.actionButtons}>
             <TouchableOpacity
-              style={[styles.actionButton, styles.skipButton]}
+              style={[MouseSwipeStyles.actionButton, MouseSwipeStyles.skipButton]}
               onPress={() => animateSwipe("left")}
               activeOpacity={0.7}
             >
-              <Text style={styles.skipButtonText}>Skip</Text>
+              <Text style={MouseSwipeStyles.skipButtonText}>Skip</Text>
             </TouchableOpacity>
 
             <AddToCartButton
               onPress={handleAddToCart}
               disabled={!product.availability}
-              style={[styles.actionButton, styles.cartButton]}
-              textStyle={styles.cartButtonText}
+              style={[MouseSwipeStyles.actionButton, MouseSwipeStyles.cartButton]}
+              textStyle={MouseSwipeStyles.cartButtonText}
               title={product.availability ? "Add to Cart" : "Out of Stock"}
             />
 
             <TouchableOpacity
-              style={[styles.actionButton, styles.likeButton]}
+              style={[MouseSwipeStyles.actionButton, MouseSwipeStyles.likeButton]}
               onPress={() => animateSwipe("right")}
               activeOpacity={0.7}
             >
-              <Text style={styles.likeButtonText}>Like</Text>
+              <Text style={MouseSwipeStyles.likeButtonText}>Like</Text>
             </TouchableOpacity>
           </View>
 
           {/* View Details Button */}
-          <View style={styles.detailsButtonContainer}>
+          <View style={MouseSwipeStyles.detailsButtonContainer}>
             <ViewDetailsButton
               onPress={handleViewDetails}
-              style={styles.detailsButton}
-              textStyle={styles.detailsButtonText}
+              style={MouseSwipeStyles.detailsButton}
+              textStyle={MouseSwipeStyles.detailsButtonText}
               title="View Details"
             />
           </View>
@@ -286,8 +287,8 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
 
       {/* Swipe Instructions */}
       {isTopCard && (
-        <View style={styles.instructionsContainer}>
-          <Text style={styles.instructionsText}>
+        <View style={MouseSwipeStyles.instructionsContainer}>
+          <Text style={MouseSwipeStyles.instructionsText}>
             💡 Drag left to skip, right to like, or use buttons below
           </Text>
         </View>
@@ -295,172 +296,3 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  logo: {
-    width: 408,
-    height: 204,
-    marginBottom: 20,
-    resizeMode: "contain",
-  },
-  cardContainer: {
-    paddingTop: 30,
-    alignSelf: "center",
-    borderColor: "#221e27",
-  },
-  card: {
-    width: CARD_WIDTH,
-    maxWidth: 700,
-    backgroundColor: "#221e27",
-    borderRadius: 16,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 8,
-    borderColor: "#221e27",
-    alignSelf: "center",
-  },
-  cardContent: {
-    borderRadius: 16,
-    overflow: "hidden",
-  },
-  imageContainer: {
-    position: "relative",
-    height: 400,
-    width: "100%",
-    backgroundColor: "#f0f0f0",
-  },
-  productImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-    backgroundColor: "#f0f0f0",
-  },
-  overlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 16,
-  },
-  likeOverlay: {
-    backgroundColor: "rgba(76, 175, 80, 0.8)",
-  },
-  skipOverlay: {
-    backgroundColor: "rgba(244, 67, 54, 0.8)",
-  },
-  overlayText: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#FFFFFF",
-    textShadowColor: "rgba(0, 0, 0, 0.3)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
-  },
-  productInfo: {
-    padding: 16,
-  },
-  productTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#e7e7e7ff",
-    marginBottom: 8,
-    lineHeight: 24,
-  },
-  productPrice: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#2E7D32",
-    marginBottom: 4,
-  },
-  productCategory: {
-    fontSize: 14,
-    color: "#cececeff",
-    marginBottom: 8,
-  },
-  outOfStock: {
-    fontSize: 12,
-    color: "#F44336",
-    fontWeight: "500",
-    textTransform: "uppercase",
-  },
-  actionButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-    gap: 8,
-  },
-  actionButton: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  skipButton: {
-    backgroundColor: "#fff",
-    borderColor: "#c725f8ff",
-    borderWidth: 1,
-  },
-  skipButtonText: {
-    color: "#b91decff",
-    fontWeight: "600",
-    fontSize: 14,
-  },
-  cartButton: {
-    backgroundColor: "#08f88c",
-  },
-  cartButtonText: {
-    color: "#FFFFFF",
-    fontWeight: "600",
-    fontSize: 14,
-  },
-  likeButton: {
-    backgroundColor: "#c725f8ff",
-    borderWidth: 1,
-    borderColor: "#2bee31ff",
-  },
-  likeButtonText: {
-    color: "#f1fcf1ff",
-    fontWeight: "600",
-    fontSize: 14,
-  },
-  detailsButtonContainer: {
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-  detailsButton: {
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: "#21fa501c",
-    paddingVertical: 10,
-  },
-  detailsButtonText: {
-    color: "#bbb8b8ff",
-    fontSize: 13,
-  },
-  instructionsContainer: {
-    position: "absolute",
-    bottom: -40,
-    left: 0,
-    right: 0,
-    alignItems: "center",
-  },
-  instructionsText: {
-    fontSize: 12,
-    color: "#666666",
-    textAlign: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
-  },
-});
