@@ -2,7 +2,6 @@ import { initializeApp, getApps } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
 // Firebase configuration
-// You'll need to replace these with your actual Firebase project credentials
 const firebaseConfig = {
   apiKey: "AIzaSyDslt19Byt9H09-PCQDGvuE4CuRIe1QcNc",
   authDomain: "swipely-d5d70.firebaseapp.com",
@@ -22,6 +21,8 @@ if (getApps().length === 0) {
 }
 
 // Initialize Firebase Auth
+// Note: For React Native, auth state will persist in memory by default
+// To persist across sessions, use @react-native-firebase/auth instead
 const auth = getAuth(app);
 
 export { auth };

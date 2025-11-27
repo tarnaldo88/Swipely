@@ -192,9 +192,6 @@ export class CartServiceImpl implements CartService {
   > {
     await this.initialize();
 
-    // Import ProductDetailsService to get product details
-    const { ProductDetailsService } = require("./ProductDetailsService");
-
     const itemsWithDetails = await Promise.all(
       this.cartItems.map(async (item) => {
         try {

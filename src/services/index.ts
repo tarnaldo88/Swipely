@@ -24,3 +24,18 @@ export {
   getSwipeActionService, 
   resetSwipeActionService 
 } from './SwipeActionService';
+
+// Product details service
+export { ProductDetailsService } from './ProductDetailsService';
+
+// Cart and wishlist services
+export { CartService } from './CartService';
+export { WishlistService } from './WishlistService';
+export { SkippedProductsService } from './SkippedProductsService';
+
+// Other services
+export { OfflineModeService } from './OfflineModeService';
+export { ErrorHandlingService } from './ErrorHandlingService';
+export { CrashReportingService } from './CrashReportingService';
+export { AnalyticsService } from './AnalyticsService';
+export { ABTestingService } from './ABTestingService';
