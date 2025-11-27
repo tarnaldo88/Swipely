@@ -142,15 +142,13 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
 
     try {
       await swipeActionService.onSwipeRight(product.id);
-      Alert.alert(
-        "Added to Wishlist",
-        "Product has been added to your wishlist!"
-      );
+      // Close modal and go to next product
+      handleClose();
     } catch (error) {
       console.error("Error liking product:", error);
       Alert.alert("Error", "Failed to add product to wishlist");
     }
-  }, [product, swipeActionService]);
+  }, [product, swipeActionService, handleClose]);
 
   const handleSkip = useCallback(async () => {
     if (!product) return;
@@ -169,12 +167,13 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
 
     try {
       await swipeActionService.onAddToCart(product.id);
-      Alert.alert("Added to Cart", "Product has been added to your cart!");
+      // Close modal and go to next product
+      handleClose();
     } catch (error) {
       console.error("Error adding to cart:", error);
       Alert.alert("Error", "Failed to add product to cart");
     }
-  }, [product, swipeActionService]);
+  }, [product, swipeActionService, handleClose]);
 
   const modalAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
