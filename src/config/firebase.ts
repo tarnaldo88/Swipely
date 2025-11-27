@@ -1,6 +1,5 @@
 import { initializeApp, getApps } from 'firebase/app';
-import { initializeAuth, getReactNativePersistence, getAuth } from 'firebase/auth';
-import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import { getAuth } from 'firebase/auth';
 
 // Firebase configuration
 // You'll need to replace these with your actual Firebase project credentials
@@ -22,16 +21,8 @@ if (getApps().length === 0) {
   app = getApps()[0];
 }
 
-// Initialize Firebase Auth with AsyncStorage persistence
-let auth;
-try {
-  auth = initializeAuth(app, {
-    persistence: getReactNativePersistence(ReactNativeAsyncStorage)
-  });
-} catch (error) {
-  // If auth is already initialized, get the existing instance
-  auth = getAuth(app);
-}
+// Initialize Firebase Auth
+const auth = getAuth(app);
 
 export { auth };
 export default app;

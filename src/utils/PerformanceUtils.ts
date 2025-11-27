@@ -175,8 +175,8 @@ export class PerformanceMonitor {
   checkMemoryUsage(): void {
     // React Native doesn't have direct memory API access
     // This is a placeholder for memory monitoring
-    if (typeof performance !== 'undefined' && performance.memory) {
-      const memoryInfo = performance.memory;
+    if (typeof performance !== 'undefined' && (performance as any).memory) {
+      const memoryInfo = (performance as any).memory;
       const usedJSHeapSize = memoryInfo.usedJSHeapSize / (1024 * 1024); // Convert to MB
       
       this.metrics.jsHeapSize = usedJSHeapSize;

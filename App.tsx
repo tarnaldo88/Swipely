@@ -16,13 +16,15 @@ import { User, RootStackParamList } from "./src/types";
 const RootStack = createStackNavigator<RootStackParamList>();
 
 // Global navigation reference
-const navigationRef = React.createRef<NavigationContainerRef<RootStackParamList>>();
+const navigationRef = React.createRef<NavigationContainerRef<RootStackParamList> | null>();
 let isNavigationReady = false;
 
 // Navigation ready handler
 const onNavigationReady = () => {
   isNavigationReady = true;
-  navigationService.setNavigationRef(navigationRef);
+  if (navigationRef.current) {
+    navigationService.setNavigationRef(navigationRef as React.RefObject<NavigationContainerRef<RootStackParamList>>);
+  }
 };
 
 // Navigation state change handler for analytics/logging
@@ -121,7 +123,6 @@ function AppContent() {
     <RootStack.Navigator 
       screenOptions={{ 
         headerShown: false,
-        animationEnabled: true,
         gestureEnabled: false, // Disable swipe back to prevent accidental navigation
       }}
     >

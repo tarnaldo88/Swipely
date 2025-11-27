@@ -501,8 +501,8 @@ export class CrashReportingService {
    * Get memory usage (approximation)
    */
   private getMemoryUsage(): number | undefined {
-    if (typeof performance !== 'undefined' && performance.memory) {
-      return performance.memory.usedJSHeapSize / (1024 * 1024); // Convert to MB
+    if (typeof performance !== 'undefined' && (performance as any).memory) {
+      return (performance as any).memory.usedJSHeapSize / (1024 * 1024); // Convert to MB
     }
     return undefined;
   }

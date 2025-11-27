@@ -71,7 +71,8 @@ export function useErrorHandler(options: UseErrorHandlerOptions = {}): UseErrorH
       if (!actions.some(action => action.type === 'ignore')) {
         alertButtons.push({
           text: 'Cancel',
-          style: 'cancel',
+          style: 'cancel' as const,
+          onPress: () => {},
         });
       }
 

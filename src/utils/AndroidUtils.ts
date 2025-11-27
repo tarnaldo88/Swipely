@@ -69,7 +69,7 @@ export class AndroidBackHandler {
   static cleanup() {
     if (Platform.OS !== 'android') return;
     
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    (BackHandler as any).removeEventListener?.('hardwareBackPress', this.handleBackPress);
     this.listeners = [];
     this.isInitialized = false;
   }

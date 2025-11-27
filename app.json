@@ -33,6 +33,11 @@
       "favicon": "./assets/favicon.png"
     },
     "scheme": "swipely",
-    "plugins": []
+    "plugins": [],
+    "extra": {
+      "eas": {
+        "projectId": "151b5b6c-52f0-4b3d-ab4d-6b6eae0ef2e0"
+      }
+    }
   }
 }
