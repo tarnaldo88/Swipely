@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CartItem, ProductCard } from "../types";
+import { ProductDetailsService } from "./ProductDetailsService";
 
 /**
  * Cart service interface for managing shopping cart functionality

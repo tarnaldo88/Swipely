@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProductCard } from '../types';
+import { ProductDetailsService } from './ProductDetailsService';
 
 /**
  * Skipped product item interface
@@ -151,9 +152,6 @@ export class SkippedProductsServiceImpl implements SkippedProductsService {
   async getSkippedProductsWithDetails(): Promise<(SkippedProductItem & { product: ProductCard })[]> {
     await this.initialize();
     
-    // Import ProductDetailsService to get product details
-    const { ProductDetailsService } = require('./ProductDetailsService');
-    
     const itemsWithDetails = await Promise.all(
       this.skippedProducts.map(async (item) => {
         try {
@@ -194,9 +192,6 @@ export class SkippedProductsServiceImpl implements SkippedProductsService {
     await this.initialize();
     
     const categoryItems = this.skippedProducts.filter(item => item.category === category);
-    
-    // Import ProductDetailsService to get product details
-    const { ProductDetailsService } = require('./ProductDetailsService');
     
     const itemsWithDetails = await Promise.all(
       categoryItems.map(async (item) => {

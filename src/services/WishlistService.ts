@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProductCard } from '../types';
+import { ProductDetailsService } from './ProductDetailsService';
 
 /**
  * Wishlist item interface
@@ -151,9 +152,6 @@ export class WishlistServiceImpl implements WishlistService {
    */
   async getWishlistItemsWithDetails(): Promise<(WishlistItem & { product: ProductCard })[]> {
     await this.initialize();
-    
-    // Import ProductDetailsService to get product details
-    const { ProductDetailsService } = require('./ProductDetailsService');
     
     const itemsWithDetails = await Promise.all(
       this.wishlistItems.map(async (item) => {

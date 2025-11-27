@@ -1,4 +1,5 @@
 import { ProductCard, Product, ProductDetailsResponse } from '../types';
+import { ProductFeedService } from './ProductFeedService';
 
 interface ProductDetailsCache {
   [productId: string]: {
@@ -130,9 +131,6 @@ export class ProductDetailsService {
    * Mock API call to fetch product details
    */
   private static async fetchProductFromAPI(productId: string): Promise<ProductCard> {
-    // Import ProductFeedService to get product data
-    const { ProductFeedService } = require('./ProductFeedService');
-    
     // Try to get product from the main product feed
     const product = ProductFeedService.getProductById(productId);
     
