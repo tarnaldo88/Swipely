@@ -135,7 +135,7 @@ export const OptimizedImage = memo<OptimizedImageProps>(({
   }, [fallbackUri, currentUri, handleError, onError]);
 
   // Calculate container style
-  const containerStyle = [
+  const containerStyle: any = [
     styles.container,
     width && { width },
     height && { height },
@@ -144,7 +144,7 @@ export const OptimizedImage = memo<OptimizedImageProps>(({
   ];
 
   // Calculate image style
-  const imageStyle = [
+  const imageStyle: any = [
     styles.image,
     { resizeMode },
     width && { width },

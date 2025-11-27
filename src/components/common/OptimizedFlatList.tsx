@@ -148,7 +148,7 @@ function OptimizedFlatListComponent<T>({
   const getItemLayout = useMemo(() => {
     if (!itemHeight) return undefined;
     
-    return (data: T[] | null | undefined, index: number) => ({
+    return (_data: any, index: number) => ({
       length: itemHeight,
       offset: itemHeight * index,
       index,

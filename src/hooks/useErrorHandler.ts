@@ -55,9 +55,9 @@ export function useErrorHandler(options: UseErrorHandlerOptions = {}): UseErrorH
       );
     } else {
       // Alert with recovery actions
-      const alertButtons = actions.map(action => ({
+      const alertButtons: any[] = actions.map(action => ({
         text: action.label,
-        style: action.type === 'retry' ? 'default' : 'cancel' as const,
+        style: action.type === 'retry' ? 'default' : 'cancel',
         onPress: () => {
           try {
             action.action();
@@ -71,7 +71,7 @@ export function useErrorHandler(options: UseErrorHandlerOptions = {}): UseErrorH
       if (!actions.some(action => action.type === 'ignore')) {
         alertButtons.push({
           text: 'Cancel',
-          style: 'cancel' as const,
+          style: 'cancel',
           onPress: () => {},
         });
       }
