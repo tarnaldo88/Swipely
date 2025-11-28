@@ -9,7 +9,8 @@
         "buildType": "apk",
         "withoutCredentials": false,
         "env": {
-          "EXPO_DEBUG": "true"
+          "EXPO_DEBUG": "true",
+          "EAS_BUILD_DISABLE_NEW_ARCH": "1"
         }
       }
     },
