@@ -44,7 +44,7 @@ interface ProductDetailsScreenProps {}
 export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
   const navigation = useNavigation<ProductDetailsScreenNavigationProp>();
   const route = useRoute<ProductDetailsScreenRouteProp>();
-  const { productId, product: initialProduct } = route.params;
+  const { productId, product: initialProduct, onActionComplete } = route.params;
 
   const [product, setProduct] = useState<ProductCard | null>(
     initialProduct || null
@@ -113,15 +113,19 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
     }
   };
 
-  const handleClose = useCallback(() => {
+  const handleClose = useCallback((actionTaken?: 'like' | 'skip' | 'cart') => {
     translateY.value = withTiming(screenHeight, { duration: 300 });
     opacity.value = withTiming(0, { duration: 300 }, () => {
       runOnJS(() => {
         setIsVisible(false);
+        // Call the callback to notify parent screen of action completion
+        if (actionTaken && onActionComplete) {
+          onActionComplete();
+        }
         navigation.goBack();
       })();
     });
-  }, [navigation]);
+  }, [navigation, onActionComplete]);
 
   const panGesture = Gesture.Pan()
     .onUpdate((event) => {
@@ -143,7 +147,7 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
     try {
       await swipeActionService.onSwipeRight(product.id);
       // Close modal and go to next product
-      handleClose();
+      handleClose('like');
     } catch (error) {
       console.error("Error liking product:", error);
       Alert.alert("Error", "Failed to add product to wishlist");
@@ -155,10 +159,10 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
 
     try {
       await swipeActionService.onSwipeLeft(product.id);
-      handleClose();
+      handleClose('skip');
     } catch (error) {
       console.error("Error skipping product:", error);
-      handleClose();
+      handleClose('skip');
     }
   }, [product, swipeActionService, handleClose]);
 
@@ -167,8 +171,10 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
 
     try {
       await swipeActionService.onAddToCart(product.id);
+      // Mark as skipped so feed advances to next product
+      await swipeActionService.onSwipeLeft(product.id);
       // Close modal and go to next product
-      handleClose();
+      handleClose('cart');
     } catch (error) {
       console.error("Error adding to cart:", error);
       Alert.alert("Error", "Failed to add product to cart");
@@ -190,7 +196,7 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
       animationType="none"
       transparent={true}
       statusBarTranslucent={true}
-      onRequestClose={handleClose}
+      onRequestClose={() => handleClose()}
     >
       <StatusBar barStyle="light-content" backgroundColor="rgba(0,0,0,0.5)" />
       <View style={styles.modalOverlay}>
@@ -202,7 +208,7 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
                 <View style={styles.dragIndicator} />
                 <TouchableOpacity
                   style={styles.closeButton}
-                  onPress={handleClose}
+                  onPress={() => handleClose()}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
                   <Text style={styles.closeButtonText}>✕</Text>

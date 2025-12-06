@@ -49,7 +49,15 @@ export const FeedScreen: React.FC = memo(() => {
     loadProducts();
     // Add some test skipped products for development
     addTestSkippedProducts();
-  }, []);
+
+    // Listen for when we return from ProductDetails screen
+    const unsubscribe = navigation.addListener('focus', () => {
+      // When returning to FeedScreen, we don't need to do anything special
+      // The ProductDetailsScreen will handle advancing via its own logic
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const addTestSkippedProducts = async () => {
     try {
@@ -182,7 +190,14 @@ export const FeedScreen: React.FC = memo(() => {
     console.log('Viewing details for product:', productId);
     const product = products.find(p => p.id === productId);
     if (product) {
-      navigation.navigate('ProductDetails', { productId, product });
+      navigation.navigate('ProductDetails', { 
+        productId, 
+        product,
+        onActionComplete: () => {
+          // Advance to next card when an action is completed in ProductDetails
+          setCurrentCardIndex(prev => prev + 1);
+        }
+      });
     }
   }, [products, navigation]);
 

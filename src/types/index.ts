@@ -19,7 +19,7 @@ export type MainTabParamList = {
 
 export type MainStackParamList = {
   MainTabs: undefined;
-  ProductDetails: { productId: string; product?: ProductCard };
+  ProductDetails: { productId: string; product?: ProductCard; onActionComplete?: () => void };
   CategorySelection: { isInitialSetup?: boolean };
   SkippedProducts: { category: string };
   Faq: {},
