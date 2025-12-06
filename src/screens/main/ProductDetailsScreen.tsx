@@ -114,17 +114,21 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
   };
 
   const handleClose = useCallback((actionTaken?: 'like' | 'skip' | 'cart') => {
+    // Animate out
     translateY.value = withTiming(screenHeight, { duration: 300 });
-    opacity.value = withTiming(0, { duration: 300 }, () => {
-      runOnJS(() => {
-        setIsVisible(false);
-        // Call the callback to notify parent screen of action completion
-        if (actionTaken && onActionComplete) {
-          onActionComplete();
-        }
-        navigation.goBack();
-      })();
-    });
+    opacity.value = withTiming(0, { duration: 300 });
+    
+    // After animation completes, close modal and navigate
+    setTimeout(() => {
+      setIsVisible(false);
+      
+      // Call the callback to notify parent screen of action completion
+      if (actionTaken && onActionComplete) {
+        onActionComplete();
+      }
+      
+      navigation.goBack();
+    }, 300);
   }, [navigation, onActionComplete]);
 
   const panGesture = Gesture.Pan()
