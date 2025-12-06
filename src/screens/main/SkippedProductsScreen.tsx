@@ -108,7 +108,14 @@ export const SkippedProductsScreen: React.FC = () => {
     console.log('Viewing details for skipped product:', productId);
     const product = products.find(p => p.id === productId);
     if (product) {
-      navigation.navigate('ProductDetails', { productId, product });
+      navigation.navigate('ProductDetails', { 
+        productId, 
+        product,
+        onActionComplete: () => {
+          // Advance to next card when an action is completed in ProductDetails
+          setCurrentCardIndex(prev => prev + 1);
+        }
+      });
     }
   }, [products, navigation]);
 

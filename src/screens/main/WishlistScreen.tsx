@@ -103,6 +103,10 @@ export const WishlistScreen: React.FC = () => {
     navigation.navigate('ProductDetails', {
       productId: item.productId,
       product: item.product,
+      onActionComplete: () => {
+        // Reload wishlist when an action is completed in ProductDetails
+        loadWishlistItems();
+      }
     });
   };
 
