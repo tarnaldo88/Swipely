@@ -47,6 +47,8 @@ const MainTabNavigator: React.FC = () => {
                 ...AndroidStyles.bottomNavigation,
                 backgroundColor: MaterialColors.surface,
                 borderTopColor: MaterialColors.divider,
+                height: 60,
+                paddingBottom: 8,
               },
         tabBarActiveTintColor:
           Platform.OS === "ios" ? "#007AFF" : MaterialColors.primary,
