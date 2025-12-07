@@ -47,8 +47,9 @@ const MainTabNavigator: React.FC = () => {
                 ...AndroidStyles.bottomNavigation,
                 backgroundColor: MaterialColors.surface,
                 borderTopColor: MaterialColors.divider,
-                height: 60,
-                paddingBottom: 8,
+                height: 56,
+                paddingBottom: 0,
+                paddingTop: 0,
               },
         tabBarActiveTintColor:
           Platform.OS === "ios" ? "#007AFF" : MaterialColors.primary,
@@ -61,9 +62,16 @@ const MainTabNavigator: React.FC = () => {
                 fontWeight: "400",
               }
             : {
-                fontSize: 12,
+                fontSize: 11,
                 fontWeight: "500",
               },
+        tabBarItemStyle:
+          Platform.OS === "android"
+            ? {
+                paddingVertical: 0,
+                paddingTop: 4,
+              }
+            : undefined,
       }}
     >
       <Tab.Screen
