@@ -28,7 +28,7 @@ interface SimpleProductDetailsScreenProps {}
 export const SimpleProductDetailsScreen: React.FC<SimpleProductDetailsScreenProps> = () => {
   const navigation = useNavigation<ProductDetailsScreenNavigationProp>();
   const route = useRoute<ProductDetailsScreenRouteProp>();
-  const { productId, product: initialProduct } = route.params;
+  const { productId, product: initialProduct, onActionComplete: onActionCompleteParam } = route.params;
 
   const [product, setProduct] = useState<ProductCard | null>(initialProduct || null);
   const [loading, setLoading] = useState(!initialProduct);
@@ -36,6 +36,11 @@ export const SimpleProductDetailsScreen: React.FC<SimpleProductDetailsScreenProp
   const [isVisible, setIsVisible] = useState(true);
   const [retryCount, setRetryCount] = useState(0);
   const [isRetrying, setIsRetrying] = useState(false);
+
+  // Ensure we have a callback, even if not provided
+  const onActionComplete = onActionCompleteParam || (() => {
+    console.log('No onActionComplete callback provided');
+  });
 
   // Mock user ID - in real app this would come from auth context
   const userId = 'mock-user-id';
@@ -84,32 +89,52 @@ export const SimpleProductDetailsScreen: React.FC<SimpleProductDetailsScreenProp
     }
   };
 
-  const handleClose = useCallback(() => {
+  const handleClose = useCallback((actionTaken?: 'like' | 'skip' | 'cart') => {
+    // Call the callback to notify parent screen of action completion
+    if (actionTaken && onActionComplete) {
+      console.log('Calling onActionComplete for action:', actionTaken);
+      onActionComplete();
+    }
+    
     setIsVisible(false);
     navigation.goBack();
-  }, [navigation]);
+  }, [navigation, onActionComplete]);
+
+  const handleCloseWithoutAction = useCallback(() => {
+    handleClose();
+  }, [handleClose]);
 
   const handleLike = useCallback(async () => {
     if (!product) return;
     
     try {
+      console.log('handleLike called for product:', product.id);
       await swipeActionService.onSwipeRight(product.id);
-      Alert.alert('Added to Wishlist', 'Product has been added to your wishlist!');
+      console.log('onSwipeRight completed');
+      
+      // Close modal and go back to feed, triggering the callback
+      console.log('Calling handleClose with like action');
+      handleClose('like');
     } catch (error) {
       console.error('Error liking product:', error);
       Alert.alert('Error', 'Failed to add product to wishlist');
     }
-  }, [product, swipeActionService]);
+  }, [product, swipeActionService, handleClose]);
 
   const handleSkip = useCallback(async () => {
     if (!product) return;
     
     try {
+      console.log('handleSkip called for product:', product.id);
       await swipeActionService.onSwipeLeft(product.id);
-      handleClose();
+      console.log('onSwipeLeft completed');
+      
+      // Close modal and go back to feed, triggering the callback
+      console.log('Calling handleClose with skip action');
+      handleClose('skip');
     } catch (error) {
       console.error('Error skipping product:', error);
-      handleClose();
+      handleClose('skip');
     }
   }, [product, swipeActionService, handleClose]);
 
@@ -117,10 +142,17 @@ export const SimpleProductDetailsScreen: React.FC<SimpleProductDetailsScreenProp
     if (!product) return;
     
     try {
+      console.log('handleAddToCart called for product:', product.id);
       await swipeActionService.onAddToCart(product.id);
-      Alert.alert('Added to Cart', 'Product has been added to your cart!');
-      // Close modal and go back to feed
-      handleClose();
+      console.log('onAddToCart completed');
+      
+      // Mark as skipped so feed advances to next product
+      await swipeActionService.onSwipeLeft(product.id);
+      console.log('onSwipeLeft completed');
+      
+      // Close modal and go back to feed, triggering the callback
+      console.log('Calling handleClose with cart action');
+      handleClose('cart');
     } catch (error) {
       console.error('Error adding to cart:', error);
       Alert.alert('Error', 'Failed to add product to cart');
@@ -137,7 +169,7 @@ export const SimpleProductDetailsScreen: React.FC<SimpleProductDetailsScreenProp
       animationType="slide"
       transparent={false}
       statusBarTranslucent={true}
-      onRequestClose={handleClose}
+      onRequestClose={handleCloseWithoutAction}
     >
       <View style={SimpleProductDetailStyles.modalBackground}>
         <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
@@ -146,7 +178,7 @@ export const SimpleProductDetailsScreen: React.FC<SimpleProductDetailsScreenProp
         <View style={SimpleProductDetailStyles.header}>
           <TouchableOpacity
             style={SimpleProductDetailStyles.closeButton}
-            onPress={handleClose}
+            onPress={handleCloseWithoutAction}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
             <Text style={SimpleProductDetailStyles.closeButtonText}>✕</Text>

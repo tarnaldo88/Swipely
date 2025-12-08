@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -17,11 +17,10 @@ import Animated, {
   useSharedValue,
   withSpring,
   withTiming,
-  runOnJS,
 } from "react-native-reanimated";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { MainStackParamList, ProductCard, Product } from "../../types";
+import { MainStackParamList, ProductCard } from "../../types";
 import { AddToCartButton } from "../../components/product/AddToCartButton";
 import { getSwipeActionService } from "../../services/SwipeActionService";
 import { ImageGallery } from "../../components/product/ImageGallery";
@@ -44,7 +43,12 @@ interface ProductDetailsScreenProps {}
 export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
   const navigation = useNavigation<ProductDetailsScreenNavigationProp>();
   const route = useRoute<ProductDetailsScreenRouteProp>();
-  const { productId, product: initialProduct, onActionComplete } = route.params;
+  const { productId, product: initialProduct, onActionComplete: onActionCompleteParam } = route.params;
+  
+  // Ensure we have a callback, even if not provided
+  const onActionComplete = onActionCompleteParam || (() => {
+    console.log('No onActionComplete callback provided');
+  });
 
   const [product, setProduct] = useState<ProductCard | null>(
     initialProduct || null
@@ -114,19 +118,22 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
   };
 
   const handleClose = useCallback((actionTaken?: 'like' | 'skip' | 'cart') => {
+    console.log('handleClose called with action:', actionTaken);
+    console.log('onActionComplete exists:', !!onActionComplete);
+    
     // Animate out
     translateY.value = withTiming(screenHeight, { duration: 300 });
     opacity.value = withTiming(0, { duration: 300 });
     
     // After animation completes, close modal and navigate
     setTimeout(() => {
-      setIsVisible(false);
-      
-      // Call the callback to notify parent screen of action completion
+      // Call the callback to notify parent screen of action completion AFTER animation
       if (actionTaken && onActionComplete) {
+        console.log('Calling onActionComplete');
         onActionComplete();
       }
       
+      setIsVisible(false);
       navigation.goBack();
     }, 300);
   }, [navigation, onActionComplete]);
@@ -139,7 +146,7 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
     })
     .onEnd((event) => {
       if (event.translationY > 150 || event.velocityY > 500) {
-        runOnJS(handleClose)();
+        handleClose();
       } else {
         translateY.value = withSpring(0);
       }
@@ -207,6 +214,7 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
         <GestureDetector gesture={panGesture}>
           <Animated.View style={[styles.modalContainer, modalAnimatedStyle]}>
             <SafeAreaView style={styles.safeArea}>
+              
               {/* Header */}
               <View style={styles.header}>
                 <View style={styles.dragIndicator} />
