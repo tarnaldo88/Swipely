@@ -32,19 +32,11 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   const isDisabled = disabled || isLoading;
 
   const handlePress = async () => {
-    console.log('AddToCartButton.handlePress called');
-    console.log('isDisabled:', isDisabled);
-    
-    if (isDisabled) {
-      console.log('Button is disabled, returning early');
-      return;
-    }
+    if (isDisabled) return;
 
     try {
-      console.log('Setting loading state and calling onPress');
       setInternalLoading(true);
       await onPress();
-      console.log('onPress completed successfully');
     } catch (error) {
       console.error('Error in AddToCartButton:', error);
     } finally {

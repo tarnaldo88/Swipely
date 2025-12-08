@@ -118,8 +118,10 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
   };
 
   const handleClose = useCallback((actionTaken?: 'like' | 'skip' | 'cart') => {
-    console.log('handleClose called with action:', actionTaken);
-    console.log('onActionComplete exists:', !!onActionComplete);
+    // Call the callback to notify parent screen of action completion BEFORE closing
+    if (actionTaken && onActionComplete) {
+      onActionComplete();
+    }
     
     // Animate out
     translateY.value = withTiming(screenHeight, { duration: 300 });
@@ -127,12 +129,6 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
     
     // After animation completes, close modal and navigate
     setTimeout(() => {
-      // Call the callback to notify parent screen of action completion AFTER animation
-      if (actionTaken && onActionComplete) {
-        console.log('Calling onActionComplete');
-        onActionComplete();
-      }
-      
       setIsVisible(false);
       navigation.goBack();
     }, 300);
