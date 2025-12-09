@@ -42,6 +42,7 @@ const MOCK_PRODUCTS: ProductCard[] = [
       'Warranty': '2 years'
     },
     availability: true,
+    reviewRating: 4.8,
   },
   {
     id: 'prod-2',
