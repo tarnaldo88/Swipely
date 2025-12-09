@@ -913,6 +913,208 @@ const MOCK_PRODUCTS: ProductCard[] = [
       'Sizes': '32-44'
     },
     availability: true,
+    reviewRating: 4.3,
+  },
+  // Additional products
+  {
+    id: 'prod-46',
+    title: 'Stainless Steel Water Bottle',
+    price: 34.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1602088113235-229c19758e9f?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'sports', name: 'Sports & Outdoors' },
+    description: 'Insulated stainless steel water bottle keeps drinks cold for 24 hours or hot for 12 hours.',
+    specifications: { 
+      'Capacity': '32 oz', 
+      'Material': 'Stainless Steel', 
+      'Insulation': 'Double-wall',
+      'Lid Type': 'Screw cap',
+      'Colors': 'Multiple'
+    },
+    availability: true,
+    reviewRating: 4.7,
+  },
+  {
+    id: 'prod-47',
+    title: 'Bamboo Cutting Board Set',
+    price: 44.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'food', name: 'Food & Beverages' },
+    description: 'Set of 3 eco-friendly bamboo cutting boards with juice grooves.',
+    specifications: { 
+      'Material': 'Bamboo', 
+      'Pieces': '3 boards', 
+      'Sizes': 'Small, Medium, Large',
+      'Eco-friendly': 'Yes',
+      'Dishwasher Safe': 'No'
+    },
+    availability: true,
+    reviewRating: 4.5,
+  },
+  {
+    id: 'prod-48',
+    title: 'Portable Phone Stand',
+    price: 19.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1605559424843-9e4c3ca3806d?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'electronics', name: 'Electronics' },
+    description: 'Adjustable aluminum phone stand compatible with all smartphones and tablets.',
+    specifications: { 
+      'Material': 'Aluminum', 
+      'Compatibility': 'Universal', 
+      'Adjustable': 'Yes',
+      'Portable': 'Yes',
+      'Weight': '150g'
+    },
+    availability: true,
+    reviewRating: 4.4,
+  },
+  {
+    id: 'prod-49',
+    title: 'Organic Cotton Pillowcase',
+    price: 29.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1584622614875-2f938051edb0?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'beauty', name: 'Beauty & Personal Care' },
+    description: 'Soft organic cotton pillowcase that is gentle on skin and hair.',
+    specifications: { 
+      'Material': '100% Organic Cotton', 
+      'Thread Count': '400', 
+      'Size': 'Standard',
+      'Colors': 'White, Beige, Gray',
+      'Care': 'Machine wash'
+    },
+    availability: true,
+    reviewRating: 4.6,
+  },
+  {
+    id: 'prod-50',
+    title: 'Desk Lamp LED',
+    price: 54.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1565636192335-14c46fa1120d?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'electronics', name: 'Electronics' },
+    description: 'Modern LED desk lamp with adjustable brightness and color temperature.',
+    specifications: { 
+      'Power': '12W LED', 
+      'Brightness': 'Adjustable', 
+      'Color Temperature': '3000-6500K',
+      'Base': 'Weighted',
+      'USB Charging': 'Yes'
+    },
+    availability: true,
+    reviewRating: 4.5,
+  },
+  {
+    id: 'prod-51',
+    title: 'Yoga Blocks Set',
+    price: 24.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'sports', name: 'Sports & Outdoors' },
+    description: 'Set of 2 foam yoga blocks for improved alignment and support.',
+    specifications: { 
+      'Material': 'EVA Foam', 
+      'Pieces': '2 blocks', 
+      'Dimensions': '9" x 6" x 4"',
+      'Weight Capacity': '300 lbs',
+      'Colors': 'Purple, Blue, Pink'
+    },
+    availability: true,
+    reviewRating: 4.3,
+  },
+  {
+    id: 'prod-52',
+    title: 'Stainless Steel Thermos',
+    price: 39.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1602088113235-229c19758e9f?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'food', name: 'Food & Beverages' },
+    description: 'Vacuum-insulated thermos keeps beverages at desired temperature for hours.',
+    specifications: { 
+      'Capacity': '1 Liter', 
+      'Material': 'Stainless Steel', 
+      'Insulation': 'Vacuum',
+      'Lid': 'Screw-on',
+      'Warranty': '1 year'
+    },
+    availability: true,
+    reviewRating: 4.7,
+  },
+  {
+    id: 'prod-53',
+    title: 'Wireless Mouse',
+    price: 29.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1527814050087-3793815479db?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'electronics', name: 'Electronics' },
+    description: 'Ergonomic wireless mouse with precision tracking and long battery life.',
+    specifications: { 
+      'Connectivity': 'Wireless 2.4GHz', 
+      'DPI': 'Adjustable 800-3200', 
+      'Battery Life': '18 months',
+      'Buttons': '6 programmable',
+      'Compatibility': 'Windows, Mac, Linux'
+    },
+    availability: true,
+    reviewRating: 4.4,
+  },
+  {
+    id: 'prod-54',
+    title: 'Canvas Tote Bag',
+    price: 34.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1590080876-a371a6b6b053?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'fashion', name: 'Fashion' },
+    description: 'Durable canvas tote bag perfect for shopping, work, or travel.',
+    specifications: { 
+      'Material': '100% Canvas', 
+      'Capacity': '20 liters', 
+      'Handles': 'Reinforced',
+      'Pockets': '2 exterior',
+      'Colors': 'Natural, Black, Navy'
+    },
+    availability: true,
+    reviewRating: 4.5,
+  },
+  {
+    id: 'prod-55',
+    title: 'Bamboo Toothbrush Set',
+    price: 14.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'beauty', name: 'Beauty & Personal Care' },
+    description: 'Eco-friendly bamboo toothbrush set with soft bristles.',
+    specifications: { 
+      'Material': 'Bamboo Handle', 
+      'Bristles': 'Soft nylon', 
+      'Pieces': '4 toothbrushes',
+      'Biodegradable': 'Yes',
+      'Vegan': 'Yes'
+    },
+    availability: true,
+    reviewRating: 4.2,
   },
 ];
 
