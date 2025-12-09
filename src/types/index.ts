@@ -68,6 +68,8 @@ export interface Product {
   };
   createdAt: Date;
   updatedAt: Date;
+  reviewRating:number;
+  reviewText:string;
 }
 
 export interface ProductImage {
@@ -95,7 +97,6 @@ export interface ProductCard {
   specifications: Record<string, any>;
   availability: boolean;
   reviewRating:number;
-  reviewText:string;
 }
 
 // Interaction types
