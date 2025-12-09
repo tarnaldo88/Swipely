@@ -141,7 +141,7 @@ export const FeedScreen: React.FC = memo(() => {
       const wishlistCount = await wishlistService.getWishlistCount();
       console.log('Total wishlist items:', wishlistCount);      
       
-      showToastNotification('Product has been added to your wishlist. Total items: ${wishlistCount}');
+      // showToastNotification('Product has been added to your wishlist. Total items: ${wishlistCount}');
       setCurrentCardIndex(prev => prev + 1);
     } catch (error) {
       console.error('Error adding to wishlist:', error);      
