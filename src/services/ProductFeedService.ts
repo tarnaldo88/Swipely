@@ -62,6 +62,26 @@ const MOCK_PRODUCTS: ProductCard[] = [
       'Origin': 'Made in USA'
     },
     availability: true,
+    reviewRating: 4.6,
+  },
+  {
+    id: 'prod-3',
+    title: 'Elegant Summer Dress',
+    price: 89.99,
+    currency: 'USD',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=400&fit=crop',
+    ],
+    category: { id: 'fashion', name: 'Fashion' },
+    description: 'Comfortable cotton dress perfect for summer days. Made from 100% organic cotton with a flattering fit.',
+    specifications: { 
+      'Material': '100% Organic Cotton', 
+      'Sizes Available': 'XS, S, M, L, XL',
+      'Care Instructions': 'Machine wash cold',
+      'Origin': 'Made in USA'
+    },
+    availability: true,
   },
   {
     id: 'prod-3',
