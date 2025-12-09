@@ -94,6 +94,8 @@ export interface ProductCard {
   description: string;
   specifications: Record<string, any>;
   availability: boolean;
+  reviewRating:number;
+  reviewText:string;
 }
 
 // Interaction types
