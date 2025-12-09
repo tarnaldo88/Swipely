@@ -8,12 +8,10 @@ import {
   Pressable,
 } from 'react-native';
 import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-  State,
+  GestureDetector,
+  Gesture,
 } from 'react-native-gesture-handler';
 import Animated, {
-  useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -89,20 +87,15 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
     [product.id, swipeActionService, onSwipeLeft, onSwipeRight]
   );
 
-  const gestureHandler = useAnimatedGestureHandler<
-    PanGestureHandlerGestureEvent,
-    { startX: number; startY: number }
-  >({
-    onStart: (_, context) => {
-      context.startX = translateX.value;
-      context.startY = translateY.value;
+  const panGesture = Gesture.Pan()
+    .onStart(() => {
       runOnJS(GesturePerformanceManager.startGestureTracking)();
-    },
-    onActive: (event, context) => {
-      translateX.value = context.startX + event.translationX;
-      translateY.value = context.startY + event.translationY * 0.1; // Subtle vertical movement
-    },
-    onEnd: (event) => {
+    })
+    .onUpdate((event) => {
+      translateX.value = event.translationX;
+      translateY.value = event.translationY * 0.1; // Subtle vertical movement
+    })
+    .onEnd((event) => {
       const shouldSwipeLeft = translateX.value < -SWIPE_THRESHOLD;
       const shouldSwipeRight = translateX.value > SWIPE_THRESHOLD;
 
@@ -124,8 +117,7 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
         translateY.value = withSpring(0);
         runOnJS(GesturePerformanceManager.endGestureTracking)('swipe-cancel');
       }
-    },
-  });
+    });
 
   const cardAnimatedStyle = useAnimatedStyle(() => {
     const rotation = interpolate(
@@ -198,7 +190,7 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
   const formattedPrice = `${product.currency}${product.price.toFixed(2)}`;
 
   return (
-    <PanGestureHandler onGestureEvent={gestureHandler}>
+    <GestureDetector gesture={panGesture}>
       <Animated.View style={[SwipeableCardStyles.cardContainer, cardAnimatedStyle]}>
         <Pressable style={SwipeableCardStyles.card} onPress={handleViewDetails}>
           {/* Product Image */}
@@ -281,7 +273,7 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
           </View>
         </Pressable>
       </Animated.View>
-    </PanGestureHandler>
+    </GestureDetector>
   );
 });
 
