@@ -21,7 +21,7 @@ interface CartItemWithProduct extends CartItem {
   product: ProductCard;
 }
 
-type CartScreenNavigationProp = StackNavigationProp<MainStackParamList, 'Cart'>;
+type CartScreenNavigationProp = StackNavigationProp<MainStackParamList>;
 
 export const CartScreen: React.FC = () => {
   const navigation = useNavigation<CartScreenNavigationProp>();
@@ -190,7 +190,10 @@ export const CartScreen: React.FC = () => {
             USD {calculateTotal().toFixed(2)}
           </Text>
         </View>
-        <TouchableOpacity style={CartScreenStyles.checkoutButton}>
+        <TouchableOpacity 
+          style={CartScreenStyles.checkoutButton}
+          onPress={handleProceedToCheckout}
+        >
           <Text style={CartScreenStyles.checkoutButtonText}>Proceed to Checkout</Text>
         </TouchableOpacity>
       </View>

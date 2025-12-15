@@ -29,6 +29,7 @@ import { ShippingAddressScreen } from "../screens/checkout/ShippingAddressScreen
 import { PaymentMethodScreen } from "../screens/checkout/PaymentMethodScreen";
 import { OrderConfirmationScreen } from "../screens/checkout/OrderConfirmationScreen";
 import { OrderHistoryScreen } from "../screens/checkout/OrderHistoryScreen";
+import { OrderDetailsScreen } from "../screens/checkout/OrderDetailsScreen";
 
 
 const Stack = createStackNavigator<MainStackParamList>();
@@ -227,6 +228,14 @@ export const MainNavigator: React.FC = () => {
         options={{
           headerShown: true,
           title: "Order History",
+        }}
+      />
+      <Stack.Screen
+        name="OrderDetails"
+        component={OrderDetailsScreen}
+        options={{
+          headerShown: true,
+          title: "Order Details",
         }}
       />
     </Stack.Navigator>
