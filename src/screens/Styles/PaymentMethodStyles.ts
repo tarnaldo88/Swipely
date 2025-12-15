@@ -1,0 +1,162 @@
+import { StyleSheet } from 'react-native';
+
+export const PaymentMethodStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  scrollContent: {
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    paddingBottom: 100,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#333',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 24,
+  },
+  fieldContainer: {
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 8,
+  },
+  input: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    fontSize: 14,
+    color: '#333',
+  },
+  inputError: {
+    borderColor: '#d32f2f',
+    backgroundColor: '#ffebee',
+  },
+  errorText: {
+    fontSize: 12,
+    color: '#d32f2f',
+    marginTop: 6,
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  halfWidth: {
+    width: '48%',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    borderRadius: 6,
+    marginBottom: 16,
+  },
+  checkboxLabel: {
+    fontSize: 13,
+    color: '#333',
+    marginLeft: 12,
+    flex: 1,
+  },
+  summaryContainer: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    borderRadius: 6,
+    marginBottom: 16,
+  },
+  summaryTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#333',
+    marginBottom: 12,
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  summaryLabel: {
+    fontSize: 12,
+    color: '#666',
+    fontWeight: '500',
+  },
+  summaryValue: {
+    fontSize: 12,
+    color: '#333',
+    fontWeight: '600',
+  },
+  totalRow: {
+    marginTop: 8,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
+  },
+  totalLabel: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '700',
+  },
+  totalValue: {
+    fontSize: 14,
+    color: '#007AFF',
+    fontWeight: '700',
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
+  },
+  backButton: {
+    flex: 1,
+    paddingVertical: 12,
+    marginRight: 8,
+    borderWidth: 1,
+    borderColor: '#007AFF',
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  backButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#007AFF',
+  },
+  proceedButton: {
+    flex: 1,
+    paddingVertical: 12,
+    marginLeft: 8,
+    backgroundColor: '#007AFF',
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  proceedButtonDisabled: {
+    opacity: 0.6,
+  },
+  proceedButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#fff',
+  },
+});
