@@ -10,16 +10,21 @@ import {
   RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { getCartService, CartService } from '../../services/CartService';
-import { CartItem, ProductCard } from '../../types';
+import { CheckoutService } from '../../services/CheckoutService';
+import { CartItem, ProductCard, MainStackParamList } from '../../types';
 import { CartScreenStyles } from '../Styles/ProductStyles';
 
 interface CartItemWithProduct extends CartItem {
   product: ProductCard;
 }
 
+type CartScreenNavigationProp = StackNavigationProp<MainStackParamList, 'Cart'>;
+
 export const CartScreen: React.FC = () => {
+  const navigation = useNavigation<CartScreenNavigationProp>();
   const [cartItems, setCartItems] = useState<CartItemWithProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -93,6 +98,34 @@ export const CartScreen: React.FC = () => {
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+  };
+
+  const handleProceedToCheckout = () => {
+    if (cartItems.length === 0) {
+      Alert.alert('Empty Cart', 'Please add items to your cart before checkout');
+      return;
+    }
+
+    try {
+      // Convert cart items to checkout format
+      const checkoutItems = cartItems.map(item => ({
+        productId: item.productId,
+        title: item.product.title,
+        price: item.product.price,
+        quantity: item.quantity,
+        imageUrl: item.product.imageUrls[0],
+        category: item.product.category.name,
+      }));
+
+      // Initialize checkout with cart items
+      CheckoutService.initializeCheckout(checkoutItems);
+
+      // Navigate to cart review screen
+      navigation.navigate('CartReview');
+    } catch (error) {
+      console.error('Error initiating checkout:', error);
+      Alert.alert('Error', 'Failed to initiate checkout');
+    }
   };
 
   const renderCartItem = ({ item }: { item: CartItemWithProduct }) => (

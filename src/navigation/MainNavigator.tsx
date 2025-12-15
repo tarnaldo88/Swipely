@@ -24,6 +24,11 @@ import {
 import { AndroidStyles, MaterialColors } from "../styles/AndroidStyles";
 import { StackScreen } from "react-native-screens";
 import { FaqScreen } from "@/screens/main/Profile/FaqScreen";
+import { CartReviewScreen } from "../screens/checkout/CartReviewScreen";
+import { ShippingAddressScreen } from "../screens/checkout/ShippingAddressScreen";
+import { PaymentMethodScreen } from "../screens/checkout/PaymentMethodScreen";
+import { OrderConfirmationScreen } from "../screens/checkout/OrderConfirmationScreen";
+import { OrderHistoryScreen } from "../screens/checkout/OrderHistoryScreen";
 
 
 const Stack = createStackNavigator<MainStackParamList>();
@@ -182,6 +187,46 @@ export const MainNavigator: React.FC = () => {
         component={FaqScreen}
         options={{
           headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="CartReview"
+        component={CartReviewScreen}
+        options={{
+          headerShown: true,
+          title: "Review Cart",
+        }}
+      />
+      <Stack.Screen
+        name="Shipping"
+        component={ShippingAddressScreen}
+        options={{
+          headerShown: true,
+          title: "Shipping Address",
+        }}
+      />
+      <Stack.Screen
+        name="Payment"
+        component={PaymentMethodScreen}
+        options={{
+          headerShown: true,
+          title: "Payment Method",
+        }}
+      />
+      <Stack.Screen
+        name="Confirmation"
+        component={OrderConfirmationScreen}
+        options={{
+          headerShown: true,
+          title: "Order Confirmation",
+        }}
+      />
+      <Stack.Screen
+        name="OrderHistory"
+        component={OrderHistoryScreen}
+        options={{
+          headerShown: true,
+          title: "Order History",
         }}
       />
     </Stack.Navigator>

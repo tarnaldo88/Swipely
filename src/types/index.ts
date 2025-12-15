@@ -22,7 +22,13 @@ export type MainStackParamList = {
   ProductDetails: { productId: string; product?: ProductCard; onActionComplete?: () => void };
   CategorySelection: { isInitialSetup?: boolean };
   SkippedProducts: { category: string };
-  Faq: {},
+  Faq: {};
+  CartReview: undefined;
+  Shipping: undefined;
+  Payment: undefined;
+  Confirmation: { orderId?: string; confirmationNumber?: string };
+  OrderHistory: undefined;
+  OrderDetails: { order: any };
 };
 
 // User types
