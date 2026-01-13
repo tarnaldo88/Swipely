@@ -3,7 +3,7 @@
  * Requirements: 3.1, 6.5
  */
 
-import React, { useState, useCallback, memo } from 'react';
+import React, { useState, useCallback, memo, useEffect } from 'react';
 import { 
   Image, 
   ImageProps, 
@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
 import { ErrorType } from '../../types/errors';
+import { ImageCacheManager } from '../../utils/ImageCacheManager';
 
 interface OptimizedImageProps extends Omit<ImageProps, 'source'> {
   uri: string;
@@ -67,6 +68,16 @@ export const OptimizedImage = memo<OptimizedImageProps>(({
   });
   const [currentUri, setCurrentUri] = useState(uri);
   const { handleError } = useErrorHandler();
+  const cacheManager = ImageCacheManager.getInstance();
+
+  // Preload image on mount if not lazy loading
+  useEffect(() => {
+    if (!lazy && uri) {
+      cacheManager.preloadImage(uri).catch(error => {
+        console.warn('Failed to preload image:', error);
+      });
+    }
+  }, [uri, lazy, cacheManager]);
 
   // Optimize image URI based on device capabilities and quality settings
   const getOptimizedUri = useCallback((originalUri: string): string => {
@@ -109,8 +120,14 @@ export const OptimizedImage = memo<OptimizedImageProps>(({
 
   const handleLoadEnd = useCallback(() => {
     setImageState(prev => ({ ...prev, loading: false, loaded: true }));
+    // Cache the image after successful load
+    if (currentUri && cacheManager) {
+      cacheManager.preloadImage(currentUri).catch(error => {
+        console.warn('Failed to cache image:', error);
+      });
+    }
     onLoadEnd?.();
-  }, [onLoadEnd]);
+  }, [onLoadEnd, currentUri, cacheManager]);
 
   const handleImageError = useCallback(async (error: any) => {
     console.warn('Image load error:', error);

@@ -6,7 +6,6 @@ import {
   RefreshControl,
   ScrollView,
   Alert,
-  Dimensions,
   TouchableOpacity,
   Modal,
   FlatList,
@@ -18,12 +17,9 @@ import { MouseSwipeableCard } from '../../components/product/MouseSwipeableCard'
 import { ProductCard, MainStackParamList } from '../../types';
 import { ProductFeedService } from '../../services/ProductFeedService';
 import { getSkippedProductsService } from '../../services/SkippedProductsService';
-import { OptimizedFlatList } from '../../components/common/OptimizedFlatList';
-import { PerformanceMonitor, MemoryManager } from '../../utils/PerformanceUtils';
+import { ImageCacheManager } from '../../utils/ImageCacheManager';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
 import { FeedScreenStyles } from '../Styles/ProductStyles';
-
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 type FeedScreenNavigationProp = StackNavigationProp<MainStackParamList>;
 
@@ -43,7 +39,21 @@ export const FeedScreen: React.FC = memo(() => {
   
   const skippedProductsService = getSkippedProductsService();
   const { handleError, executeWithRetry } = useErrorHandler();
-  const performanceMonitor = PerformanceMonitor.getInstance();
+  const imageCacheManager = ImageCacheManager.getInstance();
+
+  // Preload images for next 3 cards
+  useEffect(() => {
+    if (products.length > 0) {
+      const nextProducts = products.slice(currentCardIndex, currentCardIndex + 3);
+      const imageUris = nextProducts.flatMap(p => p.imageUrls);
+      
+      if (imageUris.length > 0) {
+        imageCacheManager.preloadImages(imageUris).catch(error => {
+          console.warn('Failed to preload images:', error);
+        });
+      }
+    }
+  }, [currentCardIndex, products, imageCacheManager]);
 
   useEffect(() => {
     loadProducts();

@@ -17,8 +17,6 @@ import Animated, {
   withSpring,
   withTiming,
   runOnJS,
-  interpolate,
-  Extrapolate,
 } from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -28,6 +26,7 @@ import { AddToCartButton } from './AddToCartButton';
 import { ViewDetailsButton } from './ViewDetailsButton';
 import { OptimizedImage } from '../common/OptimizedImage';
 import { GesturePerformanceManager } from '../../utils/PerformanceUtils';
+import { GestureOptimizer } from '../../utils/GestureOptimizer';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
 import { SwipeableCardStyles } from '@/screens/Styles/CardStyles';
 
@@ -90,8 +89,14 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
   const panGesture = Gesture.Pan()
     .onStart(() => {
       runOnJS(GesturePerformanceManager.startGestureTracking)();
+      GestureOptimizer.startGestureTracking();
     })
     .onUpdate((event) => {
+      // Debounce gesture updates for better performance
+      if (!GestureOptimizer.shouldProcessGesture({ debounceMs: 16 })) {
+        return;
+      }
+      
       translateX.value = event.translationX;
       translateY.value = event.translationY * 0.1; // Subtle vertical movement
     })
@@ -105,46 +110,36 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
         opacity.value = withTiming(0, { duration: 300 });
         runOnJS(handleSwipeComplete)('left');
         runOnJS(GesturePerformanceManager.endGestureTracking)('swipe-left');
+        GestureOptimizer.endGestureTracking();
       } else if (shouldSwipeRight) {
         translateX.value = withTiming(screenWidth * 1.5, { duration: 300 });
         translateY.value = withTiming(-100, { duration: 300 });
         opacity.value = withTiming(0, { duration: 300 });
         runOnJS(handleSwipeComplete)('right');
         runOnJS(GesturePerformanceManager.endGestureTracking)('swipe-right');
+        GestureOptimizer.endGestureTracking();
       } else {
         // Snap back to center
         translateX.value = withSpring(0);
         translateY.value = withSpring(0);
         runOnJS(GesturePerformanceManager.endGestureTracking)('swipe-cancel');
+        GestureOptimizer.endGestureTracking();
       }
     });
 
   const cardAnimatedStyle = useAnimatedStyle(() => {
-    const rotation = interpolate(
-      translateX.value,
-      [-screenWidth / 2, 0, screenWidth / 2],
-      [-15, 0, 15],
-      Extrapolate.CLAMP
-    );
-
     return {
       transform: [
         { translateX: translateX.value },
         { translateY: translateY.value },
-        { rotate: `${rotation}deg` },
-        { scale: scale.value },
       ],
       opacity: opacity.value,
     };
   });
 
   const likeOverlayStyle = useAnimatedStyle(() => {
-    const likeOpacity = interpolate(
-      translateX.value,
-      [0, SWIPE_THRESHOLD],
-      [0, 1],
-      Extrapolate.CLAMP
-    );
+    // Show like overlay when swiping right
+    const likeOpacity = translateX.value > 0 ? Math.min(translateX.value / SWIPE_THRESHOLD, 1) : 0;
 
     return {
       opacity: likeOpacity,
@@ -152,12 +147,8 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
   });
 
   const skipOverlayStyle = useAnimatedStyle(() => {
-    const skipOpacity = interpolate(
-      translateX.value,
-      [-SWIPE_THRESHOLD, 0],
-      [1, 0],
-      Extrapolate.CLAMP
-    );
+    // Show skip overlay when swiping left
+    const skipOpacity = translateX.value < 0 ? Math.min(Math.abs(translateX.value) / SWIPE_THRESHOLD, 1) : 0;
 
     return {
       opacity: skipOpacity,
