@@ -2,7 +2,6 @@ import React, { useCallback, memo } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   Dimensions,
   TouchableOpacity,
   Pressable,
@@ -26,7 +25,7 @@ import { AddToCartButton } from './AddToCartButton';
 import { ViewDetailsButton } from './ViewDetailsButton';
 import { OptimizedImage } from '../common/OptimizedImage';
 import { GesturePerformanceManager } from '../../utils/PerformanceUtils';
-import { GestureOptimizer } from '../../utils/GestureOptimizer';
+import { AdvancedGestureHandler } from '../../utils/AdvancedGestureHandler';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
 import { SwipeableCardStyles } from '@/screens/Styles/CardStyles';
 
@@ -58,7 +57,6 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
   const navigation = useNavigation<SwipeableCardNavigationProp>();
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
-  const scale = useSharedValue(isTopCard ? 1 : 0.95);
   const opacity = useSharedValue(isTopCard ? 1 : 0.8);
 
   const swipeActionService = getSwipeActionService(userId);
@@ -87,44 +85,62 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
   );
 
   const panGesture = Gesture.Pan()
-    .onStart(() => {
+    .onStart((event) => {
       runOnJS(GesturePerformanceManager.startGestureTracking)();
-      GestureOptimizer.startGestureTracking();
+      AdvancedGestureHandler.initializeGesture(event.translationX, event.translationY);
     })
     .onUpdate((event) => {
-      // Debounce gesture updates for better performance
-      if (!GestureOptimizer.shouldProcessGesture({ debounceMs: 16 })) {
+      // Intelligent throttling: only update if movement exceeds pixel threshold
+      if (!AdvancedGestureHandler.shouldProcessUpdate(event.translationX, event.translationY, {
+        pixelThreshold: 2, // Only update if moved 2+ pixels
+        timeThreshold: 8, // Only update every 8ms (~120fps)
+      })) {
         return;
       }
-      
+
+      // Direct assignment - no interpolation overhead
       translateX.value = event.translationX;
-      translateY.value = event.translationY * 0.1; // Subtle vertical movement
+      translateY.value = event.translationY * 0.1;
     })
     .onEnd((event) => {
-      const shouldSwipeLeft = translateX.value < -SWIPE_THRESHOLD;
-      const shouldSwipeRight = translateX.value > SWIPE_THRESHOLD;
+      const swipeDirection = AdvancedGestureHandler.shouldCommitSwipe(
+        translateX.value,
+        SWIPE_THRESHOLD,
+        0.5 // velocity threshold
+      );
 
-      if (shouldSwipeLeft) {
-        translateX.value = withTiming(-screenWidth * 1.5, { duration: 300 });
-        translateY.value = withTiming(-100, { duration: 300 });
-        opacity.value = withTiming(0, { duration: 300 });
+      if (swipeDirection === 'left') {
+        const duration = AdvancedGestureHandler.getAnimationDuration(
+          Math.abs(translateX.value),
+          Math.abs(AdvancedGestureHandler.getVelocity().x),
+          200,
+          400
+        );
+        translateX.value = withTiming(-screenWidth * 1.5, { duration });
+        translateY.value = withTiming(-100, { duration });
+        opacity.value = withTiming(0, { duration });
         runOnJS(handleSwipeComplete)('left');
         runOnJS(GesturePerformanceManager.endGestureTracking)('swipe-left');
-        GestureOptimizer.endGestureTracking();
-      } else if (shouldSwipeRight) {
-        translateX.value = withTiming(screenWidth * 1.5, { duration: 300 });
-        translateY.value = withTiming(-100, { duration: 300 });
-        opacity.value = withTiming(0, { duration: 300 });
+      } else if (swipeDirection === 'right') {
+        const duration = AdvancedGestureHandler.getAnimationDuration(
+          Math.abs(translateX.value),
+          Math.abs(AdvancedGestureHandler.getVelocity().x),
+          200,
+          400
+        );
+        translateX.value = withTiming(screenWidth * 1.5, { duration });
+        translateY.value = withTiming(-100, { duration });
+        opacity.value = withTiming(0, { duration });
         runOnJS(handleSwipeComplete)('right');
         runOnJS(GesturePerformanceManager.endGestureTracking)('swipe-right');
-        GestureOptimizer.endGestureTracking();
       } else {
         // Snap back to center
         translateX.value = withSpring(0);
         translateY.value = withSpring(0);
         runOnJS(GesturePerformanceManager.endGestureTracking)('swipe-cancel');
-        GestureOptimizer.endGestureTracking();
       }
+
+      AdvancedGestureHandler.resetGesture();
     });
 
   const cardAnimatedStyle = useAnimatedStyle(() => {
@@ -138,20 +154,18 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
   });
 
   const likeOverlayStyle = useAnimatedStyle(() => {
-    // Show like overlay when swiping right
-    const likeOpacity = translateX.value > 0 ? Math.min(translateX.value / SWIPE_THRESHOLD, 1) : 0;
-
+    // Use optimized opacity calculation without interpolation overhead
+    const opacities = AdvancedGestureHandler.calculateOverlayOpacity(translateX.value, SWIPE_THRESHOLD);
     return {
-      opacity: likeOpacity,
+      opacity: opacities.like,
     };
   });
 
   const skipOverlayStyle = useAnimatedStyle(() => {
-    // Show skip overlay when swiping left
-    const skipOpacity = translateX.value < 0 ? Math.min(Math.abs(translateX.value) / SWIPE_THRESHOLD, 1) : 0;
-
+    // Use optimized opacity calculation without interpolation overhead
+    const opacities = AdvancedGestureHandler.calculateOverlayOpacity(translateX.value, SWIPE_THRESHOLD);
     return {
-      opacity: skipOpacity,
+      opacity: opacities.skip,
     };
   });
 
