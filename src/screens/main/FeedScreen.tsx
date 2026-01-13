@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, memo } from 'react';
+import React, { useState, useEffect, useCallback, memo, useMemo } from 'react';
 import {
   View,
   Text,
@@ -6,19 +6,19 @@ import {
   RefreshControl,
   ScrollView,
   Alert,
-  TouchableOpacity,
-  Modal,
-  FlatList,
+  SafeAreaView,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { MouseSwipeableCard } from '../../components/product/MouseSwipeableCard';
 import { ProductCard, MainStackParamList } from '../../types';
 import { ProductFeedService } from '../../services/ProductFeedService';
 import { getSkippedProductsService } from '../../services/SkippedProductsService';
 import { ImageCacheManager } from '../../utils/ImageCacheManager';
-import { useErrorHandler } from '../../hooks/useErrorHandler';
+import { MemoizationHelper } from '../../utils/StateManagementOptimizer';
+import { SkippedProductsModal } from '../../components/feed/SkippedProductsModal';
+import { ToastNotification } from '../../components/feed/ToastNotification';
+import { CardsContainer } from '../../components/feed/CardsContainer';
+import { FeedHeader } from '../../components/feed/FeedHeader';
 import { FeedScreenStyles } from '../Styles/ProductStyles';
 
 type FeedScreenNavigationProp = StackNavigationProp<MainStackParamList>;
@@ -28,23 +28,40 @@ const MOCK_USER_ID = 'mock-user-123';
 
 export const FeedScreen: React.FC = memo(() => {
   const navigation = useNavigation<FeedScreenNavigationProp>();
+  
+  // Separate state into logical groups to minimize re-renders
   const [products, setProducts] = useState<ProductCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  
+  // Modal state - separated to prevent re-rendering cards
   const [showSkippedModal, setShowSkippedModal] = useState(false);
   const [skippedCategories, setSkippedCategories] = useState<{ category: string; count: number }[]>([]);
+  
+  // Toast state - separated to prevent re-rendering cards
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   
   const skippedProductsService = getSkippedProductsService();
-  const { handleError, executeWithRetry } = useErrorHandler();
   const imageCacheManager = ImageCacheManager.getInstance();
+
+  // Memoize products array to prevent unnecessary re-renders
+  const memoizedProducts = useMemo(
+    () => MemoizationHelper.memoizeArray('feed-products', products),
+    [products]
+  );
+
+  // Memoize skipped categories to prevent unnecessary re-renders
+  const memoizedSkippedCategories = useMemo(
+    () => MemoizationHelper.memoizeArray('skipped-categories', skippedCategories),
+    [skippedCategories]
+  );
 
   // Preload images for next 3 cards
   useEffect(() => {
-    if (products.length > 0) {
-      const nextProducts = products.slice(currentCardIndex, currentCardIndex + 3);
+    if (memoizedProducts.length > 0) {
+      const nextProducts = memoizedProducts.slice(currentCardIndex, currentCardIndex + 3);
       const imageUris = nextProducts.flatMap(p => p.imageUrls);
       
       if (imageUris.length > 0) {
@@ -53,17 +70,14 @@ export const FeedScreen: React.FC = memo(() => {
         });
       }
     }
-  }, [currentCardIndex, products, imageCacheManager]);
+  }, [currentCardIndex, memoizedProducts, imageCacheManager]);
 
   useEffect(() => {
     loadProducts();
-    // Add some test skipped products for development
     addTestSkippedProducts();
 
-    // Listen for when we return from ProductDetails screen
     const unsubscribe = navigation.addListener('focus', () => {
-      // When returning to FeedScreen, we don't need to do anything special
-      // The ProductDetailsScreen will handle advancing via its own logic
+      // No-op: ProductDetailsScreen handles advancing
     });
 
     return unsubscribe;
@@ -74,7 +88,6 @@ export const FeedScreen: React.FC = memo(() => {
       await skippedProductsService.addSkippedProduct('prod-1', 'electronics');
       await skippedProductsService.addSkippedProduct('prod-2', 'fashion');
       await skippedProductsService.addSkippedProduct('prod-3', 'electronics');
-      console.log('Added test skipped products');
     } catch (error) {
       console.error('Error adding test skipped products:', error);
     }
@@ -108,53 +121,33 @@ export const FeedScreen: React.FC = memo(() => {
   }, []);
 
   const handleSwipeLeft = useCallback(async (productId: string) => {
-    console.log('Swiped left on product:', productId);
     try {
-      // Get the product to extract its category
-      const product = products.find(p => p.id === productId);
+      const product = memoizedProducts.find(p => p.id === productId);
       const category = product?.category.id || 'general';
       
-      // Add to skipped products and record swipe action
       await Promise.all([
         skippedProductsService.addSkippedProduct(productId, category),
         ProductFeedService.recordSwipeAction(productId, 'skip', MOCK_USER_ID)
       ]);
       
-      console.log('Successfully added to skipped products and recorded skip action');
       setCurrentCardIndex(prev => prev + 1);
     } catch (error) {
       console.error('Error recording skip action:', error);
       setCurrentCardIndex(prev => prev + 1);
     }
-  }, [products, skippedProductsService]);
+  }, [memoizedProducts, skippedProductsService]);
 
   const handleSwipeRight = useCallback(async (productId: string) => {
-    console.log('Swiped right on product:', productId);
     try {
-      // Import services to add to wishlist
       const { getWishlistService } = require('../../services/WishlistService');
       const wishlistService = getWishlistService();
       
-      console.log('Adding product to wishlist:', productId);
-      
-      // Add to wishlist and record swipe action
       await wishlistService.addToWishlist(productId);
-      console.log('Successfully added to wishlist');
-      
       await ProductFeedService.recordSwipeAction(productId, 'like', MOCK_USER_ID);
-      console.log('Successfully recorded swipe action');
       
-      // Check if it was actually added
-      const isInWishlist = await wishlistService.isInWishlist(productId);
-      console.log('Product is in wishlist:', isInWishlist);
-      
-      const wishlistCount = await wishlistService.getWishlistCount();
-      console.log('Total wishlist items:', wishlistCount);      
-      
-      // showToastNotification('Product has been added to your wishlist. Total items: ${wishlistCount}');
       setCurrentCardIndex(prev => prev + 1);
     } catch (error) {
-      console.error('Error adding to wishlist:', error);      
+      console.error('Error adding to wishlist:', error);
       showToastNotification('Failed to add product to wishlist. Please try again.');
       setCurrentCardIndex(prev => prev + 1);
     }
@@ -169,47 +162,34 @@ export const FeedScreen: React.FC = memo(() => {
   }, []);
 
   const handleAddToCart = useCallback(async (productId: string) => {
-    console.log('Added to cart:', productId);
     try {
-      // Import services to add to cart
       const { getCartService } = require('../../services/CartService');
       const cartService = getCartService();
       
-      console.log('Adding product to cart:', productId);
       await cartService.addToCart(productId, 1);
-      console.log('Successfully added to cart');
-      
-      // Check if it was actually added
       const cartCount = await cartService.getCartCount();
-      console.log('Total cart items:', cartCount);
       
-      // Show toast notification instead of alert
       showToastNotification(`Added to cart! (${cartCount} items)`);
-      
-      // Automatically advance to next card
       setCurrentCardIndex(prev => prev + 1);
     } catch (error) {
       console.error('Error adding to cart:', error);
       showToastNotification('Failed to add to cart');
-      // Still advance to next card even if there was an error
       setCurrentCardIndex(prev => prev + 1);
     }
   }, [showToastNotification]);
 
   const handleViewDetails = useCallback((productId: string) => {
-    console.log('Viewing details for product:', productId);
-    const product = products.find(p => p.id === productId);
+    const product = memoizedProducts.find(p => p.id === productId);
     if (product) {
       navigation.navigate('ProductDetails', { 
         productId, 
         product,
         onActionComplete: () => {
-          // Advance to next card when an action is completed in ProductDetails
           setCurrentCardIndex(prev => prev + 1);
         }
       });
     }
-  }, [products, navigation]);
+  }, [memoizedProducts, navigation]);
 
   const loadSkippedCategories = useCallback(async () => {
     try {
@@ -227,58 +207,25 @@ export const FeedScreen: React.FC = memo(() => {
   }, [skippedProductsService]);
 
   const handleShowSkippedProducts = useCallback(async () => {
-    console.log('Skipped products button pressed');
     try {
       await loadSkippedCategories();
-      console.log('Loaded skipped categories:', skippedCategories.length);
       setShowSkippedModal(true);
-      console.log('Modal should be visible now');
     } catch (error) {
       console.error('Error showing skipped products:', error);
     }
   }, [loadSkippedCategories]);
 
-  const handleNavigateToSkippedCategory = useCallback((category: string) => {
+  const handleCloseModal = useCallback(() => {
     setShowSkippedModal(false);
+  }, []);
+
+  const handleNavigateToSkippedCategory = useCallback((category: string) => {
     navigation.navigate('SkippedProducts', { category });
   }, [navigation]);
 
-  const renderCard = (product: ProductCard, index: number) => {
-    const isTopCard = index === currentCardIndex;
-    const isVisible = index >= currentCardIndex && index < currentCardIndex + 3;
-    
-    if (!isVisible) return null;
-
-    const zIndex = Math.min(products.length - index, 100); // Cap z-index to stay below header
-    const scale = isTopCard ? 1 : 0.95 - (index - currentCardIndex) * 0.02;
-    const translateY = (index - currentCardIndex) * 8;
-
-    return (
-      <View
-        key={product.id}
-        style={[
-          FeedScreenStyles.cardWrapper,
-          {
-            zIndex,
-            transform: [
-              { scale },
-              { translateY },
-            ],
-          },
-        ]}
-      >
-        <MouseSwipeableCard
-          product={product}
-          userId={MOCK_USER_ID}
-          onSwipeLeft={handleSwipeLeft}
-          onSwipeRight={handleSwipeRight}
-          onAddToCart={handleAddToCart}
-          onViewDetails={handleViewDetails}
-          isTopCard={isTopCard}
-        />
-      </View>
-    );
-  };
+  // Memoize derived values to prevent unnecessary calculations
+  const hasMoreCards = useMemo(() => currentCardIndex < memoizedProducts.length, [currentCardIndex, memoizedProducts.length]);
+  const remainingProducts = useMemo(() => memoizedProducts.length - currentCardIndex, [memoizedProducts.length, currentCardIndex]);
 
   if (loading) {
     return (
@@ -291,7 +238,7 @@ export const FeedScreen: React.FC = memo(() => {
     );
   }
 
-  if (products.length === 0) {
+  if (memoizedProducts.length === 0) {
     return (
       <SafeAreaView style={FeedScreenStyles.container}>
         <StatusBar barStyle="light-content" backgroundColor="#221e27" />
@@ -310,53 +257,39 @@ export const FeedScreen: React.FC = memo(() => {
     );
   }
 
-  const hasMoreCards = currentCardIndex < products.length;
-
   return (
     <SafeAreaView style={FeedScreenStyles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#221e27" />
       
-      {/* Header */}
-      <View style={FeedScreenStyles.header}>
-        <View style={FeedScreenStyles.headerContent}>
-          <View style={FeedScreenStyles.headerLeft}>
-            <Text style={FeedScreenStyles.headerTitle}>Discover</Text>
-            <Text style={FeedScreenStyles.headerSubtitle}>
-              {hasMoreCards 
-                ? `${products.length - currentCardIndex} products to explore`
-                : 'All caught up!'
-              }
-            </Text>
-          </View>
-          <TouchableOpacity 
-            style={FeedScreenStyles.skippedButton} 
-            onPress={handleShowSkippedProducts}
-            activeOpacity={0.7}
-          >
-            <Text style={FeedScreenStyles.skippedButtonIcon}>↻</Text>
-            <Text style={FeedScreenStyles.skippedButtonText}>View Skipped</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      {/* Header - separated component */}
+      <FeedHeader
+        remainingProducts={remainingProducts}
+        hasMoreCards={hasMoreCards}
+        onShowSkippedProducts={handleShowSkippedProducts}
+      />
 
-      {/* Cards Container */}
-      <View style={FeedScreenStyles.cardsContainer}>
-        {hasMoreCards ? (
-          <>
-            {products.map((product, index) => renderCard(product, index))}
-          </>
-        ) : (
-          <View style={FeedScreenStyles.allDoneContainer}>
-            <Text style={FeedScreenStyles.allDoneTitle}>🎉 All Done!</Text>
-            <Text style={FeedScreenStyles.allDoneSubtitle}>
-              You've seen all available products.
-            </Text>
-            <Text style={FeedScreenStyles.allDoneAction}>
-              Pull down to refresh for new products!
-            </Text>
-          </View>
-        )}
-      </View>
+      {/* Cards Container - separated component */}
+      {hasMoreCards ? (
+        <CardsContainer
+          products={memoizedProducts}
+          currentCardIndex={currentCardIndex}
+          userId={MOCK_USER_ID}
+          onSwipeLeft={handleSwipeLeft}
+          onSwipeRight={handleSwipeRight}
+          onAddToCart={handleAddToCart}
+          onViewDetails={handleViewDetails}
+        />
+      ) : (
+        <View style={FeedScreenStyles.allDoneContainer}>
+          <Text style={FeedScreenStyles.allDoneTitle}>🎉 All Done!</Text>
+          <Text style={FeedScreenStyles.allDoneSubtitle}>
+            You've seen all available products.
+          </Text>
+          <Text style={FeedScreenStyles.allDoneAction}>
+            Pull down to refresh for new products!
+          </Text>
+        </View>
+      )}
 
       {/* Pull to refresh hint */}
       <ScrollView
@@ -378,71 +311,19 @@ export const FeedScreen: React.FC = memo(() => {
         </View>
       </ScrollView>
 
-      {/* Skipped Products Modal */}
-      <Modal
+      {/* Skipped Products Modal - separated component */}
+      <SkippedProductsModal
         visible={showSkippedModal}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => {
-          console.log('Modal close requested');
-          setShowSkippedModal(false);
-        }}
-        onShow={() => console.log('Modal is now visible')}
-      >
-        <View style={FeedScreenStyles.modalOverlay}>
-          <View style={FeedScreenStyles.modalContent}>
-            <View style={FeedScreenStyles.modalHeader}>
-              <Text style={FeedScreenStyles.modalTitle}>Review Skipped Products</Text>
-              <TouchableOpacity 
-                style={FeedScreenStyles.modalCloseButton}
-                onPress={() => setShowSkippedModal(false)}
-              >
-                <Text style={FeedScreenStyles.modalCloseButtonText}>✕</Text>
-              </TouchableOpacity>
-            </View>
-            
-            {skippedCategories.length === 0 ? (
-              <View style={FeedScreenStyles.modalEmptyContainer}>
-                <Text style={FeedScreenStyles.modalEmptyText}>No skipped products yet</Text>
-                <Text style={FeedScreenStyles.modalEmptySubtext}>
-                  Products you skip will appear here organized by category
-                </Text>
-              </View>
-            ) : (
-              <FlatList
-                data={skippedCategories}
-                keyExtractor={(item) => item.category}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    style={FeedScreenStyles.categoryItem}
-                    onPress={() => handleNavigateToSkippedCategory(item.category)}
-                  >
-                    <View style={FeedScreenStyles.categoryInfo}>
-                      <Text style={FeedScreenStyles.categoryName}>
-                        {item.category.charAt(0).toUpperCase() + item.category.slice(1)}
-                      </Text>
-                      <Text style={FeedScreenStyles.categoryCount}>
-                        {item.count} skipped product{item.count !== 1 ? 's' : ''}
-                      </Text>
-                    </View>
-                    <Text style={FeedScreenStyles.categoryChevron}>›</Text>
-                  </TouchableOpacity>
-                )}
-                style={FeedScreenStyles.categoriesList}
-              />
-            )}
-          </View>
-        </View>
-      </Modal>
+        skippedCategories={memoizedSkippedCategories}
+        onClose={handleCloseModal}
+        onCategorySelect={handleNavigateToSkippedCategory}
+      />
 
-      {/* Toast Notification */}
-      {showToast && (
-        <View style={FeedScreenStyles.toastContainer}>
-          <View style={FeedScreenStyles.toast}>
-            <Text style={FeedScreenStyles.toastText}>{toastMessage}</Text>
-          </View>
-        </View>
-      )}
+      {/* Toast Notification - separated component */}
+      <ToastNotification
+        visible={showToast}
+        message={toastMessage}
+      />
     </SafeAreaView>
   );
 });
