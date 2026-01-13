@@ -1,4 +1,4 @@
-import React, { useCallback, memo } from 'react';
+import React, { useCallback, memo, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -28,6 +28,7 @@ import { GesturePerformanceManager } from '../../utils/PerformanceUtils';
 import { AdvancedGestureHandler } from '../../utils/AdvancedGestureHandler';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
 import { SwipeableCardStyles } from '@/screens/Styles/CardStyles';
+import { SimplifiedAnimationController, FrameRateLimiter } from '../../utils/AnimationOptimizer';
 
 const { width: screenWidth } = Dimensions.get('window');
 const CARD_WIDTH = screenWidth * 0.9;
@@ -59,8 +60,23 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
   const translateY = useSharedValue(0);
   const opacity = useSharedValue(isTopCard ? 1 : 0.8);
 
+  // Animation optimization
+  const animationControllerRef = useRef<SimplifiedAnimationController | null>(null);
+  const frameRateLimiterRef = useRef<FrameRateLimiter | null>(null);
+
   const swipeActionService = getSwipeActionService(userId);
   const { handleError } = useErrorHandler();
+
+  // Initialize animation controller and frame rate limiter
+  useEffect(() => {
+    animationControllerRef.current = new SimplifiedAnimationController(5);
+    frameRateLimiterRef.current = new FrameRateLimiter(60); // Target 60 FPS
+
+    return () => {
+      // Cleanup animations on unmount
+      animationControllerRef.current?.cleanup();
+    };
+  }, []);
 
   const handleSwipeComplete = useCallback(
     async (direction: 'left' | 'right') => {
@@ -85,11 +101,16 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
   );
 
   const panGesture = Gesture.Pan()
-    .onStart((event) => {
+    .onStart(() => {
       runOnJS(GesturePerformanceManager.startGestureTracking)();
-      AdvancedGestureHandler.initializeGesture(event.translationX, event.translationY);
+      AdvancedGestureHandler.initializeGesture(0, 0);
     })
     .onUpdate((event) => {
+      // Frame rate limiting - only process if frame should render
+      if (!frameRateLimiterRef.current?.shouldRenderFrame()) {
+        return;
+      }
+
       // Intelligent throttling: only update if movement exceeds pixel threshold
       if (!AdvancedGestureHandler.shouldProcessUpdate(event.translationX, event.translationY, {
         pixelThreshold: 2, // Only update if moved 2+ pixels
@@ -102,7 +123,7 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
       translateX.value = event.translationX;
       translateY.value = event.translationY * 0.1;
     })
-    .onEnd((event) => {
+    .onEnd(() => {
       const swipeDirection = AdvancedGestureHandler.shouldCommitSwipe(
         translateX.value,
         SWIPE_THRESHOLD,
@@ -134,7 +155,7 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
         runOnJS(handleSwipeComplete)('right');
         runOnJS(GesturePerformanceManager.endGestureTracking)('swipe-right');
       } else {
-        // Snap back to center
+        // Snap back to center with spring animation
         translateX.value = withSpring(0);
         translateY.value = withSpring(0);
         runOnJS(GesturePerformanceManager.endGestureTracking)('swipe-cancel');
