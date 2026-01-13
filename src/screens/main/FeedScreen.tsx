@@ -15,6 +15,7 @@ import { ProductFeedService } from '../../services/ProductFeedService';
 import { getSkippedProductsService } from '../../services/SkippedProductsService';
 import { ImageCacheManager } from '../../utils/ImageCacheManager';
 import { MemoizationHelper } from '../../utils/StateManagementOptimizer';
+import { useMemoryManagement, useImageLifecycle } from '../../hooks/useMemoryManagement';
 import { SkippedProductsModal } from '../../components/feed/SkippedProductsModal';
 import { ToastNotification } from '../../components/feed/ToastNotification';
 import { CardsContainer } from '../../components/feed/CardsContainer';
@@ -28,6 +29,9 @@ const MOCK_USER_ID = 'mock-user-123';
 
 export const FeedScreen: React.FC = memo(() => {
   const navigation = useNavigation<FeedScreenNavigationProp>();
+  
+  // Memory management hooks
+  const { timers, cleanup } = useMemoryManagement('FeedScreen');
   
   // Separate state into logical groups to minimize re-renders
   const [products, setProducts] = useState<ProductCard[]>([]);
@@ -58,14 +62,22 @@ export const FeedScreen: React.FC = memo(() => {
     [skippedCategories]
   );
 
+  // Get image URIs for lifecycle management
+  const imageUris = useMemo(() => {
+    return memoizedProducts.flatMap(p => p.imageUrls);
+  }, [memoizedProducts]);
+
+  // Manage image lifecycle
+  useImageLifecycle(imageUris);
+
   // Preload images for next 3 cards
   useEffect(() => {
     if (memoizedProducts.length > 0) {
       const nextProducts = memoizedProducts.slice(currentCardIndex, currentCardIndex + 3);
-      const imageUris = nextProducts.flatMap(p => p.imageUrls);
+      const nextImageUris = nextProducts.flatMap(p => p.imageUrls);
       
-      if (imageUris.length > 0) {
-        imageCacheManager.preloadImages(imageUris).catch(error => {
+      if (nextImageUris.length > 0) {
+        imageCacheManager.preloadImages(nextImageUris).catch(error => {
           console.warn('Failed to preload images:', error);
         });
       }
@@ -80,8 +92,17 @@ export const FeedScreen: React.FC = memo(() => {
       // No-op: ProductDetailsScreen handles advancing
     });
 
-    return unsubscribe;
-  }, [navigation]);
+    // Register cleanup
+    cleanup.onCleanup(() => {
+      // Clean up any pending operations
+      imageCacheManager.cleanup();
+    });
+
+    return () => {
+      unsubscribe();
+      cleanup.cleanup();
+    };
+  }, [navigation, cleanup, imageCacheManager]);
 
   const addTestSkippedProducts = async () => {
     try {
@@ -156,10 +177,12 @@ export const FeedScreen: React.FC = memo(() => {
   const showToastNotification = useCallback((message: string) => {
     setToastMessage(message);
     setShowToast(true);
-    setTimeout(() => {
+    
+    // Use managed timer for cleanup
+    timers.setTimeout(() => {
       setShowToast(false);
     }, 1000);
-  }, []);
+  }, [timers]);
 
   const handleAddToCart = useCallback(async (productId: string) => {
     try {
