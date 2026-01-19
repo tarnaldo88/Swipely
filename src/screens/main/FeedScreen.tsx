@@ -147,39 +147,6 @@ export const FeedScreen: React.FC = memo(() => {
     }
   }, []);
 
-  const handleSwipeLeft = useCallback(async (productId: string) => {
-    try {
-      const product = memoizedProducts.find(p => p.id === productId);
-      const category = product?.category.id || 'general';
-      
-      await Promise.all([
-        skippedProductsService.addSkippedProduct(productId, category),
-        ProductFeedService.recordSwipeAction(productId, 'skip', MOCK_USER_ID)
-      ]);
-      
-      setCurrentCardIndex(prev => prev + 1);
-    } catch (error) {
-      console.error('Error recording skip action:', error);
-      setCurrentCardIndex(prev => prev + 1);
-    }
-  }, [memoizedProducts, skippedProductsService]);
-
-  const handleSwipeRight = useCallback(async (productId: string) => {
-    try {
-      const { getWishlistService } = require('../../services/WishlistService');
-      const wishlistService = getWishlistService();
-      
-      await wishlistService.addToWishlist(productId);
-      await ProductFeedService.recordSwipeAction(productId, 'like', MOCK_USER_ID);
-      
-      setCurrentCardIndex(prev => prev + 1);
-    } catch (error) {
-      console.error('Error adding to wishlist:', error);
-      showToastNotification('Failed to add product to wishlist. Please try again.');
-      setCurrentCardIndex(prev => prev + 1);
-    }
-  }, []);
-
   const showToastNotification = useCallback((message: string) => {
     setToastMessage(message);
     setShowToast(true);
@@ -189,6 +156,45 @@ export const FeedScreen: React.FC = memo(() => {
       setShowToast(false);
     }, 1000);
   }, [timers]);
+
+  const handleSwipeLeft = useCallback(async (productId: string) => {
+    // Update card index immediately (non-blocking)
+    setCurrentCardIndex(prev => prev + 1);
+    
+    // Defer async operations to background (non-blocking)
+    setTimeout(async () => {
+      try {
+        const product = memoizedProducts.find(p => p.id === productId);
+        const category = product?.category.id || 'general';
+        
+        await Promise.all([
+          skippedProductsService.addSkippedProduct(productId, category),
+          ProductFeedService.recordSwipeAction(productId, 'skip', MOCK_USER_ID)
+        ]);
+      } catch (error) {
+        console.error('Error recording skip action:', error);
+      }
+    }, 0);
+  }, [memoizedProducts, skippedProductsService]);
+
+  const handleSwipeRight = useCallback(async (productId: string) => {
+    // Update card index immediately (non-blocking)
+    setCurrentCardIndex(prev => prev + 1);
+    
+    // Defer async operations to background (non-blocking)
+    setTimeout(async () => {
+      try {
+        const { getWishlistService } = require('../../services/WishlistService');
+        const wishlistService = getWishlistService();
+        
+        await wishlistService.addToWishlist(productId);
+        await ProductFeedService.recordSwipeAction(productId, 'like', MOCK_USER_ID);
+      } catch (error) {
+        console.error('Error adding to wishlist:', error);
+        showToastNotification('Failed to add product to wishlist. Please try again.');
+      }
+    }, 0);
+  }, [showToastNotification]);
 
   const handleAddToCart = useCallback(async (productId: string) => {
     try {
