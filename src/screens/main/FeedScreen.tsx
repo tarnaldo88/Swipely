@@ -7,6 +7,7 @@ import {
   ScrollView,
   Alert,
   SafeAreaView,
+  InteractionManager,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -158,8 +159,10 @@ export const FeedScreen: React.FC = memo(() => {
   }, [timers]);
 
   const handleSwipeLeft = useCallback(async (productId: string) => {
-    // Update card index immediately (non-blocking)
-    setCurrentCardIndex(prev => prev + 1);
+    // Use requestAnimationFrame to defer state update to next frame (smoother)
+    requestAnimationFrame(() => {
+      setCurrentCardIndex(prev => prev + 1);
+    });
     
     // Defer async operations to background (non-blocking)
     setTimeout(async () => {
@@ -178,8 +181,10 @@ export const FeedScreen: React.FC = memo(() => {
   }, [memoizedProducts, skippedProductsService]);
 
   const handleSwipeRight = useCallback(async (productId: string) => {
-    // Update card index immediately (non-blocking)
-    setCurrentCardIndex(prev => prev + 1);
+    // Use requestAnimationFrame to defer state update to next frame (smoother)
+    requestAnimationFrame(() => {
+      setCurrentCardIndex(prev => prev + 1);
+    });
     
     // Defer async operations to background (non-blocking)
     setTimeout(async () => {
