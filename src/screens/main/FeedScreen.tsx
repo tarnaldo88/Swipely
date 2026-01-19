@@ -159,8 +159,8 @@ export const FeedScreen: React.FC = memo(() => {
   }, [timers]);
 
   const handleSwipeLeft = useCallback(async (productId: string) => {
-    // Use requestAnimationFrame to defer state update to next frame (smoother)
-    requestAnimationFrame(() => {
+    // Use InteractionManager to defer state update until all interactions complete
+    InteractionManager.runAfterInteractions(() => {
       setCurrentCardIndex(prev => prev + 1);
     });
     
@@ -181,8 +181,8 @@ export const FeedScreen: React.FC = memo(() => {
   }, [memoizedProducts, skippedProductsService]);
 
   const handleSwipeRight = useCallback(async (productId: string) => {
-    // Use requestAnimationFrame to defer state update to next frame (smoother)
-    requestAnimationFrame(() => {
+    // Use InteractionManager to defer state update until all interactions complete
+    InteractionManager.runAfterInteractions(() => {
       setCurrentCardIndex(prev => prev + 1);
     });
     
