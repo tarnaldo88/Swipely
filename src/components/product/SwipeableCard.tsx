@@ -103,6 +103,7 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
 
   const panGesture = Gesture.Pan()
     .onStart(() => {
+      SwipeOptimizer.startAnimation();
       runOnJS(GesturePerformanceManager.startGestureTracking)();
       AdvancedGestureHandler.initializeGesture(0, 0);
     })
@@ -143,6 +144,7 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
         opacity.value = withTiming(0, { duration });
         runOnJS(handleSwipeComplete)('left');
         runOnJS(GesturePerformanceManager.endGestureTracking)('swipe-left');
+        runOnJS(SwipeOptimizer.endAnimation)(duration);
       } else if (swipeDirection === 'right') {
         const duration = AdvancedGestureHandler.getAnimationDuration(
           Math.abs(translateX.value),
@@ -155,11 +157,13 @@ export const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
         opacity.value = withTiming(0, { duration });
         runOnJS(handleSwipeComplete)('right');
         runOnJS(GesturePerformanceManager.endGestureTracking)('swipe-right');
+        runOnJS(SwipeOptimizer.endAnimation)(duration);
       } else {
         // Snap back to center with spring animation
         translateX.value = withSpring(0);
         translateY.value = withSpring(0);
         runOnJS(GesturePerformanceManager.endGestureTracking)('swipe-cancel');
+        runOnJS(SwipeOptimizer.endAnimation)(300);
       }
 
       AdvancedGestureHandler.resetGesture();
