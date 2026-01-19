@@ -70,16 +70,22 @@ export const FeedScreen: React.FC = memo(() => {
   // Manage image lifecycle
   useImageLifecycle(imageUris);
 
-  // Preload images for next 3 cards
+  // Aggressively preload images for next 5 cards to prevent freeze on swipe
   useEffect(() => {
     if (memoizedProducts.length > 0) {
-      const nextProducts = memoizedProducts.slice(currentCardIndex, currentCardIndex + 3);
+      // Preload next 5 cards (more aggressive to prevent freeze)
+      const nextProducts = memoizedProducts.slice(currentCardIndex, currentCardIndex + 5);
       const nextImageUris = nextProducts.flatMap(p => p.imageUrls);
       
       if (nextImageUris.length > 0) {
-        imageCacheManager.preloadImages(nextImageUris).catch(error => {
-          console.warn('Failed to preload images:', error);
-        });
+        // Use setTimeout to defer preloading to next frame to avoid blocking
+        const preloadTimer = setTimeout(() => {
+          imageCacheManager.preloadImages(nextImageUris).catch(error => {
+            console.warn('Failed to preload images:', error);
+          });
+        }, 0);
+        
+        return () => clearTimeout(preloadTimer);
       }
     }
   }, [currentCardIndex, memoizedProducts, imageCacheManager]);

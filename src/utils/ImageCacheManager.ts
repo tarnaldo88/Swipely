@@ -45,7 +45,7 @@ export class ImageCacheManager {
   }
 
   /**
-   * Preload an image with reference counting
+   * Preload an image with reference counting and non-blocking loading
    */
   preloadImage(uri: string): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -57,27 +57,38 @@ export class ImageCacheManager {
         return;
       }
 
+      // Add to queue for processing
       this.loadingQueue.push(uri);
-      this.processQueue();
+      
+      // Process queue asynchronously to avoid blocking
+      setImmediate(() => this.processQueue());
 
-      Image.prefetch(uri)
-        .then(() => {
-          this.cache.set(uri, {
-            uri,
-            timestamp: Date.now(),
-            size: 0, // Approximate size
-            refCount: 1,
+      // Start loading immediately if under concurrent limit
+      if (this.activeLoads < MAX_CONCURRENT_LOADS) {
+        this.activeLoads++;
+        
+        Image.prefetch(uri)
+          .then(() => {
+            this.cache.set(uri, {
+              uri,
+              timestamp: Date.now(),
+              size: 0,
+              refCount: 1,
+            });
+            this.activeLoads--;
+            this.processQueue();
+            resolve();
+          })
+          .catch((error) => {
+            console.error(`Failed to preload image: ${uri}`, error);
+            this.activeLoads--;
+            this.processQueue();
+            reject(error);
           });
-          this.activeLoads--;
-          this.processQueue();
-          resolve();
-        })
-        .catch((error) => {
-          console.error(`Failed to preload image: ${uri}`, error);
-          this.activeLoads--;
-          this.processQueue();
-          reject(error);
-        });
+      } else {
+        // Queue for later processing
+        resolve();
+      }
     });
   }
 

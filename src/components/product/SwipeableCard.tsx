@@ -29,6 +29,7 @@ import { AdvancedGestureHandler } from '../../utils/AdvancedGestureHandler';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
 import { SwipeableCardStyles } from '@/screens/Styles/CardStyles';
 import { SimplifiedAnimationController, FrameRateLimiter } from '../../utils/AnimationOptimizer';
+import { SwipeOptimizer } from '../../utils/SwipeOptimizer';
 
 const { width: screenWidth } = Dimensions.get('window');
 const CARD_WIDTH = screenWidth * 0.9;

@@ -19,6 +19,7 @@ interface CardsContainerProps {
 /**
  * Separated cards container to prevent re-renders of entire feed
  * Only re-renders when products or currentCardIndex changes
+ * Optimized to render only visible cards + 1 ahead for smooth transitions
  */
 export const CardsContainer = memo<CardsContainerProps>(({
   products,
@@ -31,7 +32,8 @@ export const CardsContainer = memo<CardsContainerProps>(({
 }) => {
   const renderCard = useCallback((product: ProductCard, index: number) => {
     const isTopCard = index === currentCardIndex;
-    const isVisible = index >= currentCardIndex && index < currentCardIndex + 3;
+    // Only render current card + 2 ahead (not 3) to reduce rendering overhead
+    const isVisible = index >= currentCardIndex && index < currentCardIndex + 2;
     
     if (!isVisible) return null;
 
