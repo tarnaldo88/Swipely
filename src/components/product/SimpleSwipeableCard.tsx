@@ -72,11 +72,14 @@ export const SimpleSwipeableCard: React.FC<SimpleSwipeableCardProps> = ({
   const handleViewDetails = useCallback(async () => {
     try {
       await swipeActionService.onViewDetails(product.id);
-      navigation.navigate('ProductDetails', { 
-        productId: product.id, 
-        product: product 
-      });
-      onViewDetails?.(product.id);
+      if (onViewDetails) {
+        onViewDetails(product.id);
+      } else {
+        navigation.navigate('ProductDetails', { 
+          productId: product.id, 
+          product: product 
+        });
+      }
     } catch (error) {
       console.error('Error handling view details:', error);
     }

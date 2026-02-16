@@ -10,18 +10,14 @@ import {
   ActivityIndicator,
 } from "react-native";
 import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
+  Gesture,
+  GestureDetector,
 } from "react-native-gesture-handler";
 import Animated, {
-  useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  withTiming,
   runOnJS,
-  interpolate,
-  Extrapolate,
 } from "react-native-reanimated";
 
 const { width: screenWidth } = Dimensions.get("window");
@@ -106,6 +102,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
   // Animation values
   const translateX = useSharedValue(0);
   const scale = useSharedValue(1);
+  const startX = useSharedValue(0);
 
   // Memoize which images should be loaded based on current index and preload radius
   const shouldLoadImage = useMemo(() => {
@@ -132,21 +129,18 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
     [images.length]
   );
 
-  const gestureHandler = useAnimatedGestureHandler<
-    PanGestureHandlerGestureEvent,
-    { startX: number }
-  >({
-    onStart: (_, context) => {
-      context.startX = translateX.value;
-    },
-    onActive: (event, context) => {
-      translateX.value = context.startX + event.translationX;
+  const panGesture = Gesture.Pan()
+    .onBegin(() => {
+      startX.value = translateX.value;
+    })
+    .onUpdate((event) => {
+      translateX.value = startX.value + event.translationX;
 
       // Add subtle scale effect
       const progress = Math.abs(event.translationX) / screenWidth;
       scale.value = 1 - progress * 0.05;
-    },
-    onEnd: (event) => {
+    })
+    .onEnd(() => {
       const shouldSwipeLeft = translateX.value < -SWIPE_THRESHOLD;
       const shouldSwipeRight = translateX.value > SWIPE_THRESHOLD;
 
@@ -159,8 +153,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
       // Reset animation values
       translateX.value = withSpring(0);
       scale.value = withSpring(1);
-    },
-  });
+    });
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -195,7 +188,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
 
   return (
     <View style={[styles.container, { height }]}>
-      <PanGestureHandler onGestureEvent={gestureHandler}>
+      <GestureDetector gesture={panGesture}>
         <Animated.View style={[styles.galleryContainer, animatedStyle]}>
           <ScrollView
             ref={scrollViewRef}
@@ -220,7 +213,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
             ))}
           </ScrollView>
         </Animated.View>
-      </PanGestureHandler>
+      </GestureDetector>
 
       {/* Image Indicators */}
       {images.length > 1 && (

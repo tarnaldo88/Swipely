@@ -151,41 +151,50 @@ export const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = () => {
   const handleLike = useCallback(async () => {
     if (!product) return;
 
-    try {
-      await swipeActionService.onSwipeRight(product.id);
-      // Close modal and go to next product
-      handleClose('like');
-    } catch (error) {
-      console.error("Error liking product:", error);
-      Alert.alert("Error", "Failed to add product to wishlist");
-    }
+    const currentProductId = product.id;
+    handleClose('like');
+
+    setTimeout(async () => {
+      try {
+        await swipeActionService.onSwipeRight(currentProductId);
+      } catch (error) {
+        console.error("Error liking product:", error);
+        Alert.alert("Error", "Failed to add product to wishlist");
+      }
+    }, 0);
   }, [product, swipeActionService, handleClose]);
 
   const handleSkip = useCallback(async () => {
     if (!product) return;
 
-    try {
-      await swipeActionService.onSwipeLeft(product.id);
-      handleClose('skip');
-    } catch (error) {
-      console.error("Error skipping product:", error);
-      handleClose('skip');
-    }
+    const currentProductId = product.id;
+    handleClose('skip');
+
+    setTimeout(async () => {
+      try {
+        await swipeActionService.onSwipeLeft(currentProductId);
+      } catch (error) {
+        console.error("Error skipping product:", error);
+      }
+    }, 0);
   }, [product, swipeActionService, handleClose]);
 
   const handleAddToCart = useCallback(async () => {
     if (!product) return;
 
-    try {
-      await swipeActionService.onAddToCart(product.id);
-      // Mark as skipped so feed advances to next product
-      await swipeActionService.onSwipeLeft(product.id);
-      // Close modal and go to next product
-      handleClose('cart');
-    } catch (error) {
-      console.error("Error adding to cart:", error);
-      Alert.alert("Error", "Failed to add product to cart");
-    }
+    const currentProductId = product.id;
+    handleClose('cart');
+
+    setTimeout(async () => {
+      try {
+        await swipeActionService.onAddToCart(currentProductId);
+        // Mark as skipped so feed advances to next product
+        await swipeActionService.onSwipeLeft(currentProductId);
+      } catch (error) {
+        console.error("Error adding to cart:", error);
+        Alert.alert("Error", "Failed to add product to cart");
+      }
+    }, 0);
   }, [product, swipeActionService, handleClose]);
 
   const modalAnimatedStyle = useAnimatedStyle(() => ({

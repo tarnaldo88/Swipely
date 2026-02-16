@@ -195,11 +195,14 @@ export const IOSSwipeableCard: React.FC<IOSSwipeableCardProps> = ({
     try {
       HapticFeedback.light();
       await swipeActionService.onViewDetails(product.id);
-      navigation.navigate('ProductDetails', { 
-        productId: product.id, 
-        product: product 
-      });
-      onViewDetails?.(product.id);
+      if (onViewDetails) {
+        onViewDetails(product.id);
+      } else {
+        navigation.navigate('ProductDetails', { 
+          productId: product.id, 
+          product: product 
+        });
+      }
     } catch (error) {
       console.error('Error handling view details:', error);
     }

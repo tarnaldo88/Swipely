@@ -107,56 +107,58 @@ export const SimpleProductDetailsScreen: React.FC<SimpleProductDetailsScreenProp
   const handleLike = useCallback(async () => {
     if (!product) return;
     
-    try {
-      console.log('handleLike called for product:', product.id);
-      await swipeActionService.onSwipeRight(product.id);
-      console.log('onSwipeRight completed');
-      
-      // Close modal and go back to feed, triggering the callback
-      console.log('Calling handleClose with like action');
-      handleClose('like');
-    } catch (error) {
-      console.error('Error liking product:', error);
-      Alert.alert('Error', 'Failed to add product to wishlist');
-    }
+    const currentProductId = product.id;
+    handleClose('like');
+
+    setTimeout(async () => {
+      try {
+        console.log('handleLike called for product:', currentProductId);
+        await swipeActionService.onSwipeRight(currentProductId);
+        console.log('onSwipeRight completed');
+      } catch (error) {
+        console.error('Error liking product:', error);
+        Alert.alert('Error', 'Failed to add product to wishlist');
+      }
+    }, 0);
   }, [product, swipeActionService, handleClose]);
 
   const handleSkip = useCallback(async () => {
     if (!product) return;
     
-    try {
-      console.log('handleSkip called for product:', product.id);
-      await swipeActionService.onSwipeLeft(product.id);
-      console.log('onSwipeLeft completed');
-      
-      // Close modal and go back to feed, triggering the callback
-      console.log('Calling handleClose with skip action');
-      handleClose('skip');
-    } catch (error) {
-      console.error('Error skipping product:', error);
-      handleClose('skip');
-    }
+    const currentProductId = product.id;
+    handleClose('skip');
+
+    setTimeout(async () => {
+      try {
+        console.log('handleSkip called for product:', currentProductId);
+        await swipeActionService.onSwipeLeft(currentProductId);
+        console.log('onSwipeLeft completed');
+      } catch (error) {
+        console.error('Error skipping product:', error);
+      }
+    }, 0);
   }, [product, swipeActionService, handleClose]);
 
   const handleAddToCart = useCallback(async () => {
     if (!product) return;
     
-    try {
-      console.log('handleAddToCart called for product:', product.id);
-      await swipeActionService.onAddToCart(product.id);
-      console.log('onAddToCart completed');
-      
-      // Mark as skipped so feed advances to next product
-      await swipeActionService.onSwipeLeft(product.id);
-      console.log('onSwipeLeft completed');
-      
-      // Close modal and go back to feed, triggering the callback
-      console.log('Calling handleClose with cart action');
-      handleClose('cart');
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      Alert.alert('Error', 'Failed to add product to cart');
-    }
+    const currentProductId = product.id;
+    handleClose('cart');
+
+    setTimeout(async () => {
+      try {
+        console.log('handleAddToCart called for product:', currentProductId);
+        await swipeActionService.onAddToCart(currentProductId);
+        console.log('onAddToCart completed');
+        
+        // Mark as skipped so feed advances to next product
+        await swipeActionService.onSwipeLeft(currentProductId);
+        console.log('onSwipeLeft completed');
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+        Alert.alert('Error', 'Failed to add product to cart');
+      }
+    }, 0);
   }, [product, swipeActionService, handleClose]);
 
   if (!isVisible) {
