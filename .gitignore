@@ -34,8 +34,8 @@ yarn-error.*
 .env*.local
 
 # Firebase config (keep your credentials secure)
-src/config/firebase.ts
-src/config/firebase.example.ts
+# src/config/firebase.ts
+# src/config/firebase.example.ts
 
 # typescript
 *.tsbuildinfo
