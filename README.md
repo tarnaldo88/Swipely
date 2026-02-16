@@ -22,6 +22,7 @@ Swipely revolutionizes mobile commerce with an intuitive swipe-based product dis
 - **Intelligent Recommendations**: AI-powered product suggestions based on user preferences
 - **Category Filtering**: Browse products by specific categories
 - **Real-time Feed**: Dynamic product loading with infinite scroll
+- **Product Details Quick Actions**: Like, Skip, and Add to Cart in product details close the modal and move to the next card automatically
 
 ### **Platform-Optimized Experience**
 - **Material Design (Android)**: Native Android UI patterns with ripple effects
@@ -173,6 +174,7 @@ src/
 - **Wishlist Management**: Save products with organized collections
 - **Offline Mode**: Continue browsing and shopping without internet connection
 - **Data Sync**: Seamless synchronization across multiple devices
+- **Details Flow Continuity**: Product details opened from feed cards now return with the same card progression flow across web, iOS, and Android
 
 ### **Performance & Reliability**
 - **Image Optimization**: WebP support, lazy loading, responsive sizing, and caching
@@ -213,6 +215,7 @@ src/
 - **Like Button**: Same as swipe right + auto-advance to next card
 - **Add to Cart**: Add product + auto-advance to next card
 - **View Details**: Open product modal with full information
+- **Product Details Modal**: Like, Skip, and Add to Cart close the modal and auto-advance to the next feed card
 
 ### **Navigation & Features**
 - **Bottom Tabs**: Discover, Wishlist, Cart, Profile

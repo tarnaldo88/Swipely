@@ -53,18 +53,26 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
   const [isDragging, setIsDragging] = useState(false);
 
   const handleSwipeComplete = useCallback(
-    async (direction: "left" | "right") => {
-      try {
-        if (direction === "left") {
-          await swipeActionService.onSwipeLeft(product.id);
-          onSwipeLeft?.(product.id);
-        } else {
-          await swipeActionService.onSwipeRight(product.id);
-          onSwipeRight?.(product.id);
-        }
-      } catch (error) {
-        console.error("Error handling swipe:", error);
+    (direction: "left" | "right") => {
+      // Advance UI immediately
+      if (direction === "left") {
+        onSwipeLeft?.(product.id);
+      } else {
+        onSwipeRight?.(product.id);
       }
+
+      // Run side effects after UI update (non-blocking)
+      setTimeout(async () => {
+        try {
+          if (direction === "left") {
+            await swipeActionService.onSwipeLeft(product.id);
+          } else {
+            await swipeActionService.onSwipeRight(product.id);
+          }
+        } catch (error) {
+          console.error("Error handling swipe:", error);
+        }
+      }, 0);
     },
     [product.id, swipeActionService, onSwipeLeft, onSwipeRight]
   );
@@ -73,11 +81,11 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
     Animated.parallel([
       Animated.spring(pan, {
         toValue: { x: 0, y: 0 },
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       Animated.spring(rotate, {
         toValue: 0,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
     ]).start();
   }, [pan, rotate]);
@@ -90,12 +98,12 @@ export const MouseSwipeableCard: React.FC<MouseSwipeableCardProps> = ({
         Animated.timing(pan, {
           toValue: { x: toValue, y: -100 },
           duration: 300,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(rotate, {
           toValue: direction === "left" ? -0.3 : 0.3,
           duration: 300,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
       ]).start(() => {
         handleSwipeComplete(direction);

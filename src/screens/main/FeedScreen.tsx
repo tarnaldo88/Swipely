@@ -5,10 +5,9 @@ import {
   StatusBar,
   RefreshControl,
   ScrollView,
-  Alert,
-  SafeAreaView,
-  InteractionManager,
+  Alert,  
 } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ProductCard, MainStackParamList } from '../../types';
@@ -158,11 +157,8 @@ export const FeedScreen: React.FC = memo(() => {
     }, 1000);
   }, [timers]);
 
-  const handleSwipeLeft = useCallback(async (productId: string) => {
-    // Use InteractionManager to defer state update until all interactions complete
-    InteractionManager.runAfterInteractions(() => {
-      setCurrentCardIndex(prev => prev + 1);
-    });
+  const handleSwipeLeft = useCallback(async (productId: string) => {    
+    setCurrentCardIndex(prev => prev + 1);
     
     // Defer async operations to background (non-blocking)
     setTimeout(async () => {
@@ -181,10 +177,7 @@ export const FeedScreen: React.FC = memo(() => {
   }, [memoizedProducts, skippedProductsService]);
 
   const handleSwipeRight = useCallback(async (productId: string) => {
-    // Use InteractionManager to defer state update until all interactions complete
-    InteractionManager.runAfterInteractions(() => {
-      setCurrentCardIndex(prev => prev + 1);
-    });
+    setCurrentCardIndex(prev => prev + 1);
     
     // Defer async operations to background (non-blocking)
     setTimeout(async () => {
@@ -269,18 +262,18 @@ export const FeedScreen: React.FC = memo(() => {
 
   if (loading) {
     return (
-      <SafeAreaView style={FeedScreenStyles.container}>
+      <SafeAreaProvider style={FeedScreenStyles.container}>
         <StatusBar barStyle="light-content" backgroundColor="#221e27" />
         <View style={FeedScreenStyles.loadingContainer}>
           <Text style={FeedScreenStyles.loadingText}>Loading your personalized feed...</Text>
         </View>
-      </SafeAreaView>
+      </SafeAreaProvider>
     );
   }
 
   if (memoizedProducts.length === 0) {
     return (
-      <SafeAreaView style={FeedScreenStyles.container}>
+      <SafeAreaProvider style={FeedScreenStyles.container}>
         <StatusBar barStyle="light-content" backgroundColor="#221e27" />
         <ScrollView
           contentContainerStyle={FeedScreenStyles.emptyContainer}
@@ -293,12 +286,12 @@ export const FeedScreen: React.FC = memo(() => {
             Pull down to refresh and discover new products!
           </Text>
         </ScrollView>
-      </SafeAreaView>
+      </SafeAreaProvider>
     );
   }
 
   return (
-    <SafeAreaView style={FeedScreenStyles.container}>
+    <SafeAreaProvider style={FeedScreenStyles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#221e27" />
       
       {/* Header - separated component */}
@@ -364,7 +357,7 @@ export const FeedScreen: React.FC = memo(() => {
         visible={showToast}
         message={toastMessage}
       />
-    </SafeAreaView>
+    </SafeAreaProvider>
   );
 });
 
