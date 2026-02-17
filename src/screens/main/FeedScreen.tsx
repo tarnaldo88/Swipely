@@ -11,8 +11,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ProductCard, MainStackParamList } from '../../types';
-import { ProductFeedService } from '../../services/ProductFeedService';
 import { getSkippedProductsService } from '../../services/SkippedProductsService';
+import { getCartProvider, getProductFeedProvider, getWishlistProvider } from '../../data/providers';
 import { ImageCacheManager } from '../../utils/ImageCacheManager';
 import { MemoizationHelper } from '../../utils/StateManagementOptimizer';
 import { useMemoryManagement, useImageLifecycle } from '../../hooks/useMemoryManagement';
@@ -49,6 +49,9 @@ export const FeedScreen: React.FC = memo(() => {
   
   const skippedProductsService = getSkippedProductsService();
   const imageCacheManager = ImageCacheManager.getInstance();
+  const productFeedProvider = useMemo(() => getProductFeedProvider(), []);
+  const wishlistProvider = useMemo(() => getWishlistProvider(), []);
+  const cartProvider = useMemo(() => getCartProvider(), []);
 
   // Memoize products array to prevent unnecessary re-renders
   const memoizedProducts = useMemo(
@@ -90,6 +93,29 @@ export const FeedScreen: React.FC = memo(() => {
     }
   }, [currentCardIndex, memoizedProducts, imageCacheManager]);
 
+  const addTestSkippedProducts = useCallback(async () => {
+    try {
+      await skippedProductsService.addSkippedProduct('prod-1', 'electronics');
+      await skippedProductsService.addSkippedProduct('prod-2', 'fashion');
+      await skippedProductsService.addSkippedProduct('prod-3', 'electronics');
+    } catch (error) {
+      console.error('Error adding test skipped products:', error);
+    }
+  }, [skippedProductsService]);
+
+  const loadProducts = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await productFeedProvider.getPersonalizedFeed({ page: 1, limit: 10 });
+      setProducts(response.products);
+    } catch (error) {
+      console.error('Error loading products:', error);
+      Alert.alert('Error', 'Failed to load products. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }, [productFeedProvider]);
+
   useEffect(() => {
     loadProducts();
     addTestSkippedProducts();
@@ -108,35 +134,12 @@ export const FeedScreen: React.FC = memo(() => {
       unsubscribe();
       cleanup.cleanup();
     };
-  }, [navigation, cleanup, imageCacheManager]);
-
-  const addTestSkippedProducts = async () => {
-    try {
-      await skippedProductsService.addSkippedProduct('prod-1', 'electronics');
-      await skippedProductsService.addSkippedProduct('prod-2', 'fashion');
-      await skippedProductsService.addSkippedProduct('prod-3', 'electronics');
-    } catch (error) {
-      console.error('Error adding test skipped products:', error);
-    }
-  };
-
-  const loadProducts = async () => {
-    try {
-      setLoading(true);
-      const response = await ProductFeedService.getPersonalizedFeed({ page: 1, limit: 10 });
-      setProducts(response.products);
-    } catch (error) {
-      console.error('Error loading products:', error);
-      Alert.alert('Error', 'Failed to load products. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [navigation, cleanup, imageCacheManager, loadProducts, addTestSkippedProducts]);
 
   const handleRefresh = useCallback(async () => {
     try {
       setRefreshing(true);
-      const response = await ProductFeedService.refreshFeed();
+      const response = await productFeedProvider.refreshFeed();
       setProducts(response.products);
       setCurrentCardIndex(0);
     } catch (error) {
@@ -145,7 +148,7 @@ export const FeedScreen: React.FC = memo(() => {
     } finally {
       setRefreshing(false);
     }
-  }, []);
+  }, [productFeedProvider]);
 
   const showToastNotification = useCallback((message: string) => {
     setToastMessage(message);
@@ -168,13 +171,13 @@ export const FeedScreen: React.FC = memo(() => {
         
         await Promise.all([
           skippedProductsService.addSkippedProduct(productId, category),
-          ProductFeedService.recordSwipeAction(productId, 'skip', MOCK_USER_ID)
+          productFeedProvider.recordSwipeAction(productId, 'skip', MOCK_USER_ID)
         ]);
       } catch (error) {
         console.error('Error recording skip action:', error);
       }
     }, 0);
-  }, [memoizedProducts, skippedProductsService]);
+  }, [memoizedProducts, skippedProductsService, productFeedProvider]);
 
   const handleSwipeRight = useCallback(async (productId: string) => {
     setCurrentCardIndex(prev => prev + 1);
@@ -182,25 +185,19 @@ export const FeedScreen: React.FC = memo(() => {
     // Defer async operations to background (non-blocking)
     setTimeout(async () => {
       try {
-        const { getWishlistService } = require('../../services/WishlistService');
-        const wishlistService = getWishlistService();
-        
-        await wishlistService.addToWishlist(productId);
-        await ProductFeedService.recordSwipeAction(productId, 'like', MOCK_USER_ID);
+        await wishlistProvider.addToWishlist(productId);
+        await productFeedProvider.recordSwipeAction(productId, 'like', MOCK_USER_ID);
       } catch (error) {
         console.error('Error adding to wishlist:', error);
         showToastNotification('Failed to add product to wishlist. Please try again.');
       }
     }, 0);
-  }, [showToastNotification]);
+  }, [showToastNotification, productFeedProvider, wishlistProvider]);
 
   const handleAddToCart = useCallback(async (productId: string) => {
     try {
-      const { getCartService } = require('../../services/CartService');
-      const cartService = getCartService();
-      
-      await cartService.addToCart(productId, 1);
-      const cartCount = await cartService.getCartCount();
+      await cartProvider.addToCart(productId, 1);
+      const cartCount = await cartProvider.getCartCount();
       
       showToastNotification(`Added to cart! (${cartCount} items)`);
       setCurrentCardIndex(prev => prev + 1);
@@ -209,7 +206,7 @@ export const FeedScreen: React.FC = memo(() => {
       showToastNotification('Failed to add to cart');
       setCurrentCardIndex(prev => prev + 1);
     }
-  }, [showToastNotification]);
+  }, [showToastNotification, cartProvider]);
 
   const handleViewDetails = useCallback((productId: string) => {
     const product = memoizedProducts.find(p => p.id === productId);

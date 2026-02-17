@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -13,8 +13,9 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { getWishlistService, WishlistService, WishlistItem } from '../../services/WishlistService';
-import { getCartService, CartService } from '../../services/CartService';
+import { getCartProvider, getWishlistProvider } from '../../data/providers';
+import { WishlistItem, WishlistProvider } from '../../data/providers/WishlistProvider';
+import { CartProvider } from '../../data/providers/CartProvider';
 import { ProductCard, MainStackParamList } from '../../types';
 import { WishListStyles } from '../Styles/ProductStyles';
 
@@ -30,8 +31,8 @@ export const WishlistScreen: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const wishlistService: WishlistService = getWishlistService();
-  const cartService: CartService = getCartService();
+  const wishlistService: WishlistProvider = useMemo(() => getWishlistProvider(), []);
+  const cartService: CartProvider = useMemo(() => getCartProvider(), []);
 
   const loadWishlistItems = useCallback(async () => {
     try {

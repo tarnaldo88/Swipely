@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { getCartService, CartService } from '../../services/CartService';
+import { getCartProvider } from '../../data/providers';
+import { CartProvider } from '../../data/providers/CartProvider';
 import { CheckoutService } from '../../services/CheckoutService';
 import { CartItem, ProductCard, MainStackParamList } from '../../types';
 import { CartScreenStyles } from '../Styles/ProductStyles';
@@ -28,7 +29,7 @@ export const CartScreen: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItemWithProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const cartService: CartService = getCartService();
+  const cartService: CartProvider = useMemo(() => getCartProvider(), []);
 
   const loadCartItems = useCallback(async () => {
     try {

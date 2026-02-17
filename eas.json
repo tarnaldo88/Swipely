@@ -9,6 +9,10 @@
         "buildType": "apk",
         "withoutCredentials": false,
         "env": {
+          "EXPO_PUBLIC_APP_ENV": "staging",
+          "EXPO_PUBLIC_USE_MOCK_DATA": "true",
+          "EXPO_PUBLIC_ANALYTICS_ENABLED": "false",
+          "EXPO_PUBLIC_CRASH_REPORTING_ENABLED": "false",
           "EXPO_DEBUG": "true",
           "EAS_BUILD_DISABLE_NEW_ARCH": "1"
         }
@@ -16,17 +20,35 @@
     },
     "preview2": {
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "env": {
+          "EXPO_PUBLIC_APP_ENV": "staging",
+          "EXPO_PUBLIC_USE_MOCK_DATA": "true",
+          "EXPO_PUBLIC_ANALYTICS_ENABLED": "false",
+          "EXPO_PUBLIC_CRASH_REPORTING_ENABLED": "false"
+        }
       }
     },
     "preview3": {
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "env": {
+          "EXPO_PUBLIC_APP_ENV": "staging",
+          "EXPO_PUBLIC_USE_MOCK_DATA": "true",
+          "EXPO_PUBLIC_ANALYTICS_ENABLED": "false",
+          "EXPO_PUBLIC_CRASH_REPORTING_ENABLED": "false"
+        }
       }
     },
     "production": {
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "env": {
+          "EXPO_PUBLIC_APP_ENV": "production",
+          "EXPO_PUBLIC_USE_MOCK_DATA": "false",
+          "EXPO_PUBLIC_ANALYTICS_ENABLED": "true",
+          "EXPO_PUBLIC_CRASH_REPORTING_ENABLED": "true"
+        }
       }
     }
   },

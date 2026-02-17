@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -13,8 +13,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { MouseSwipeableCard } from '../../components/product/MouseSwipeableCard';
 import { ProductCard, MainStackParamList } from '../../types';
 import { getSkippedProductsService } from '../../services/SkippedProductsService';
-import { getWishlistService } from '../../services/WishlistService';
-import { getCartService } from '../../services/CartService';
+import { getCartProvider, getWishlistProvider } from '../../data/providers';
 import { SkippedProductStyles } from '../Styles/ProductStyles';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -35,8 +34,8 @@ export const SkippedProductsScreen: React.FC = () => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   
   const skippedProductsService = getSkippedProductsService();
-  const wishlistService = getWishlistService();
-  const cartService = getCartService();
+  const wishlistService = useMemo(() => getWishlistProvider(), []);
+  const cartService = useMemo(() => getCartProvider(), []);
 
   useEffect(() => {
     loadSkippedProducts();
