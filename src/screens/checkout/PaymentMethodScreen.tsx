@@ -161,6 +161,14 @@ export const PaymentMethodScreen: React.FC<PaymentMethodScreenProps> = ({
           return;
         }
 
+        CheckoutService.setPaymentMethod({
+          cardNumber: '4242 4242 4242 4242',
+          expirationDate: '12/99',
+          cvv: '123',
+          cardholderName: 'Stripe Payment',
+          isDefault: false,
+        });
+
         paymentResult = {
           success: true,
           orderId,
