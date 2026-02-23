@@ -44,10 +44,19 @@ export const AppConfig = {
   api: {
     baseUrl: process.env.EXPO_PUBLIC_API_BASE_URL?.trim() || '',
   },
+  stripe: {
+    publishableKey: process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY?.trim() || '',
+    merchantIdentifier:
+      process.env.EXPO_PUBLIC_STRIPE_MERCHANT_IDENTIFIER?.trim() || 'merchant.com.swipely',
+    paymentSheetUrl: process.env.EXPO_PUBLIC_STRIPE_PAYMENT_SHEET_URL?.trim() || '',
+  },
   features: {
     useMockData,
     analyticsEnabled: parseBoolean(process.env.EXPO_PUBLIC_ANALYTICS_ENABLED, !__DEV__),
     crashReportingEnabled: parseBoolean(process.env.EXPO_PUBLIC_CRASH_REPORTING_ENABLED, !__DEV__),
+    stripeEnabled:
+      Boolean(process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY?.trim()) &&
+      Boolean(process.env.EXPO_PUBLIC_STRIPE_PAYMENT_SHEET_URL?.trim()),
   },
 };
 
