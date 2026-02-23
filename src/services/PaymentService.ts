@@ -7,6 +7,7 @@
 
 import { PaymentMethod, PaymentResult, Order } from '../types/checkout';
 import { isValidCardNumber, isValidExpirationDate, isValidCVV } from '../utils/checkoutValidation';
+import { AppConfig } from '../config/env';
 
 interface StripePaymentIntent {
   clientSecret: string;
@@ -14,10 +15,60 @@ interface StripePaymentIntent {
   currency: string;
 }
 
+export interface StripePaymentSheetParams {
+  clientSecret: string;
+  customerId?: string;
+  ephemeralKey?: string;
+  merchantDisplayName?: string;
+}
+
 export class PaymentService {
   private static readonly STRIPE_PUBLISHABLE_KEY = 'pk_test_demo'; // Demo key
   private static readonly MAX_RETRIES = 3;
   private static retryCount = 0;
+
+  static isStripeConfigured(): boolean {
+    return AppConfig.features.stripeEnabled;
+  }
+
+  static async createPaymentSheetParams(
+    orderId: string,
+    amount: number
+  ): Promise<StripePaymentSheetParams> {
+    if (!AppConfig.features.stripeEnabled || !AppConfig.stripe.paymentSheetUrl) {
+      throw new Error('Stripe is not configured');
+    }
+
+    const response = await fetch(AppConfig.stripe.paymentSheetUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        orderId,
+        amount,
+        amountInCents: Math.round(amount * 100),
+        currency: 'usd',
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to create Stripe payment session (${response.status})`);
+    }
+
+    const data = await response.json();
+
+    if (!data?.clientSecret) {
+      throw new Error('Stripe payment session is missing client secret');
+    }
+
+    return {
+      clientSecret: data.clientSecret,
+      customerId: data.customerId,
+      ephemeralKey: data.ephemeralKey,
+      merchantDisplayName: data.merchantDisplayName || 'Swipely',
+    };
+  }
 
   /**
    * Initialize Stripe (would be called once at app startup)
