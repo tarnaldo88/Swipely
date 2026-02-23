@@ -19,6 +19,7 @@ import {
 } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useStripe } from '@stripe/stripe-react-native';
+import * as Linking from 'expo-linking';
 import { CheckoutService } from '../../services/CheckoutService';
 import { PaymentService } from '../../services/PaymentService';
 import { PaymentMethod, CartCalculation } from '../../types/checkout';
@@ -118,6 +119,7 @@ export const PaymentMethodScreen: React.FC<PaymentMethodScreenProps> = ({
         paymentIntentClientSecret: paymentSheet.clientSecret,
         customerId: paymentSheet.customerId,
         customerEphemeralKeySecret: paymentSheet.ephemeralKey,
+        returnURL: Linking.createURL('stripe-redirect'),
         allowsDelayedPaymentMethods: true,
       });
 
