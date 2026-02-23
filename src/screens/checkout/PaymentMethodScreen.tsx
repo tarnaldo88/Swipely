@@ -130,6 +130,10 @@ export const PaymentMethodScreen: React.FC<PaymentMethodScreenProps> = ({
 
       const presentResult = await presentPaymentSheet();
       if (presentResult.error) {
+        if (presentResult.error.code === 'Canceled') {
+          return false;
+        }
+
         Alert.alert('Payment Failed', presentResult.error.message);
         return false;
       }
