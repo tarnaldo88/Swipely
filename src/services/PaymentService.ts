@@ -23,7 +23,6 @@ export interface StripePaymentSheetParams {
 }
 
 export class PaymentService {
-  private static readonly STRIPE_PUBLISHABLE_KEY = 'pk_test_demo'; // Demo key
   private static readonly MAX_RETRIES = 3;
   private static retryCount = 0;
 
@@ -53,19 +52,26 @@ export class PaymentService {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to create Stripe payment session (${response.status})`);
+      const errorText = await response.text();
+      throw new Error(
+        `Failed to create Stripe payment session (${response.status}): ${errorText || 'Unknown error'}`
+      );
     }
 
     const data = await response.json();
+    const clientSecret =
+      data?.clientSecret || data?.paymentIntent || data?.paymentIntentClientSecret;
+    const customerId = data?.customerId || data?.customer;
+    const ephemeralKey = data?.ephemeralKey || data?.ephemeralKeySecret;
 
-    if (!data?.clientSecret) {
+    if (!clientSecret) {
       throw new Error('Stripe payment session is missing client secret');
     }
 
     return {
-      clientSecret: data.clientSecret,
-      customerId: data.customerId,
-      ephemeralKey: data.ephemeralKey,
+      clientSecret,
+      customerId,
+      ephemeralKey,
       merchantDisplayName: data.merchantDisplayName || 'Swipely',
     };
   }
