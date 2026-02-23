@@ -154,23 +154,31 @@ function AppContent() {
 
 
 export default function App() {
+  const appShell = (
+    <Provider store={store}>
+      <NavigationContainer 
+        linking={LinkingConfiguration}
+        onReady={onNavigationReady}
+        onStateChange={onNavigationStateChange}
+        ref={navigationRef}
+      >
+        <AppContent />
+      </NavigationContainer>
+    </Provider>
+  );
+
   return (
     <GestureHandlerRootView style={styles.container}>
-      <StripeProvider
-        publishableKey={AppConfig.stripe.publishableKey}
-        merchantIdentifier={AppConfig.stripe.merchantIdentifier}
-      >
-        <Provider store={store}>
-          <NavigationContainer 
-            linking={LinkingConfiguration}
-            onReady={onNavigationReady}
-            onStateChange={onNavigationStateChange}
-            ref={navigationRef}
-          >
-            <AppContent />
-          </NavigationContainer>
-        </Provider>
-      </StripeProvider>
+      {AppConfig.stripe.publishableKey ? (
+        <StripeProvider
+          publishableKey={AppConfig.stripe.publishableKey}
+          merchantIdentifier={AppConfig.stripe.merchantIdentifier}
+        >
+          {appShell}
+        </StripeProvider>
+      ) : (
+        appShell
+      )}
     </GestureHandlerRootView>
   );
 }
