@@ -137,20 +137,22 @@ src/
 
 ### Stripe Checkout Setup
 
-Stripe checkout is enabled only when both values below are set:
+Recommended local setup:
 
 ```bash
+EXPO_PUBLIC_API_BASE_URL=http://localhost:3001
 EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxx
-EXPO_PUBLIC_STRIPE_PAYMENT_SHEET_URL=https://your-api.example.com/payments/create-payment-sheet
 ```
 
 Optional:
 
 ```bash
 EXPO_PUBLIC_STRIPE_MERCHANT_IDENTIFIER=merchant.com.swipely
+# Optional explicit override. If omitted, app uses ${EXPO_PUBLIC_API_BASE_URL}/payments/create-payment-sheet
+EXPO_PUBLIC_STRIPE_PAYMENT_SHEET_URL=
 ```
 
-The `EXPO_PUBLIC_STRIPE_PAYMENT_SHEET_URL` endpoint should return JSON with at least:
+The payment sheet endpoint should return JSON with at least:
 
 ```json
 {
@@ -166,14 +168,20 @@ Compatible aliases are also accepted by the app:
 - `customer` instead of `customerId`
 - `ephemeralKeySecret` instead of `ephemeralKey`
 
-4. **Start development server**
+4. **Start Stripe backend**
+   ```bash
+   npm run backend:install
+   npm run backend:start
+   ```
+
+5. **Start development server**
    ```bash
    npm start
    # or
    yarn start
    ```
 
-5. **Run on specific platforms**
+6. **Run on specific platforms**
    ```bash
    npm run android    # Android emulator/device
    npm run ios        # iOS simulator/device (macOS only)
