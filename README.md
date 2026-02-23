@@ -135,6 +135,37 @@ src/
    # Edit .env with your Firebase and API configurations
    ```
 
+### Stripe Checkout Setup
+
+Stripe checkout is enabled only when both values below are set:
+
+```bash
+EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxx
+EXPO_PUBLIC_STRIPE_PAYMENT_SHEET_URL=https://your-api.example.com/payments/create-payment-sheet
+```
+
+Optional:
+
+```bash
+EXPO_PUBLIC_STRIPE_MERCHANT_IDENTIFIER=merchant.com.swipely
+```
+
+The `EXPO_PUBLIC_STRIPE_PAYMENT_SHEET_URL` endpoint should return JSON with at least:
+
+```json
+{
+  "clientSecret": "pi_xxx_secret_xxx",
+  "customerId": "cus_xxx",
+  "ephemeralKey": "ek_test_xxx",
+  "merchantDisplayName": "Swipely"
+}
+```
+
+Compatible aliases are also accepted by the app:
+- `paymentIntent` or `paymentIntentClientSecret` instead of `clientSecret`
+- `customer` instead of `customerId`
+- `ephemeralKeySecret` instead of `ephemeralKey`
+
 4. **Start development server**
    ```bash
    npm start
