@@ -34,11 +34,13 @@ export class PaymentService {
     orderId: string,
     amount: number
   ): Promise<StripePaymentSheetParams> {
-    if (!AppConfig.features.stripeEnabled || !AppConfig.stripe.paymentSheetUrl) {
+    const paymentSheetUrl = this.getPaymentSheetUrl();
+
+    if (!AppConfig.features.stripeEnabled || !paymentSheetUrl) {
       throw new Error('Stripe is not configured');
     }
 
-    const response = await fetch(AppConfig.stripe.paymentSheetUrl, {
+    const response = await fetch(paymentSheetUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -74,6 +76,18 @@ export class PaymentService {
       ephemeralKey,
       merchantDisplayName: data.merchantDisplayName || 'Swipely',
     };
+  }
+
+  private static getPaymentSheetUrl(): string {
+    if (AppConfig.stripe.paymentSheetUrl) {
+      return AppConfig.stripe.paymentSheetUrl;
+    }
+
+    if (!AppConfig.api.baseUrl) {
+      return '';
+    }
+
+    return `${AppConfig.api.baseUrl}${AppConfig.stripe.paymentSheetPath}`;
   }
 
   /**
