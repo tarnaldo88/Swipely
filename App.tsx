@@ -5,12 +5,14 @@ import { Provider } from "react-redux";
 import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { createStackNavigator } from "@react-navigation/stack";
+import { StripeProvider } from "@stripe/stripe-react-native";
 import { store } from "./src/store";
 import { AuthNavigator } from "./src/navigation/AuthNavigator";
 import { MainNavigator } from "./src/navigation/MainNavigator";
 import { LinkingConfiguration } from "./src/navigation/LinkingConfiguration";
 import { navigationService } from "./src/navigation/NavigationService";
 import { getAuthService, initializeAuthService } from "./src/services";
+import { AppConfig } from "./src/config/env";
 import { User, RootStackParamList } from "./src/types";
 
 const RootStack = createStackNavigator<RootStackParamList>();
@@ -154,16 +156,21 @@ function AppContent() {
 export default function App() {
   return (
     <GestureHandlerRootView style={styles.container}>
-      <Provider store={store}>
-        <NavigationContainer 
-          linking={LinkingConfiguration}
-          onReady={onNavigationReady}
-          onStateChange={onNavigationStateChange}
-          ref={navigationRef}
-        >
-          <AppContent />
-        </NavigationContainer>
-      </Provider>
+      <StripeProvider
+        publishableKey={AppConfig.stripe.publishableKey}
+        merchantIdentifier={AppConfig.stripe.merchantIdentifier}
+      >
+        <Provider store={store}>
+          <NavigationContainer 
+            linking={LinkingConfiguration}
+            onReady={onNavigationReady}
+            onStateChange={onNavigationStateChange}
+            ref={navigationRef}
+          >
+            <AppContent />
+          </NavigationContainer>
+        </Provider>
+      </StripeProvider>
     </GestureHandlerRootView>
   );
 }
