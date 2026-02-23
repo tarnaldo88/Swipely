@@ -5,7 +5,7 @@
  * For now, this provides the service structure and mock implementation
  */
 
-import { PaymentMethod, PaymentResult, Order } from '../types/checkout';
+import { PaymentMethod, PaymentResult } from '../types/checkout';
 import { isValidCardNumber, isValidExpirationDate, isValidCVV } from '../utils/checkoutValidation';
 import { AppConfig } from '../config/env';
 
