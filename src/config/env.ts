@@ -44,6 +44,9 @@ export const AppConfig = {
   api: {
     baseUrl: process.env.EXPO_PUBLIC_API_BASE_URL?.trim() || '',
   },
+  productFeed: {
+    baseUrl: process.env.EXPO_PUBLIC_PRODUCT_FEED_BASE_URL?.trim() || '',
+  },
   stripe: {
     publishableKey: process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY?.trim() || '',
     merchantIdentifier:
@@ -53,6 +56,7 @@ export const AppConfig = {
   },
   features: {
     useMockData,
+    useRemoteProductFeed: parseBoolean(process.env.EXPO_PUBLIC_USE_REMOTE_PRODUCT_FEED, false),
     analyticsEnabled: parseBoolean(process.env.EXPO_PUBLIC_ANALYTICS_ENABLED, !__DEV__),
     crashReportingEnabled: parseBoolean(process.env.EXPO_PUBLIC_CRASH_REPORTING_ENABLED, !__DEV__),
     stripeEnabled:
