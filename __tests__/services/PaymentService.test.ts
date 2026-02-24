@@ -128,4 +128,40 @@ describe('PaymentService Stripe integration', () => {
       'Stripe is not configured'
     );
   });
+
+  it('verifies payment status from backend', async () => {
+    process.env.EXPO_PUBLIC_API_BASE_URL = 'https://api.example.com';
+
+    ((global as any).fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        orderId: 'ORD-6',
+        status: 'succeeded',
+        paymentIntentId: 'pi_123',
+      }),
+    });
+
+    const service = loadPaymentService();
+    const status = await service.verifyPaymentStatus('ORD-6');
+
+    expect((global as any).fetch).toHaveBeenCalledWith(
+      'https://api.example.com/payments/status/ORD-6'
+    );
+    expect(status.status).toBe('succeeded');
+  });
+
+  it('throws when payment status verification fails', async () => {
+    process.env.EXPO_PUBLIC_API_BASE_URL = 'https://api.example.com';
+
+    ((global as any).fetch as jest.Mock).mockResolvedValue({
+      ok: false,
+      status: 404,
+      text: async () => 'not found',
+    });
+
+    const service = loadPaymentService();
+    await expect(service.verifyPaymentStatus('ORD-MISSING')).rejects.toThrow(
+      'Failed to verify payment status (404): not found'
+    );
+  });
 });

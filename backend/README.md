@@ -35,6 +35,7 @@ Server runs on `http://localhost:3001` by default.
 - `POST /feed/refresh`
 - `POST /swipe-actions`
 - `POST /payments/create-payment-sheet`
+- `GET /payments/status/:orderId`
 - `POST /webhooks/stripe`
 
 ## Request contract: `/payments/create-payment-sheet`

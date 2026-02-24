@@ -20,6 +20,14 @@ export interface StripePaymentSheetParams {
   customerId?: string;
   ephemeralKey?: string;
   merchantDisplayName?: string;
+  paymentIntentId?: string;
+}
+
+export interface PaymentStatusResponse {
+  orderId: string;
+  status: string;
+  paymentIntentId?: string | null;
+  updatedAt?: string;
 }
 
 export class PaymentService {
@@ -70,12 +78,36 @@ export class PaymentService {
       throw new Error('Stripe payment session is missing client secret');
     }
 
-    return {
+    const result: StripePaymentSheetParams = {
       clientSecret,
       customerId,
       ephemeralKey,
       merchantDisplayName: data.merchantDisplayName || 'Swipely',
     };
+
+    if (data?.paymentIntentId) {
+      result.paymentIntentId = data.paymentIntentId;
+    }
+
+    return result;
+  }
+
+  static async verifyPaymentStatus(orderId: string): Promise<PaymentStatusResponse> {
+    if (!AppConfig.api.baseUrl) {
+      throw new Error('API base URL is not configured');
+    }
+
+    const response = await fetch(
+      `${AppConfig.api.baseUrl}/payments/status/${encodeURIComponent(orderId)}`
+    );
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Failed to verify payment status (${response.status}): ${errorText || 'Unknown error'}`
+      );
+    }
+
+    return response.json();
   }
 
   private static getPaymentSheetUrl(): string {

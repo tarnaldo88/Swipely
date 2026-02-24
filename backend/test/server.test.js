@@ -19,6 +19,7 @@ function createStripeMock(overrides = {}) {
     },
     paymentIntents: {
       create: async () => ({ client_secret: 'pi_test_secret' }),
+      retrieve: async id => ({ id, status: 'requires_payment_method' }),
       ...(overrides.paymentIntents || {}),
     },
     webhooks: {
@@ -194,7 +195,7 @@ test('POST /payments/create-payment-sheet creates customer and payment intent', 
     paymentIntents: {
       create: async input => {
         capturedPaymentIntentInput = input;
-        return { client_secret: 'pi_from_test' };
+        return { id: 'pi_from_test_id', client_secret: 'pi_from_test' };
       },
     },
   });
@@ -216,11 +217,41 @@ test('POST /payments/create-payment-sheet creates customer and payment intent', 
     customerId: 'cus_new',
     ephemeralKey: 'ek_test_secret',
     merchantDisplayName: 'Swipely Test',
+    paymentIntentId: 'pi_from_test_id',
   });
   assert.equal(capturedPaymentIntentInput.amount, 2599);
   assert.equal(capturedPaymentIntentInput.currency, 'usd');
   assert.equal(capturedPaymentIntentInput.customer, 'cus_new');
   assert.deepEqual(capturedPaymentIntentInput.metadata, { orderId: 'ORD-2' });
+});
+
+test('GET /payments/status/:orderId returns latest mapped Stripe status', async () => {
+  const stripe = createStripeMock({
+    paymentIntents: {
+      create: async () => ({ id: 'pi_status_test', client_secret: 'pi_secret' }),
+      retrieve: async () => ({ id: 'pi_status_test', status: 'succeeded' }),
+    },
+  });
+  const app = createApp({ stripe });
+
+  const created = await request(app).post('/payments/create-payment-sheet').send({
+    orderId: 'ORD-STATUS-1',
+    amountInCents: 1099,
+  });
+  assert.equal(created.status, 200);
+
+  const statusResponse = await request(app).get('/payments/status/ORD-STATUS-1');
+  assert.equal(statusResponse.status, 200);
+  assert.equal(statusResponse.body.orderId, 'ORD-STATUS-1');
+  assert.equal(statusResponse.body.paymentIntentId, 'pi_status_test');
+  assert.equal(statusResponse.body.status, 'succeeded');
+});
+
+test('GET /payments/status/:orderId returns 404 for unknown order', async () => {
+  const app = createApp({ stripe: createStripeMock() });
+  const response = await request(app).get('/payments/status/ORD-MISSING');
+  assert.equal(response.status, 404);
+  assert.equal(response.body.error, 'Payment status not found');
 });
 
 test('POST /payments/create-payment-sheet uses existing customerId when provided', async () => {

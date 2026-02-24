@@ -167,6 +167,17 @@ export const PaymentMethodScreen: React.FC<PaymentMethodScreenProps> = ({
           return;
         }
 
+        const paymentStatus = await PaymentService.verifyPaymentStatus(orderId);
+        if (paymentStatus.status !== 'succeeded' && paymentStatus.status !== 'processing') {
+          Alert.alert(
+            'Payment Not Confirmed',
+            'Payment is not confirmed by the server yet. Please try again in a moment.'
+          );
+          CheckoutService.setProcessing(false);
+          setIsLoading(false);
+          return;
+        }
+
         CheckoutService.setPaymentMethod({
           cardNumber: '4242 4242 4242 4242',
           expirationDate: '12/99',
