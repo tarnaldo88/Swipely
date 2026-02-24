@@ -1,4 +1,4 @@
-import { CategoryPreferences, ProductFeedResponse, SwipeActionResponse } from '../../types';
+import { CategoryPreferences, ProductCard, ProductFeedResponse, SwipeActionResponse } from '../../types';
 import { AppConfig } from '../../config/env';
 import { ProductFeedService } from '../../services/ProductFeedService';
 
@@ -77,7 +77,7 @@ export class ApiProductFeedProvider implements ProductFeedProvider {
       .join(' ');
   }
 
-  private mapDummyProductToCard(product: any) {
+  private mapDummyProductToCard(product: any): ProductCard {
     const imageUrls = [product.thumbnail, ...(product.images || [])].filter(Boolean);
     const categoryId = String(product.category || 'general');
 
@@ -117,7 +117,7 @@ export class ApiProductFeedProvider implements ProductFeedProvider {
     }
 
     const data = await response.json();
-    const allCards = Array.isArray(data.products)
+    const allCards: ProductCard[] = Array.isArray(data.products)
       ? data.products.map((product: any) => this.mapDummyProductToCard(product))
       : [];
 
