@@ -17,6 +17,7 @@ cp backend/.env.example backend/.env
 3. Set at minimum:
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET` (required for webhook validation)
+- `DUMMYJSON_BASE_URL` (defaults to `https://dummyjson.com`)
 
 4. Start server:
 
@@ -29,6 +30,10 @@ Server runs on `http://localhost:3001` by default.
 ## Endpoints
 
 - `GET /health`
+- `POST /products`
+- `POST /feed/personalized`
+- `POST /feed/refresh`
+- `POST /swipe-actions`
 - `POST /payments/create-payment-sheet`
 - `POST /webhooks/stripe`
 
