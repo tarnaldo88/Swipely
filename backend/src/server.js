@@ -11,6 +11,7 @@ const merchantDisplayName = process.env.STRIPE_MERCHANT_DISPLAY_NAME || 'Swipely
 const stripeApiVersion = process.env.STRIPE_API_VERSION || '2024-06-20';
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
+const dummyJsonBaseUrl = process.env.DUMMYJSON_BASE_URL || 'https://dummyjson.com';
 
 if (!stripeSecretKey) {
   throw new Error('STRIPE_SECRET_KEY is required');
@@ -27,6 +28,7 @@ const app = createApp({
   merchantDisplayName,
   stripeApiVersion,
   stripeWebhookSecret,
+  dummyJsonBaseUrl,
 });
 
 app.listen(port, () => {
