@@ -34,7 +34,13 @@
     },
     "scheme": "swipely",
     "plugins": [
-      "@stripe/stripe-react-native"
+      [
+        "@stripe/stripe-react-native",
+        {
+          "merchantIdentifier": "merchant.com.swipely",
+          "enableGooglePay": false
+        }
+      ]
     ],
     "extra": {
       "eas": {
