@@ -21,9 +21,13 @@ let wishlistProviderInstance: WishlistProvider | null = null;
 
 export const getProductFeedProvider = (): ProductFeedProvider => {
   if (!productFeedProviderInstance) {
-    productFeedProviderInstance = AppConfig.features.useMockData
-      ? new MockProductFeedProvider()
-      : new ApiProductFeedProvider();
+    if (AppConfig.features.useRemoteProductFeed) {
+      productFeedProviderInstance = new ApiProductFeedProvider();
+    } else {
+      productFeedProviderInstance = AppConfig.features.useMockData
+        ? new MockProductFeedProvider()
+        : new ApiProductFeedProvider();
+    }
   }
 
   return productFeedProviderInstance;
