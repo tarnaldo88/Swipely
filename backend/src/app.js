@@ -1,6 +1,58 @@
 const express = require('express');
 const cors = require('cors');
 
+function toCategoryName(category) {
+  return String(category || 'general')
+    .split('-')
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
+function mapDummyProductToCard(product) {
+  const imageUrls = [product.thumbnail, ...(product.images || [])].filter(Boolean);
+  const categoryId = String(product.category || 'general');
+
+  return {
+    id: String(product.id),
+    title: product.title || 'Untitled Product',
+    price: Number(product.price || 0),
+    currency: 'USD',
+    imageUrls: imageUrls.length > 0 ? imageUrls : ['https://dummyjson.com/image/400x400'],
+    category: {
+      id: categoryId,
+      name: toCategoryName(categoryId),
+    },
+    description: product.description || '',
+    specifications: {
+      brand: product.brand || 'Unknown',
+      stock: product.stock ?? 0,
+      rating: product.rating ?? 0,
+    },
+    availability: Number(product.stock || 0) > 0,
+    reviewRating: typeof product.rating === 'number' ? product.rating : undefined,
+  };
+}
+
+function filterCards(cards, filters) {
+  return cards.filter(card => {
+    if (filters?.categories?.length && !filters.categories.includes(card.category.id)) {
+      return false;
+    }
+
+    if (filters?.priceRange) {
+      if (card.price < filters.priceRange.min || card.price > filters.priceRange.max) {
+        return false;
+      }
+    }
+
+    if (filters?.excludeProductIds?.length && filters.excludeProductIds.includes(card.id)) {
+      return false;
+    }
+
+    return true;
+  });
+}
+
 function createApp({
   stripe,
   allowedOrigin = '*',
@@ -8,8 +60,47 @@ function createApp({
   merchantDisplayName = 'Swipely',
   stripeApiVersion = '2024-06-20',
   stripeWebhookSecret = '',
+  dummyJsonBaseUrl = 'https://dummyjson.com',
+  fetchImpl = globalThis.fetch,
 }) {
   const app = express();
+
+  const getDummyJsonFeed = async (
+    pagination = { page: 1, limit: 10 },
+    filters = undefined
+  ) => {
+    if (typeof fetchImpl !== 'function') {
+      throw new Error('Fetch is not available in this runtime');
+    }
+
+    const page = Math.max(1, Number(pagination.page || 1));
+    const limit = Math.max(1, Number(pagination.limit || 10));
+    const skip = (page - 1) * limit;
+
+    const response = await fetchImpl(`${dummyJsonBaseUrl}/products?limit=${limit}&skip=${skip}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch products from DummyJSON: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const cards = Array.isArray(data.products) ? data.products.map(mapDummyProductToCard) : [];
+    const filteredCards = filterCards(cards, filters);
+    const total = Number(data.total || filteredCards.length);
+
+    return {
+      products: filteredCards,
+      pagination: {
+        page,
+        limit,
+        total,
+        hasMore: skip + limit < total,
+      },
+      filters: {
+        categories: filters?.categories || [],
+        priceRange: filters?.priceRange,
+      },
+    };
+  };
 
   // Stripe webhook must read the raw request body.
   app.post('/webhooks/stripe', express.raw({ type: 'application/json' }), (req, res) => {
@@ -51,6 +142,57 @@ function createApp({
 
   app.get('/health', (_, res) => {
     res.json({ ok: true });
+  });
+
+  app.post('/products', async (req, res) => {
+    try {
+      const pagination = req.body?.pagination || { page: 1, limit: 10 };
+      const filters = req.body?.filters;
+      const response = await getDummyJsonFeed(pagination, filters);
+      return res.json(response);
+    } catch (error) {
+      console.error('Failed to fetch products:', error);
+      return res.status(500).json({
+        error: error?.message || 'Failed to fetch products',
+      });
+    }
+  });
+
+  app.post('/feed/personalized', async (req, res) => {
+    try {
+      const pagination = req.body?.pagination || { page: 1, limit: 10 };
+      const response = await getDummyJsonFeed(pagination);
+      return res.json(response);
+    } catch (error) {
+      console.error('Failed to fetch personalized feed:', error);
+      return res.status(500).json({
+        error: error?.message || 'Failed to fetch personalized feed',
+      });
+    }
+  });
+
+  app.post('/feed/refresh', async (_, res) => {
+    try {
+      const response = await getDummyJsonFeed({ page: 1, limit: 10 });
+      return res.json(response);
+    } catch (error) {
+      console.error('Failed to refresh feed:', error);
+      return res.status(500).json({
+        error: error?.message || 'Failed to refresh feed',
+      });
+    }
+  });
+
+  app.post('/swipe-actions', (req, res) => {
+    const { productId, action, userId } = req.body || {};
+    if (!productId || !action || !userId) {
+      return res.status(400).json({ error: 'productId, action, and userId are required' });
+    }
+
+    return res.json({
+      success: true,
+      message: `${action} action recorded successfully`,
+    });
   });
 
   app.post('/payments/create-payment-sheet', async (req, res) => {
