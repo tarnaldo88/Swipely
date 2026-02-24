@@ -43,6 +43,7 @@ export const AppConfig = {
   },
   api: {
     baseUrl: process.env.EXPO_PUBLIC_API_BASE_URL?.trim() || '',
+    paymentApiKey: process.env.EXPO_PUBLIC_PAYMENT_API_KEY?.trim() || '',
   },
   productFeed: {
     baseUrl: process.env.EXPO_PUBLIC_PRODUCT_FEED_BASE_URL?.trim() || '',

@@ -191,10 +191,12 @@ test('POST /payments/create-payment-sheet validates amountInCents', async () => 
 
 test('POST /payments/create-payment-sheet creates customer and payment intent', async () => {
   let capturedPaymentIntentInput = null;
+  let capturedPaymentIntentOptions = null;
   const stripe = createStripeMock({
     paymentIntents: {
-      create: async input => {
+      create: async (input, options) => {
         capturedPaymentIntentInput = input;
+        capturedPaymentIntentOptions = options;
         return { id: 'pi_from_test_id', client_secret: 'pi_from_test' };
       },
     },
@@ -223,6 +225,7 @@ test('POST /payments/create-payment-sheet creates customer and payment intent', 
   assert.equal(capturedPaymentIntentInput.currency, 'usd');
   assert.equal(capturedPaymentIntentInput.customer, 'cus_new');
   assert.deepEqual(capturedPaymentIntentInput.metadata, { orderId: 'ORD-2' });
+  assert.deepEqual(capturedPaymentIntentOptions, { idempotencyKey: 'order:ORD-2' });
 });
 
 test('GET /payments/status/:orderId returns latest mapped Stripe status', async () => {
@@ -252,6 +255,51 @@ test('GET /payments/status/:orderId returns 404 for unknown order', async () => 
   const response = await request(app).get('/payments/status/ORD-MISSING');
   assert.equal(response.status, 404);
   assert.equal(response.body.error, 'Payment status not found');
+});
+
+test('POST /payments/create-payment-sheet enforces API key when required', async () => {
+  const app = createApp({
+    stripe: createStripeMock(),
+    requirePaymentApiKey: true,
+    paymentApiKey: 'secret-key',
+  });
+
+  const unauthorized = await request(app).post('/payments/create-payment-sheet').send({
+    orderId: 'ORD-AUTH-1',
+    amountInCents: 1099,
+  });
+  assert.equal(unauthorized.status, 401);
+
+  const authorized = await request(app)
+    .post('/payments/create-payment-sheet')
+    .set('x-api-key', 'secret-key')
+    .send({
+      orderId: 'ORD-AUTH-2',
+      amountInCents: 1099,
+    });
+  assert.equal(authorized.status, 200);
+});
+
+test('GET /orders/status/:orderId returns fulfillment state', async () => {
+  const stripe = createStripeMock({
+    paymentIntents: {
+      create: async () => ({ id: 'pi_order_status', client_secret: 'pi_secret' }),
+      retrieve: async () => ({ id: 'pi_order_status', status: 'succeeded' }),
+    },
+  });
+  const app = createApp({ stripe });
+
+  await request(app).post('/payments/create-payment-sheet').send({
+    orderId: 'ORD-FULFILL-1',
+    amountInCents: 2500,
+  });
+  await request(app).get('/payments/status/ORD-FULFILL-1');
+
+  const response = await request(app).get('/orders/status/ORD-FULFILL-1');
+  assert.equal(response.status, 200);
+  assert.equal(response.body.orderId, 'ORD-FULFILL-1');
+  assert.equal(response.body.paymentStatus, 'succeeded');
+  assert.equal(response.body.fulfillment, 'fulfilled');
 });
 
 test('POST /payments/create-payment-sheet uses existing customerId when provided', async () => {
@@ -340,6 +388,36 @@ test('POST /webhooks/stripe verifies and accepts valid event', async () => {
 
   assert.equal(response.status, 200);
   assert.deepEqual(response.body, { received: true });
+});
+
+test('POST /webhooks/stripe treats repeated event id as duplicate', async () => {
+  const app = createApp({
+    stripe: createStripeMock({
+      webhooks: {
+        constructEvent: () => ({
+          id: 'evt_dup_1',
+          type: 'payment_intent.succeeded',
+          data: { object: { id: 'pi_dup', amount: 1000, currency: 'usd', metadata: {} } },
+        }),
+      },
+    }),
+    stripeWebhookSecret: 'whsec_123',
+  });
+
+  const first = await request(app)
+    .post('/webhooks/stripe')
+    .set('stripe-signature', 'test_signature')
+    .set('Content-Type', 'application/json')
+    .send(JSON.stringify({ type: 'payment_intent.succeeded' }));
+  assert.equal(first.status, 200);
+
+  const second = await request(app)
+    .post('/webhooks/stripe')
+    .set('stripe-signature', 'test_signature')
+    .set('Content-Type', 'application/json')
+    .send(JSON.stringify({ type: 'payment_intent.succeeded' }));
+  assert.equal(second.status, 200);
+  assert.deepEqual(second.body, { received: true, duplicate: true });
 });
 
 test('POST /webhooks/stripe returns 400 when signature verification fails', async () => {

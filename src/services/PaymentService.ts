@@ -48,11 +48,17 @@ export class PaymentService {
       throw new Error('Stripe is not configured');
     }
 
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'Idempotency-Key': `order:${orderId}`,
+    };
+    if (AppConfig.api.paymentApiKey) {
+      headers['x-api-key'] = AppConfig.api.paymentApiKey;
+    }
+
     const response = await fetch(paymentSheetUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify({
         orderId,
         amount,
@@ -97,8 +103,14 @@ export class PaymentService {
       throw new Error('API base URL is not configured');
     }
 
+    const headers: Record<string, string> = {};
+    if (AppConfig.api.paymentApiKey) {
+      headers['x-api-key'] = AppConfig.api.paymentApiKey;
+    }
+
     const response = await fetch(
-      `${AppConfig.api.baseUrl}/payments/status/${encodeURIComponent(orderId)}`
+      `${AppConfig.api.baseUrl}/payments/status/${encodeURIComponent(orderId)}`,
+      { headers }
     );
     if (!response.ok) {
       const errorText = await response.text();

@@ -1,6 +1,38 @@
 const express = require('express');
 const cors = require('cors');
 
+function createInMemoryPaymentStore() {
+  const processedEventIds = new Set();
+  const paymentsByOrderId = new Map();
+
+  return {
+    hasProcessedEvent(eventId) {
+      return processedEventIds.has(eventId);
+    },
+    markProcessedEvent(eventId) {
+      if (eventId) {
+        processedEventIds.add(eventId);
+      }
+    },
+    getPayment(orderId) {
+      return paymentsByOrderId.get(orderId) || null;
+    },
+    setPayment(orderId, record) {
+      if (!orderId) {
+        return;
+      }
+
+      const existing = paymentsByOrderId.get(orderId) || {};
+      paymentsByOrderId.set(orderId, {
+        ...existing,
+        ...record,
+        orderId,
+        updatedAt: new Date().toISOString(),
+      });
+    },
+  };
+}
+
 function toCategoryName(category) {
   return String(category || 'general')
     .split('-')
@@ -62,24 +94,41 @@ function createApp({
   stripeWebhookSecret = '',
   dummyJsonBaseUrl = 'https://dummyjson.com',
   fetchImpl = globalThis.fetch,
+  paymentStore = createInMemoryPaymentStore(),
+  requirePaymentApiKey = false,
+  paymentApiKey = '',
 }) {
   const app = express();
-  const processedStripeEvents = new Set();
-  const paymentStatusByOrderId = new Map();
 
-  const setOrderPaymentStatus = (orderId, status, paymentIntentId = null) => {
+  const setOrderPaymentStatus = (orderId, status, paymentIntentId = null, fulfillment = undefined) => {
     if (!orderId) {
       return;
     }
 
-    const existing = paymentStatusByOrderId.get(orderId) || {};
-    paymentStatusByOrderId.set(orderId, {
+    const existing = paymentStore.getPayment(orderId) || {};
+    const nextRecord = {
       ...existing,
       orderId,
       status,
       paymentIntentId: paymentIntentId || existing.paymentIntentId || null,
-      updatedAt: new Date().toISOString(),
-    });
+    };
+    if (fulfillment !== undefined) {
+      nextRecord.fulfillment = fulfillment;
+    }
+    paymentStore.setPayment(orderId, nextRecord);
+  };
+
+  const requirePaymentAuth = (req, res, next) => {
+    if (!requirePaymentApiKey) {
+      return next();
+    }
+
+    const incoming = req.headers['x-api-key'];
+    if (!incoming || incoming !== paymentApiKey) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    return next();
   };
 
   const getDummyJsonFeed = async (
@@ -130,12 +179,12 @@ function createApp({
       const event = stripe.webhooks.constructEvent(req.body, signature, stripeWebhookSecret);
       const eventId = event?.id;
 
-      if (eventId && processedStripeEvents.has(eventId)) {
+      if (eventId && paymentStore.hasProcessedEvent(eventId)) {
         return res.json({ received: true, duplicate: true });
       }
 
       if (eventId) {
-        processedStripeEvents.add(eventId);
+        paymentStore.markProcessedEvent(eventId);
       }
 
       if (event.type === 'payment_intent.succeeded') {
@@ -143,7 +192,8 @@ function createApp({
         setOrderPaymentStatus(
           paymentIntent?.metadata?.orderId,
           'succeeded',
-          paymentIntent?.id || null
+          paymentIntent?.id || null,
+          'fulfilled'
         );
         console.log('payment_intent.succeeded', {
           id: paymentIntent.id,
@@ -158,7 +208,8 @@ function createApp({
         setOrderPaymentStatus(
           paymentIntent?.metadata?.orderId,
           'failed',
-          paymentIntent?.id || null
+          paymentIntent?.id || null,
+          'not_fulfilled'
         );
         console.log('payment_intent.payment_failed', {
           id: paymentIntent.id,
@@ -171,7 +222,8 @@ function createApp({
         setOrderPaymentStatus(
           paymentIntent?.metadata?.orderId,
           'processing',
-          paymentIntent?.id || null
+          paymentIntent?.id || null,
+          'pending'
         );
       }
 
@@ -180,7 +232,8 @@ function createApp({
         setOrderPaymentStatus(
           paymentIntent?.metadata?.orderId,
           'canceled',
-          paymentIntent?.id || null
+          paymentIntent?.id || null,
+          'not_fulfilled'
         );
       }
 
@@ -249,10 +302,12 @@ function createApp({
     });
   });
 
-  app.post('/payments/create-payment-sheet', async (req, res) => {
+  app.post('/payments/create-payment-sheet', requirePaymentAuth, async (req, res) => {
     try {
       const { orderId, amountInCents, currency: requestedCurrency, customerId } = req.body || {};
       const parsedAmount = Number(amountInCents);
+      const idempotencyKeyFromHeader = req.headers['idempotency-key'];
+      const idempotencyKey = String(idempotencyKeyFromHeader || `order:${orderId}`);
 
       if (!orderId || typeof orderId !== 'string') {
         return res.status(400).json({ error: 'orderId is required' });
@@ -285,9 +340,11 @@ function createApp({
         customer: customer.id,
         automatic_payment_methods: { enabled: true },
         metadata: { orderId },
+      }, {
+        idempotencyKey,
       });
 
-      setOrderPaymentStatus(orderId, 'requires_payment_method', paymentIntent.id);
+      setOrderPaymentStatus(orderId, 'requires_payment_method', paymentIntent.id, 'pending');
 
       return res.json({
         clientSecret: paymentIntent.client_secret,
@@ -311,7 +368,7 @@ function createApp({
         return res.status(400).json({ error: 'orderId is required' });
       }
 
-      const statusRecord = paymentStatusByOrderId.get(orderId);
+      const statusRecord = paymentStore.getPayment(orderId);
       if (!statusRecord) {
         return res.status(404).json({ error: 'Payment status not found' });
       }
@@ -332,16 +389,39 @@ function createApp({
                     ? 'requires_confirmation'
                     : statusRecord.status;
 
-        setOrderPaymentStatus(orderId, mappedStatus, statusRecord.paymentIntentId);
+        const fulfillment = mappedStatus === 'succeeded'
+          ? 'fulfilled'
+          : mappedStatus === 'processing'
+            ? 'pending'
+            : mappedStatus === 'canceled' || mappedStatus === 'failed'
+              ? 'not_fulfilled'
+              : statusRecord.fulfillment || 'pending';
+
+        setOrderPaymentStatus(orderId, mappedStatus, statusRecord.paymentIntentId, fulfillment);
       }
 
-      return res.json(paymentStatusByOrderId.get(orderId));
+      return res.json(paymentStore.getPayment(orderId));
     } catch (error) {
       console.error('Failed to retrieve payment status:', error);
       return res.status(500).json({
         error: error?.message || 'Failed to retrieve payment status',
       });
     }
+  });
+
+  app.get('/orders/status/:orderId', requirePaymentAuth, (req, res) => {
+    const { orderId } = req.params;
+    const record = paymentStore.getPayment(orderId);
+    if (!record) {
+      return res.status(404).json({ error: 'Order status not found' });
+    }
+
+    return res.json({
+      orderId: record.orderId,
+      paymentStatus: record.status,
+      fulfillment: record.fulfillment || 'pending',
+      updatedAt: record.updatedAt,
+    });
   });
 
   return app;

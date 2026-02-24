@@ -18,6 +18,8 @@ cp backend/.env.example backend/.env
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET` (required for webhook validation)
 - `DUMMYJSON_BASE_URL` (defaults to `https://dummyjson.com`)
+- `PAYMENT_STORE_PATH` (defaults to `./data/payment-store.json`)
+- `REQUIRE_PAYMENT_API_KEY` / `PAYMENT_API_KEY` (optional hardening)
 
 4. Start server:
 
@@ -36,6 +38,7 @@ Server runs on `http://localhost:3001` by default.
 - `POST /swipe-actions`
 - `POST /payments/create-payment-sheet`
 - `GET /payments/status/:orderId`
+- `GET /orders/status/:orderId`
 - `POST /webhooks/stripe`
 
 ## Request contract: `/payments/create-payment-sheet`

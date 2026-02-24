@@ -32,6 +32,7 @@ yarn-error.*
 
 # local env files
 .env*.local
+backend/data/
 
 # Firebase config (keep your credentials secure)
 src/config/firebase.ts
