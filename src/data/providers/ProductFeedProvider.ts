@@ -54,7 +54,7 @@ export class MockProductFeedProvider implements ProductFeedProvider {
 export class ApiProductFeedProvider implements ProductFeedProvider {
   private readonly baseUrl: string;
 
-  constructor(baseUrl: string = AppConfig.api.baseUrl) {
+  constructor(baseUrl: string = AppConfig.productFeed.baseUrl || AppConfig.api.baseUrl) {
     this.baseUrl = baseUrl;
   }
 
@@ -66,11 +66,107 @@ export class ApiProductFeedProvider implements ProductFeedProvider {
     }
   }
 
+  private isDummyJsonSource(): boolean {
+    return /dummyjson\.com/i.test(this.baseUrl);
+  }
+
+  private toCategoryName(category: string): string {
+    return category
+      .split('-')
+      .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(' ');
+  }
+
+  private mapDummyProductToCard(product: any) {
+    const imageUrls = [product.thumbnail, ...(product.images || [])].filter(Boolean);
+    const categoryId = String(product.category || 'general');
+
+    return {
+      id: String(product.id),
+      title: product.title || 'Untitled Product',
+      price: Number(product.price || 0),
+      currency: 'USD',
+      imageUrls: imageUrls.length > 0 ? imageUrls : ['https://dummyjson.com/image/400x400'],
+      category: {
+        id: categoryId,
+        name: this.toCategoryName(categoryId),
+      },
+      description: product.description || '',
+      specifications: {
+        brand: product.brand || 'Unknown',
+        stock: product.stock ?? 0,
+        rating: product.rating ?? 0,
+      },
+      availability: Number(product.stock || 0) > 0,
+      reviewRating: typeof product.rating === 'number' ? product.rating : undefined,
+    };
+  }
+
+  private async getDummyJsonFeed(
+    pagination: PaginationParams = { page: 1, limit: 10 },
+    filters?: FeedFilters
+  ): Promise<ProductFeedResponse> {
+    const limit = Math.max(1, pagination.limit);
+    const skip = Math.max(0, (pagination.page - 1) * limit);
+    const response = await fetch(
+      `${this.baseUrl}/products?limit=${limit}&skip=${skip}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch products from DummyJSON: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const allCards = Array.isArray(data.products)
+      ? data.products.map((product: any) => this.mapDummyProductToCard(product))
+      : [];
+
+    const filteredCards = allCards.filter(card => {
+      if (filters?.categories?.length) {
+        if (!filters.categories.includes(card.category.id)) {
+          return false;
+        }
+      }
+
+      if (filters?.priceRange) {
+        if (card.price < filters.priceRange.min || card.price > filters.priceRange.max) {
+          return false;
+        }
+      }
+
+      if (filters?.excludeProductIds?.length) {
+        if (filters.excludeProductIds.includes(card.id)) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+
+    return {
+      products: filteredCards,
+      pagination: {
+        page: pagination.page,
+        limit,
+        total: Number(data.total || filteredCards.length),
+        hasMore: skip + limit < Number(data.total || filteredCards.length),
+      },
+      filters: {
+        categories: filters?.categories || [],
+        priceRange: filters?.priceRange,
+      },
+    };
+  }
+
   async getProducts(
     pagination: PaginationParams = { page: 1, limit: 10 },
     filters?: FeedFilters
   ): Promise<ProductFeedResponse> {
     this.ensureConfigured();
+
+    if (this.isDummyJsonSource()) {
+      return this.getDummyJsonFeed(pagination, filters);
+    }
 
     const response = await fetch(`${this.baseUrl}/products`, {
       method: 'POST',
@@ -90,6 +186,10 @@ export class ApiProductFeedProvider implements ProductFeedProvider {
   ): Promise<ProductFeedResponse> {
     this.ensureConfigured();
 
+    if (this.isDummyJsonSource()) {
+      return this.getDummyJsonFeed(pagination);
+    }
+
     const response = await fetch(`${this.baseUrl}/feed/personalized`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -105,6 +205,10 @@ export class ApiProductFeedProvider implements ProductFeedProvider {
 
   async refreshFeed(): Promise<ProductFeedResponse> {
     this.ensureConfigured();
+
+    if (this.isDummyJsonSource()) {
+      return this.getDummyJsonFeed({ page: 1, limit: 10 });
+    }
 
     const response = await fetch(`${this.baseUrl}/feed/refresh`, {
       method: 'POST',
@@ -124,6 +228,13 @@ export class ApiProductFeedProvider implements ProductFeedProvider {
     userId: string
   ): Promise<SwipeActionResponse> {
     this.ensureConfigured();
+
+    if (this.isDummyJsonSource()) {
+      return {
+        success: true,
+        message: `${action} action recorded locally`,
+      };
+    }
 
     const response = await fetch(`${this.baseUrl}/swipe-actions`, {
       method: 'POST',
