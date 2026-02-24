@@ -31,6 +31,14 @@ function createStripeMock(overrides = {}) {
   };
 }
 
+function createFetchResponse(body, ok = true, status = 200) {
+  return {
+    ok,
+    status,
+    json: async () => body,
+  };
+}
+
 test.beforeEach(() => {
   console.log = () => {};
   console.error = () => {};
@@ -47,6 +55,116 @@ test('GET /health returns ok', async () => {
 
   assert.equal(response.status, 200);
   assert.deepEqual(response.body, { ok: true });
+});
+
+test('POST /feed/personalized proxies and maps DummyJSON products', async () => {
+  const fetchMock = async () =>
+    createFetchResponse({
+      total: 100,
+      products: [
+        {
+          id: 1,
+          title: 'Test Product',
+          description: 'Test Description',
+          category: 'beauty',
+          price: 9.99,
+          rating: 4.5,
+          stock: 8,
+          brand: 'TestBrand',
+          thumbnail: 'https://img.test/thumb.jpg',
+          images: ['https://img.test/1.jpg'],
+        },
+      ],
+    });
+  const app = createApp({ stripe: createStripeMock(), fetchImpl: fetchMock });
+
+  const response = await request(app).post('/feed/personalized').send({
+    pagination: { page: 1, limit: 10 },
+  });
+
+  assert.equal(response.status, 200);
+  assert.equal(response.body.products.length, 1);
+  assert.equal(response.body.products[0].id, '1');
+  assert.equal(response.body.products[0].category.id, 'beauty');
+  assert.equal(response.body.products[0].category.name, 'Beauty');
+});
+
+test('POST /products applies category filtering to DummyJSON proxy results', async () => {
+  const fetchMock = async () =>
+    createFetchResponse({
+      total: 2,
+      products: [
+        {
+          id: 1,
+          title: 'Beauty Product',
+          description: 'Beauty',
+          category: 'beauty',
+          price: 10,
+          stock: 5,
+          thumbnail: 'https://img.test/beauty.jpg',
+          images: [],
+        },
+        {
+          id: 2,
+          title: 'Furniture Product',
+          description: 'Furniture',
+          category: 'furniture',
+          price: 20,
+          stock: 5,
+          thumbnail: 'https://img.test/furniture.jpg',
+          images: [],
+        },
+      ],
+    });
+  const app = createApp({ stripe: createStripeMock(), fetchImpl: fetchMock });
+
+  const response = await request(app).post('/products').send({
+    pagination: { page: 1, limit: 10 },
+    filters: { categories: ['beauty'] },
+  });
+
+  assert.equal(response.status, 200);
+  assert.equal(response.body.products.length, 1);
+  assert.equal(response.body.products[0].category.id, 'beauty');
+});
+
+test('POST /feed/refresh returns first page feed through proxy', async () => {
+  const fetchMock = async url => {
+    assert.match(url, /\/products\?limit=10&skip=0$/);
+    return createFetchResponse({
+      total: 1,
+      products: [
+        {
+          id: 9,
+          title: 'Refreshed Product',
+          description: 'Desc',
+          category: 'groceries',
+          price: 3.5,
+          stock: 3,
+          thumbnail: 'https://img.test/groceries.jpg',
+          images: [],
+        },
+      ],
+    });
+  };
+  const app = createApp({ stripe: createStripeMock(), fetchImpl: fetchMock });
+
+  const response = await request(app).post('/feed/refresh').send({});
+
+  assert.equal(response.status, 200);
+  assert.equal(response.body.pagination.page, 1);
+  assert.equal(response.body.products[0].id, '9');
+});
+
+test('POST /swipe-actions validates required fields', async () => {
+  const app = createApp({ stripe: createStripeMock() });
+  const response = await request(app).post('/swipe-actions').send({
+    productId: '1',
+    action: 'like',
+  });
+
+  assert.equal(response.status, 400);
+  assert.equal(response.body.error, 'productId, action, and userId are required');
 });
 
 test('POST /payments/create-payment-sheet validates required orderId', async () => {
