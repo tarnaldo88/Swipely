@@ -18,7 +18,10 @@ cp backend/.env.example backend/.env
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET` (required for webhook validation)
 - `DUMMYJSON_BASE_URL` (defaults to `https://dummyjson.com`)
-- `PAYMENT_STORE_PATH` (defaults to `./data/payment-store.json`)
+- `PAYMENT_STORE_DRIVER` (`auto`, `postgres`, `sqlite`, `file`, `memory`)
+- `DATABASE_URL` (required for Postgres mode)
+- `SQLITE_DB_PATH` (defaults to `./data/payment-store.sqlite` for local fallback)
+- `PAYMENT_STORE_PATH` (only used in `file` mode)
 - `REQUIRE_PAYMENT_API_KEY` / `PAYMENT_API_KEY` (optional hardening)
 
 4. Start server:
@@ -39,6 +42,7 @@ Server runs on `http://localhost:3001` by default.
 - `POST /payments/create-payment-sheet`
 - `GET /payments/status/:orderId`
 - `GET /orders/status/:orderId`
+- `GET /internal/store-info` (requires `x-api-key`, disabled when `PAYMENT_API_KEY` is empty)
 - `POST /webhooks/stripe`
 
 ## Request contract: `/payments/create-payment-sheet`
@@ -58,6 +62,7 @@ Server runs on `http://localhost:3001` by default.
   "clientSecret": "pi_xxx_secret_xxx",
   "customerId": "cus_xxx",
   "ephemeralKey": "ek_test_xxx",
-  "merchantDisplayName": "Swipely"
+  "merchantDisplayName": "Swipely",
+  "paymentIntentId": "pi_xxx"
 }
 ```

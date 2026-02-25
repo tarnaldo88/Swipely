@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 const Stripe = require('stripe');
 const { createApp } = require('./app');
-const { FilePaymentStore } = require('./paymentStore');
+const { createPaymentStoreFromEnv } = require('./paymentStore');
 
 dotenv.config();
 
@@ -24,21 +24,42 @@ if (!stripeSecretKey) {
 const stripe = new Stripe(stripeSecretKey, {
   apiVersion: stripeApiVersion,
 });
-const paymentStore = new FilePaymentStore(paymentStorePath || undefined);
 
-const app = createApp({
-  stripe,
-  allowedOrigin,
-  currency,
-  merchantDisplayName,
-  stripeApiVersion,
-  stripeWebhookSecret,
-  dummyJsonBaseUrl,
-  paymentStore,
-  requirePaymentApiKey,
-  paymentApiKey,
-});
+async function startServer() {
+  const paymentStore = await createPaymentStoreFromEnv({
+    paymentStorePath,
+  });
+  const app = createApp({
+    stripe,
+    allowedOrigin,
+    currency,
+    merchantDisplayName,
+    stripeApiVersion,
+    stripeWebhookSecret,
+    dummyJsonBaseUrl,
+    paymentStore,
+    requirePaymentApiKey,
+    paymentApiKey,
+  });
 
-app.listen(port, () => {
-  console.log(`Stripe backend listening on http://localhost:${port}`);
+  const server = app.listen(port, () => {
+    console.log(`Stripe backend listening on http://localhost:${port}`);
+  });
+
+  const shutdown = async () => {
+    try {
+      await paymentStore.close?.();
+    } catch (error) {
+      console.error('Failed to close payment store cleanly:', error);
+    }
+    server.close(() => process.exit(0));
+  };
+
+  process.on('SIGINT', shutdown);
+  process.on('SIGTERM', shutdown);
+}
+
+startServer().catch(error => {
+  console.error('Failed to start backend server:', error);
+  process.exit(1);
 });

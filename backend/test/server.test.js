@@ -58,6 +58,39 @@ test('GET /health returns ok', async () => {
   assert.deepEqual(response.body, { ok: true });
 });
 
+test('GET /internal/store-info is disabled without PAYMENT_API_KEY', async () => {
+  const app = createApp({ stripe: createStripeMock() });
+  const response = await request(app).get('/internal/store-info');
+
+  assert.equal(response.status, 403);
+  assert.equal(response.body.error, 'Internal debug endpoint is disabled');
+});
+
+test('GET /internal/store-info requires valid API key', async () => {
+  const app = createApp({
+    stripe: createStripeMock(),
+    paymentApiKey: 'debug-key',
+    paymentStore: {
+      getStoreInfo: async () => ({ driver: 'sqlite', path: '/tmp/store.sqlite' }),
+      getPayment: async () => null,
+      setPayment: async () => {},
+      markProcessedEvent: async () => true,
+    },
+  });
+
+  const unauthorized = await request(app).get('/internal/store-info');
+  assert.equal(unauthorized.status, 401);
+
+  const authorized = await request(app)
+    .get('/internal/store-info')
+    .set('x-api-key', 'debug-key');
+  assert.equal(authorized.status, 200);
+  assert.deepEqual(authorized.body, {
+    driver: 'sqlite',
+    path: '/tmp/store.sqlite',
+  });
+});
+
 test('POST /feed/personalized proxies and maps DummyJSON products', async () => {
   const fetchMock = async () =>
     createFetchResponse({
