@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 function createInMemoryPaymentStore() {
   const processedEventIds = new Set();
@@ -101,6 +103,74 @@ function createApp({
   paymentApiKey = '',
 }) {
   const app = express();
+
+  app.disable('x-powered-by');
+
+  app.set('trust proxy', 1);
+
+  const isProduction = String(process.env.NODE_ENV || '').toLowerCase() === 'production';
+
+  const normalizeAllowedOrigins = originValue => {
+    if (!originValue) {
+      return [];
+    }
+
+    if (Array.isArray(originValue)) {
+      return originValue.map(item => String(item).trim()).filter(Boolean);
+    }
+
+    const raw = String(originValue).trim();
+    if (!raw) {
+      return [];
+    }
+
+    if (raw === '*') {
+      return '*';
+    }
+
+    return raw
+      .split(',')
+      .map(item => item.trim())
+      .filter(Boolean);
+  };
+
+  const resolvedAllowedOrigins = normalizeAllowedOrigins(allowedOrigin);
+  if (isProduction && resolvedAllowedOrigins === '*') {
+    console.warn('ALLOWED_ORIGIN is set to "*" in production; CORS will be disabled. Set ALLOWED_ORIGIN to a specific origin list.');
+  }
+
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+      contentSecurityPolicy: false,
+    })
+  );
+
+  app.use(
+    cors({
+      origin:
+        isProduction && resolvedAllowedOrigins === '*'
+          ? false
+          : resolvedAllowedOrigins,
+    })
+  );
+  app.use(express.json({ limit: '100kb' }));
+
+  const writeLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    limit: 120,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (_, res) => res.status(429).json({ error: 'Too many requests' }),
+  });
+
+  const paymentLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    limit: 30,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (_, res) => res.status(429).json({ error: 'Too many requests' }),
+  });
 
   const setOrderPaymentStatus = async (
     orderId,
@@ -263,9 +333,6 @@ function createApp({
     }
   });
 
-  app.use(cors({ origin: allowedOrigin }));
-  app.use(express.json());
-
   app.get('/health', (_, res) => {
     res.json({ ok: true });
   });
@@ -289,7 +356,7 @@ function createApp({
     }
   });
 
-  app.post('/feed/personalized', async (req, res) => {
+  app.post('/feed/personalized', writeLimiter, async (req, res) => {
     try {
       const pagination = req.body?.pagination || { page: 1, limit: 10 };
       const response = await getDummyJsonFeed(pagination);
@@ -302,7 +369,7 @@ function createApp({
     }
   });
 
-  app.post('/feed/refresh', async (_, res) => {
+  app.post('/feed/refresh', writeLimiter, async (_, res) => {
     try {
       const response = await getDummyJsonFeed({ page: 1, limit: 10 });
       return res.json(response);
@@ -314,7 +381,7 @@ function createApp({
     }
   });
 
-  app.post('/swipe-actions', (req, res) => {
+  app.post('/swipe-actions', writeLimiter, (req, res) => {
     const { productId, action, userId } = req.body || {};
     if (!productId || !action || !userId) {
       return res.status(400).json({ error: 'productId, action, and userId are required' });
@@ -326,7 +393,7 @@ function createApp({
     });
   });
 
-  app.post('/payments/create-payment-sheet', requirePaymentAuth, async (req, res) => {
+  app.post('/payments/create-payment-sheet', paymentLimiter, requirePaymentAuth, async (req, res) => {
     try {
       const { orderId, amountInCents, currency: requestedCurrency, customerId } = req.body || {};
       const parsedAmount = Number(amountInCents);
