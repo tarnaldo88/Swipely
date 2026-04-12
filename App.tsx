@@ -31,7 +31,7 @@ const onNavigationReady = () => {
 
 // Navigation state change handler for analytics/logging
 const onNavigationStateChange = (state: any) => {
-  if (isNavigationReady) {
+  if (isNavigationReady && __DEV__) {
     // Log navigation events for analytics
     const currentRoute = navigationRef.current?.getCurrentRoute();
     if (currentRoute) {
