@@ -37,18 +37,44 @@ if (environment === 'production' && requestedMockMode) {
   console.warn('EXPO_PUBLIC_USE_MOCK_DATA was true in production and has been forced to false.');
 }
 
+const requirePublicValue = (name: string, value: string): string => {
+  if (environment === 'production' && !value) {
+    throw new Error(`${name} must be set in production builds`);
+  }
+
+  if (!value) {
+    console.warn(`${name} is not set; some features may be unavailable.`);
+  }
+
+  return value;
+};
+
+const warnPublicValue = (name: string, value: string): string => {
+  if (!value) {
+    console.warn(`${name} is not set; some features may be unavailable.`);
+  }
+
+  return value;
+};
+
 export const AppConfig = {
   app: {
     environment,
   },
   api: {
-    baseUrl: process.env.EXPO_PUBLIC_API_BASE_URL?.trim() || '',
+    baseUrl: requirePublicValue(
+      'EXPO_PUBLIC_API_BASE_URL',
+      process.env.EXPO_PUBLIC_API_BASE_URL?.trim() || ''
+    ),
   },
   productFeed: {
     baseUrl: process.env.EXPO_PUBLIC_PRODUCT_FEED_BASE_URL?.trim() || '',
   },
   stripe: {
-    publishableKey: process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY?.trim() || '',
+    publishableKey: warnPublicValue(
+      'EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY',
+      process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY?.trim() || ''
+    ),
     merchantIdentifier:
       process.env.EXPO_PUBLIC_STRIPE_MERCHANT_IDENTIFIER?.trim() || 'merchant.com.swipely',
     paymentSheetUrl: process.env.EXPO_PUBLIC_STRIPE_PAYMENT_SHEET_URL?.trim() || '',
