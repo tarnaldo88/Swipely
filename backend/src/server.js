@@ -16,9 +16,19 @@ const dummyJsonBaseUrl = process.env.DUMMYJSON_BASE_URL || 'https://dummyjson.co
 const paymentStorePath = process.env.PAYMENT_STORE_PATH || '';
 const requirePaymentApiKey = String(process.env.REQUIRE_PAYMENT_API_KEY || 'false').toLowerCase() === 'true';
 const paymentApiKey = process.env.PAYMENT_API_KEY || '';
+const nodeEnv = String(process.env.NODE_ENV || '').toLowerCase();
+const isProduction = nodeEnv === 'production';
 
 if (!stripeSecretKey) {
   throw new Error('STRIPE_SECRET_KEY is required');
+}
+
+if (isProduction && allowedOrigin === '*') {
+  throw new Error('ALLOWED_ORIGIN must be set to an explicit origin (or comma-separated list) in production');
+}
+
+if (requirePaymentApiKey && !paymentApiKey) {
+  throw new Error('PAYMENT_API_KEY is required when REQUIRE_PAYMENT_API_KEY=true');
 }
 
 const stripe = new Stripe(stripeSecretKey, {
