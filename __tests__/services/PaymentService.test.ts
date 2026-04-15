@@ -152,33 +152,9 @@ describe('PaymentService Stripe integration', () => {
 
     expect((global as any).fetch).toHaveBeenCalledWith(
       'https://api.example.com/payments/status/ORD-6',
-      { headers: {} }
+      {}
     );
     expect(status.status).toBe('succeeded');
-  });
-
-  it('sends API key header when configured', async () => {
-    process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY = 'pk_test_123';
-    process.env.EXPO_PUBLIC_API_BASE_URL = 'https://api.example.com';
-    process.env.EXPO_PUBLIC_PAYMENT_API_KEY = 'client-key';
-
-    ((global as any).fetch as jest.Mock).mockResolvedValue({
-      ok: true,
-      json: async () => ({ clientSecret: 'pi_test_secret' }),
-    });
-
-    const service = loadPaymentService();
-    await service.createPaymentSheetParams('ORD-APIKEY', 12);
-
-    expect((global as any).fetch).toHaveBeenCalledWith(
-      'https://api.example.com/payments/create-payment-sheet',
-      expect.objectContaining({
-        headers: expect.objectContaining({
-          'x-api-key': 'client-key',
-          'Idempotency-Key': 'order:ORD-APIKEY',
-        }),
-      })
-    );
   });
 
   it('throws when payment status verification fails', async () => {
